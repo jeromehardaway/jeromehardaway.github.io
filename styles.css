@@ -12,3 +12,11 @@ nav a:hover { color: #c5203e; }
 .contact form input[type="submit"]:hover { background-color: #091f40; border: 1px solid #c5203e; }
 img { max-width: 30%; height: auto; border-radius: 50%; }
 .about img { float: left; margin-right: 20px; }
+
+/* Dark Mode Styles */
+body.dark-mode { background-color: #333; color: #ccc; }
+header.dark-mode { background: #222; }
+nav.dark-mode, nav.dark-mode a { background: #222; color: #ccc; }
+nav.dark-mode a:hover { color: #fff; }
+.dark-mode-toggle { background: none; color: #ccc; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; }
+.dark-mode-toggle:hover { background: #555; }
