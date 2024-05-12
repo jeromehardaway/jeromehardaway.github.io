@@ -14,7 +14,7 @@ img { max-width: 30%; height: auto; border-radius: 50%; }
 .about img { float: left; margin-right: 20px; }
 
 /* Dark Mode Styles */
-body.dark-mode { background-color: #333; color: #ccc; }
+body.dark-mode { background-color: #333; color: #ffffff; }
 header.dark-mode { background: #222; }
 nav.dark-mode, nav.dark-mode a { background: #222; color: #ccc; }
 nav.dark-mode a:hover { color: #fff; }
