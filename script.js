@@ -27,7 +27,7 @@ window.onload = function() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const apiKey = 'f0beccd7adbad08bd787807f9401a36d 
+    const apiKey = 'f0beccd7adbad08bd787807f9401a36d'
     const city = 'Atlanta'; // You can change this to any city you want
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
