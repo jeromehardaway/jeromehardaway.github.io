@@ -38,7 +38,7 @@ Contains copyright information.
 
 ## Deployment
 
-This project is deployed using GitHub Pages. To view it, navigate to [your GitHub Pages link].
+This project is deployed using GitHub Pages. To view it, navigate to [here](https://jeromehardaway.github.io/#).
 
 ## Contact
 
