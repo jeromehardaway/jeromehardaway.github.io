@@ -95,24 +95,40 @@ img {
   margin-top: 20px;
 }
 
-.work .card {
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
   background: #f0f0f0;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
   overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s;
 }
 
-.work .card a {
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card a {
   text-decoration: none;
   color: inherit;
 }
 
-.work .card-content {
+.card-content {
   padding: 20px;
 }
 
-.work .card-content h4 {
+.card-content i {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.card-content h4 {
   margin: 0;
 }
 
