@@ -95,22 +95,25 @@ img {
   margin-top: 20px;
 }
 
-.work ul {
-  list-style-type: none;
-  padding-left: 0;
+.work .card {
+  background: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
 }
 
-.work ul li {
-  margin-bottom: 10px;
-}
-
-.work ul li a {
+.work .card a {
   text-decoration: none;
-  color: #007bff;
+  color: inherit;
 }
 
-.work ul li a:hover {
-  text-decoration: underline;
+.work .card-content {
+  padding: 20px;
+}
+
+.work .card-content h4 {
+  margin: 0;
 }
 
 footer {
