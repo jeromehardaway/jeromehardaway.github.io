@@ -43,7 +43,7 @@ nav a:hover {
   color: #c5203e;
 }
 
-.about, .skills, .contact, .journey {
+.about, .skills, .contact, .journey, .work {
   margin: 40px 0;
   color: #000;
 }
@@ -89,4 +89,32 @@ img {
 .about img {
   float: left;
   margin-right: 20px;
+}
+
+.work h3 {
+  margin-top: 20px;
+}
+
+.work ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.work ul li {
+  margin-bottom: 10px;
+}
+
+.work ul li a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.work ul li a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  background: #f0f0f0;
+  padding: 20px 0;
+  text-align: center;
 }
