@@ -243,7 +243,6 @@ a:hover {
   font-weight: 700;
   color: var(--navy);
 }
-
 .main-nav {
   display: flex;
   align-items: center;
@@ -430,7 +429,6 @@ a:hover {
   background: linear-gradient(135deg, rgba(9, 31, 64, 0.5) 0%, rgba(9, 31, 64, 0.6) 100%);
   z-index: 1;
 }
-
 .hero-content {
   display: flex;
   align-items: center;
@@ -458,7 +456,6 @@ a:hover {
   object-fit: cover;
   position: relative;
 }
-
 .glitch-wrapper {
   position: relative;
   width: 300px;
