@@ -92,6 +92,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  height: 100%; /* Ensure HTML takes full height */
 }
 
 body {
@@ -101,6 +102,13 @@ body {
   background-color: var(--bg-primary);
   transition: var(--transition);
   -webkit-font-smoothing: antialiased;
+  display: flex; /* Added for footer positioning */
+  flex-direction: column; /* Added for footer positioning */
+  min-height: 100%; /* Ensure body takes at least full viewport height */
+}
+
+main { /* Added to make main content push footer */
+  flex-grow: 1;
 }
 
 .container {
@@ -1425,6 +1433,7 @@ a:hover {
   .nav-link.active:hover {
     border-left: 3px solid var(--red);
   }
+}
 
 @media (max-width: 480px) {
   .hero-name {
