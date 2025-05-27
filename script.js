@@ -341,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const animationManager = new AnimationManager();
     const formManager = new FormManager();
     const glitchManager = new GlitchManager();
+    const skillsAnimationManager = new SkillsAnimationManager();
     
     // Additional initialization for any project-specific features can go here
     
@@ -401,6 +402,227 @@ class GlitchManager {
         const offsetX = (mouseX - 0.5) * (index + 1) * 5;
         const offsetY = (mouseY - 0.5) * (index + 1) * 5;
         image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      });
+    });
+  }
+}
+
+// Skills Animation with Anime.js
+class SkillsAnimationManager {
+  constructor() {
+    this.tooltip = document.getElementById('tooltip');
+    this.tools = document.querySelectorAll('.tool');
+    this.modal = document.getElementById('skillModal');
+    this.modalTitle = document.getElementById('modalTitle');
+    this.modalDescription = document.getElementById('modalDescription');
+    this.closeModalBtn = document.getElementById('closeModal');
+    this.modalBackdrop = document.querySelector('.modal-backdrop');
+    
+    this.init();
+  }
+
+  init() {
+    this.setupTooltip();
+    this.setupModal();
+    this.animateSkills();
+    this.setupObserver();
+  }
+
+  setupTooltip() {
+    if (!this.tooltip || this.tools.length === 0) return;
+
+    // Keep tooltip functionality for devices that support hover
+    // (mostly for desktop, as an enhancement)
+    if (window.matchMedia('(hover: hover)').matches) {
+      this.tools.forEach(tool => {
+        tool.addEventListener('mouseenter', (e) => {
+          this.tooltip.innerText = tool.dataset.description;
+          this.tooltip.style.display = 'block';
+          this.tooltip.style.opacity = '1';
+          this.updateTooltipPosition(e);
+        });
+
+        tool.addEventListener('mousemove', (e) => {
+          this.updateTooltipPosition(e);
+        });
+
+        tool.addEventListener('mouseleave', () => {
+          this.tooltip.style.opacity = '0';
+          setTimeout(() => {
+            this.tooltip.style.display = 'none';
+          }, 200);
+        });
+      });
+    }
+  }
+
+  setupModal() {
+    if (!this.modal || this.tools.length === 0) return;
+    
+    // Setup click events for all skill tools
+    this.tools.forEach(tool => {
+      tool.addEventListener('click', () => {
+        const skillName = tool.textContent;
+        const skillDescription = tool.dataset.description;
+        
+        this.openModal(skillName, skillDescription);
+      });
+    });
+    
+    // Setup close modal functionality
+    if (this.closeModalBtn) {
+      this.closeModalBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+    
+    // Close modal when clicking on backdrop
+    if (this.modalBackdrop) {
+      this.modalBackdrop.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+        this.closeModal();
+      }
+    });
+  }
+  
+  openModal(title, description) {
+    if (!this.modal) return;
+    
+    this.modalTitle.textContent = title;
+    this.modalDescription.textContent = description;
+    
+    // Show the modal
+    this.modal.classList.add('active');
+    
+    // Add animation with anime.js if available
+    if (typeof anime !== 'undefined') {
+      anime({
+        targets: '.modal-container',
+        scale: [0.9, 1],
+        opacity: [0, 1],
+        duration: 300,
+        easing: 'easeOutCubic'
+      });
+    }
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+  
+  closeModal() {
+    if (!this.modal) return;
+    
+    // Add animation with anime.js if available
+    if (typeof anime !== 'undefined') {
+      anime({
+        targets: '.modal-container',
+        scale: [1, 0.9],
+        opacity: [1, 0],
+        duration: 200,
+        easing: 'easeInCubic',
+        complete: () => {
+          this.modal.classList.remove('active');
+        }
+      });
+    } else {
+      // Fallback without animation
+      this.modal.classList.remove('active');
+    }
+    
+    // Restore body scrolling
+    document.body.style.overflow = '';
+  }
+
+  updateTooltipPosition(e) {
+    const windowWidth = window.innerWidth;
+    const tooltipWidth = this.tooltip.offsetWidth;
+    const tooltipHeight = this.tooltip.offsetHeight;
+    const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    
+    // Check if tooltip would go off screen to the right
+    if (e.pageX + tooltipWidth + 15 > windowWidth) {
+      this.tooltip.style.left = `${e.pageX - tooltipWidth - 10}px`;
+    } else {
+      this.tooltip.style.left = `${e.pageX + 15}px`;
+    }
+    
+    // Check if tooltip would go off screen at the bottom
+    if (e.pageY - scrollY + tooltipHeight + 10 > viewportHeight) {
+      this.tooltip.style.top = `${e.pageY - tooltipHeight - 10}px`;
+    } else {
+      this.tooltip.style.top = `${e.pageY + 10}px`;
+    }
+  }
+
+  animateSkills() {
+    // Only run animation if anime.js is loaded
+    if (typeof anime === 'undefined') return;
+    
+    anime({
+      targets: '.skills-section .tool',
+      opacity: [0, 1],
+      translateY: [-15, 0],
+      scale: [0.95, 1],
+      delay: anime.stagger(30, {grid: [3, 5], from: 'center'}),
+      duration: 700,
+      easing: 'easeOutExpo',
+      autoplay: false
+    });
+    
+    anime({
+      targets: '.skills-section .vertical',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      delay: anime.stagger(150),
+      duration: 1000,
+      easing: 'easeOutQuint',
+      autoplay: false
+    });
+  }
+
+  setupObserver() {
+    const skillSection = document.querySelector('#skills');
+    if (!skillSection) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.playAnimations();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(skillSection);
+  }
+
+  playAnimations() {
+    if (typeof anime === 'undefined') return;
+    
+    // First animate all vertical sections together
+    anime({
+      targets: '.skills-section .vertical',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      delay: function(el, i) { return i * 150; }, // Sequential delay based on index
+      duration: 800,
+      easing: 'easeOutQuint',
+    }).finished.then(() => {
+      // Then animate all tool elements
+      anime({
+        targets: '.skills-section .tool',
+        opacity: [0, 1],
+        translateY: [-10, 0],
+        delay: anime.stagger(40),
+        duration: 600,
+        easing: 'easeOutExpo'
       });
     });
   }
