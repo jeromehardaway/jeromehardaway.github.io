@@ -63,11 +63,19 @@ class ThemeManager {
   enableDarkMode(animate = true) {
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem(this.darkModeKey, 'dark');
+    
+    // Dispatch theme change event
+    const event = new CustomEvent('data-theme-changed', { detail: { theme: 'dark' } });
+    document.documentElement.dispatchEvent(event);
   }
 
   enableLightMode(animate = true) {
     document.documentElement.setAttribute('data-theme', 'light');
     localStorage.setItem(this.darkModeKey, 'light');
+    
+    // Dispatch theme change event
+    const event = new CustomEvent('data-theme-changed', { detail: { theme: 'light' } });
+    document.documentElement.dispatchEvent(event);
   }
 }
 
@@ -342,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formManager = new FormManager();
     const glitchManager = new GlitchManager();
     const skillsAnimationManager = new SkillsAnimationManager();
+    const projectAnimationManager = new ProjectAnimationManager();
     
     // Additional initialization for any project-specific features can go here
     
@@ -625,5 +634,127 @@ class SkillsAnimationManager {
         easing: 'easeOutExpo'
       });
     });
+  }
+}
+
+// ProjectAnimationManager - Handles project card animations
+class ProjectAnimationManager {
+  constructor() {
+    this.projectsSection = document.getElementById('projects');
+    this.projectCards = document.querySelectorAll('.vanta-fly-in');
+    this.isAnimating = false;
+    
+    this.init();
+  }
+
+  init() {
+    if (this.projectCards.length > 0) {
+      this.setupProjectsAnimation();
+      this.setupScrollEffect();
+    } else {
+      console.error('Project cards not found');
+    }
+  }
+
+  setupProjectsAnimation() {
+    // Intersection observer for project cards
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const delay = card.dataset.delay || 0;
+          
+          setTimeout(() => {
+            card.classList.add('animate');
+          }, parseInt(delay));
+          
+          observer.unobserve(card);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    });
+
+    // Observe all project cards
+    this.projectCards.forEach(card => {
+      observer.observe(card);
+      
+      // Add 3D parallax effect on mouse move
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element
+        const y = e.clientY - rect.top; // y position within the element
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const moveX = (x - centerX) / 15; // More pronounced effect
+        const moveY = (y - centerY) / 15;
+        
+        // Apply the 3D rotation effect
+        card.style.transform = `perspective(1000px) rotateY(${moveX}deg) rotateX(${-moveY}deg) translateZ(20px) scale(1.05)`;
+        
+        // Move the project image for a parallax effect
+        const projectImage = card.querySelector('.project-image img');
+        if (projectImage) {
+          projectImage.style.transform = `translateX(${moveX * 2}px) translateY(${moveY * 2}px) scale(1.1)`;
+        }
+      });
+      
+      // Reset transform on mouse leave with smooth transition
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform 0.5s ease-out';
+        card.style.transform = '';
+        
+        const projectImage = card.querySelector('.project-image img');
+        if (projectImage) {
+          projectImage.style.transition = 'transform 0.5s ease-out';
+          projectImage.style.transform = 'scale(1)';
+        }
+        
+        // Remove the transition after it completes to allow smooth mouse move again
+        setTimeout(() => {
+          card.style.transition = '';
+          if (projectImage) {
+            projectImage.style.transition = '';
+          }
+        }, 500);
+      });
+    });
+  }
+
+  setupScrollEffect() {
+    // Add floating animation when scrolling
+    window.addEventListener('scroll', () => {
+      if (this.isInView(this.projectsSection) && !this.isAnimating) {
+        this.isAnimating = true;
+        
+        this.projectCards.forEach((card, index) => {
+          // Subtle floating effect
+          anime({
+            targets: card,
+            translateY: [
+              { value: -10, duration: 1500, easing: 'easeInOutQuad' },
+              { value: 0, duration: 1500, easing: 'easeInOutQuad' }
+            ],
+            delay: index * 100,
+            loop: true,
+            direction: 'alternate'
+          });
+        });
+      } else if (!this.isInView(this.projectsSection) && this.isAnimating) {
+        this.isAnimating = false;
+        anime.remove(this.projectCards);
+      }
+    });
+  }
+
+  isInView(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.bottom >= 0
+    );
   }
 }
