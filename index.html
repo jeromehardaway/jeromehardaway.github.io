@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="skills.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -89,59 +91,74 @@
 
         <section id="skills" class="skills-section">
             <div class="container">
-                <h2 class="section-title">Skills & Expertise</h2>
-                <div class="skills-container">
-                    <div class="skill-category">
-                        <h3>Technical Skills</h3>
-                        <ul class="skills-list">
-                            <li class="skill-item">
-                                <span class="skill-name">UI Development (React, Next.js)</span>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 95%;"></div>
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <span class="skill-name">Data Engineering</span>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 90%;"></div>
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <span class="skill-name">AI Engineering</span>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 85%;"></div>
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <span class="skill-name">System Architecture</span>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 80%;"></div>
-                                </div>
-                            </li>
-                        </ul>
+                <h2 class="section-title">My Skills & Tools</h2>
+                <div id="skillGrid">
+
+                  <!-- Core Skills -->
+                  <div class="vertical" data-vertical="Core Skills">
+                    <h2>Core Skills</h2>
+                    <div class="tools-list">
+                      <div class="tool" data-description="TypeScript is my default for writing scalable, safe applications across the stack.">TypeScript</div>
+                      <div class="tool" data-description="JavaScript powers my frontend, backend, and scripting workflows.">JavaScript</div>
+                      <div class="tool" data-description="Python is my main language for AI, automation, scripting, and backends.">Python</div>
+                      <div class="tool" data-description="GitHub is my source of truth for version control, collaboration, and open source.">GitHub</div>
+                      <div class="tool" data-description="GitHub Actions automates my CI/CD workflows across projects.">GitHub Actions</div>
+                      <div class="tool" data-description="Google Cloud provides my compute, storage, and big data services.">Google Cloud</div>
+                      <div class="tool" data-description="Azure powers my enterprise-level services and AI infrastructure.">Azure</div>
+                      <div class="tool" data-description="I design systems with observability, scale, and AI-integration in mind.">System Design</div>
+                      <div class="tool" data-description="I write humanized technical documentation and developer-first blog content.">Technical Writing</div>
+                      <div class="tool" data-description="I use DevOps best practices to ship, monitor, and iterate efficiently.">DevOps</div>
+                      <div class="tool" data-description="My developer mentorship spans career roadmaps, code reviews, and mock interviews.">Mentorship</div>
                     </div>
-                    <div class="skill-category">
-                        <h3>Core Expertise</h3>
-                        <div class="expertise-grid">
-                            <div class="expertise-card">
-                                <h4>UI Development</h4>
-                                <p>Crafting intuitive interfaces with React, Next.js, and Tailwind CSS</p>
-                            </div>
-                            <div class="expertise-card">
-                                <h4>Data Engineering</h4>
-                                <p>Building robust data pipelines and infrastructure at scale</p>
-                            </div>
-                            <div class="expertise-card">
-                                <h4>AI Integration</h4>
-                                <p>Implementing AI solutions with Google Gemini and Azure OpenAI</p>
-                            </div>
-                            <div class="expertise-card">
-                                <h4>System Design</h4>
-                                <p>Creating systems where every layer supports the next, serving the user</p>
-                            </div>
-                        </div>
+                  </div>
+
+                  <!-- UI Engineering -->
+                  <div class="vertical" data-vertical="UI Engineering">
+                    <h2>UI Engineering</h2>
+                    <div class="tools-list">
+                      <div class="tool" data-description="I build full-stack apps using Next.js with server components and API routes.">Next.js</div>
+                      <div class="tool" data-description="Tailwind helps me build clean, scalable interfaces fast.">Tailwind CSS</div>
+                      <div class="tool" data-description="I use Vercel for frontend deployments with edge function support.">Vercel</div>
+                      <div class="tool" data-description="D3 helps me build interactive, expressive data visualizations in React/Next.js.">D3.js</div>
+                      <div class="tool" data-description="Recharts gives me a fast and responsive charting layer for dashboards.">Recharts</div>
                     </div>
+                  </div>
+
+                  <!-- Data Engineering -->
+                  <div class="vertical" data-vertical="Data Engineering">
+                    <h2>Data Engineering</h2>
+                    <div class="tools-list">
+                      <div class="tool" data-description="Pandas is my go-to tool for wrangling and cleaning data.">Pandas</div>
+                      <div class="tool" data-description="NumPy powers all my vectorized data processing tasks.">NumPy</div>
+                      <div class="tool" data-description="Polars speeds up large dataset processing beyond Pandas.">Polars</div>
+                      <div class="tool" data-description="Firebase gives me real-time syncing, auth, and DBs out of the box.">Firebase</div>
+                      <div class="tool" data-description="Google Cloud provides my compute, storage, and big data services.">Google Cloud</div>
+                      <div class="tool" data-description="Azure powers my enterprise-level services and pipelines.">Azure</div>
+                      <div class="tool" data-description="PostgreSQL is my default relational database for structured, production-grade storage.">PostgreSQL</div>
+                      <div class="tool" data-description="Neon gives me serverless, scalable Postgres with branching and instant preview support.">Neon</div>
+                    </div>
+                  </div>
+
+                  <!-- AI Engineering -->
+                  <div class="vertical" data-vertical="AI Engineering">
+                    <h2>AI Engineering</h2>
+                    <div class="tools-list">
+                      <div class="tool" data-description="FastAPI is my go-to for serving AI models with low-latency APIs.">FastAPI</div>
+                      <div class="tool" data-description="Streamlit helps me quickly demo and deploy AI tools.">Streamlit</div>
+                      <div class="tool" data-description="Flask is my lightweight option for creating custom AI backends.">Flask</div>
+                      <div class="tool" data-description="Gemini powers my multimodal and generative AI applications.">Google Gemini</div>
+                      <div class="tool" data-description="Azure OpenAI helps me build enterprise-ready LLM apps.">Azure OpenAI</div>
+                      <div class="tool" data-description="I use PyTorch for flexible model building and experimentation.">PyTorch</div>
+                      <div class="tool" data-description="TensorFlow handles large-scale training and inference pipelines.">TensorFlow</div>
+                      <div class="tool" data-description="Transformers.js allows me to run LLMs directly in the browser.">Transformers.js</div>
+                      <div class="tool" data-description="LangChain helps me build intelligent, agent-style LLM systems.">LangChain</div>
+                      <div class="tool" data-description="MLflow tracks experiments and manages my model lifecycle.">MLflow</div>
+                      <div class="tool" data-description="DeepSpeed helps me train massive models efficiently.">DeepSpeed</div>
+                    </div>
+                  </div>
                 </div>
+
+                <div id="tooltip"></div>
             </div>
         </section>
 
@@ -286,5 +303,19 @@
             </div>
         </div>
     </footer>
+
+    <!-- New Modal Popup for Skill Details -->
+    <div id="skillModal" class="skill-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">Skill Name</h3>
+                <button id="closeModal" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p id="modalDescription">Skill description will appear here.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

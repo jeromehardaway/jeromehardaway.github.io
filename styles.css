@@ -213,6 +213,7 @@ a:hover {
 /* Header and Navigation */
 .main-header {
   background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: var(--text-primary);
@@ -1344,5 +1345,52 @@ a:hover {
   
   .projects-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Skills Grid with Anime.js Styling */
+.skills-section #skillGrid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  width: 100% !important;
+  margin-top: 2rem !important;
+  overflow-x: auto !important; /* Allow horizontal scrolling on small screens */
+}
+
+.skills-section .vertical {
+  flex: 1 1 0 !important;
+  min-width: 250px !important;
+  max-width: none !important;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skills-section .tools-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+}
+
+/* Media queries for responsive behavior */
+@media (max-width: 1200px) {
+  .skills-section #skillGrid {
+    flex-wrap: wrap !important;
+  }
+  
+  .skills-section .vertical {
+    flex: 1 1 45% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-section .vertical {
+    flex: 1 1 100% !important;
   }
 }
