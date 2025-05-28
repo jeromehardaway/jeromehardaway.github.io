@@ -1,4 +1,14 @@
-/* Skills section specific styling */
+
+.skills-summary {
+  width: 100%;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: #333;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
 .skills-section #skillGrid {
   display: flex;
   flex-direction: row;
@@ -6,7 +16,7 @@
   gap: 20px;
   width: 100%;
   margin-top: 2rem;
-  overflow-x: auto; /* Allow horizontal scrolling on small screens */
+  overflow-x: auto;
 }
 
 .skills-section .vertical {
@@ -108,7 +118,6 @@
   }
 }
 
-/* Media queries for responsive behavior */
 @media (max-width: 1200px) {
   .skills-section #skillGrid {
     flex-wrap: wrap;
@@ -135,7 +144,6 @@
   }
 }
 
-/* Modal Styling */
 .skill-modal {
   position: fixed;
   top: 0;

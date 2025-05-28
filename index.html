@@ -1,171 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Jerome Hardaway - Software Engineer, Veteran Advocate, and Founder of Vets Who Code">
-    <meta name="keywords" content="Jerome Hardaway, Software Engineer, Vets Who Code, Veteran Advocate, Tech Leadership">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Jerome Hardaway - Software Engineer, Veteran Advocate, and Founder of Vets Who Code"
+    />
+    <meta
+      name="keywords"
+      content="Jerome Hardaway, Software Engineer, Vets Who Code, Veteran Advocate, Tech Leadership"
+    />
     <title>Jerome Hardaway - Software Engineer & Veteran Advocate</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="skills.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="skills.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.139.0/build/three.min.js"></script>
     <script src="script.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
     <header class="main-header">
-        <div class="container header-content">
-            <div class="logo">
-                <h1>Jerome Hardaway</h1>
-            </div>
-            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-                <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24">
-                    <path d="M12 17.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 1.5a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm12-7a.8.8 0 0 1-.8.8h-2.4a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8zM4 12a.8.8 0 0 1-.8.8H.8a.8.8 0 0 1 0-1.6h2.5a.8.8 0 0 1 .8.8zm16.5-8.5a.8.8 0 0 1 0 1l-1.8 1.8a.8.8 0 0 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM6.3 17.7a.8.8 0 0 1 0 1l-1.7 1.8a.8.8 0 1 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM12 0a.8.8 0 0 1 .8.8v2.5a.8.8 0 0 1-1.6 0V.8A.8.8 0 0 1 12 0zm0 20a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-1.6 0v-2.4a.8.8 0 0 1 .8-.8zM3.5 3.5a.8.8 0 0 1 1 0l1.8 1.8a.8.8 0 1 1-1 1L3.5 4.6a.8.8 0 0 1 0-1zm14.2 14.2a.8.8 0 0 1 1 0l1.8 1.7a.8.8 0 0 1-1 1l-1.8-1.7a.8.8 0 0 1 0-1z"/>
-                </svg>
-                <svg class="moon-icon" viewBox="0 0 24 24" width="24" height="24">
-                    <path d="M12.1 22c-5.5 0-10-4.5-10-10 0-4.8 3.4-8.9 8-9.8.6-.1.8.5.4 1-1.5 1.8-2.4 4.1-2.4 6.7 0 5.8 4.7 10.5 10.5 10.5 2.6 0 4.9-.9 6.7-2.4.4-.4 1-.2 1 .4-.9 4.6-5 8-9.8 8z"/>
-                </svg>
-            </button>
-            <nav class="main-nav">
-                <div class="hamburger-menu" id="hamburger-menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#skills" class="nav-link">Skills</a></li>
-                    <!-- <li><a href="#projects" class="nav-link">Projects</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li> -->
-                </ul>
-            </nav>
+      <div class="container header-content">
+        <div class="logo">
+          <h1>Jerome Hardaway</h1>
         </div>
+        <button
+          id="dark-mode-toggle"
+          class="dark-mode-toggle"
+          aria-label="Toggle dark mode"
+        >
+          <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24">
+            <path
+              d="M12 17.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 1.5a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm12-7a.8.8 0 0 1-.8.8h-2.4a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8zM4 12a.8.8 0 0 1-.8.8H.8a.8.8 0 0 1 0-1.6h2.5a.8.8 0 0 1 .8.8zm16.5-8.5a.8.8 0 0 1 0 1l-1.8 1.8a.8.8 0 0 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM6.3 17.7a.8.8 0 0 1 0 1l-1.7 1.8a.8.8 0 1 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM12 0a.8.8 0 0 1 .8.8v2.5a.8.8 0 0 1-1.6 0V.8A.8.8 0 0 1 12 0zm0 20a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-1.6 0v-2.4a.8.8 0 0 1 .8-.8zM3.5 3.5a.8.8 0 0 1 1 0l1.8 1.8a.8.8 0 1 1-1 1L3.5 4.6a.8.8 0 0 1 0-1zm14.2 14.2a.8.8 0 0 1 1 0l1.8 1.7a.8.8 0 0 1-1 1l-1.8-1.7a.8.8 0 0 1 0-1z"
+            />
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="24" height="24">
+            <path
+              d="M12.1 22c-5.5 0-10-4.5-10-10 0-4.8 3.4-8.9 8-9.8.6-.1.8.5.4 1-1.5 1.8-2.4 4.1-2.4 6.7 0 5.8 4.7 10.5 10.5 10.5 2.6 0 4.9-.9 6.7-2.4.4-.4 1-.2 1 .4-.9 4.6-5 8-9.8 8z"
+            />
+          </svg>
+        </button>
+        <nav class="main-nav">
+          <div class="hamburger-menu" id="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <ul class="nav-links" id="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <!-- <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li> -->
+          </ul>
+        </nav>
+      </div>
     </header>
     <main>
-        <section id="home" class="hero-section">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <span class="subtitle">Hello, I'm</span>
-                        <h1 class="hero-name glitch-title" data-text="Jerome Hardaway">Jerome Hardaway</h1>
-                        <h2 class="hero-title">Software Engineer & Veteran Advocate</h2>
-                        <p class="hero-description">Based in Atlanta, transforming the tech industry through code and community.</p>
-                        <!-- <div class="hero-cta">
+      <section id="home" class="hero-section">
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-text">
+              <span class="subtitle">Hello, I'm</span>
+              <h1 class="hero-name glitch-title" data-text="Jerome Hardaway">
+                Jerome Hardaway
+              </h1>
+              <h2 class="hero-title">Software Engineer & Veteran Advocate</h2>
+              <p class="hero-description">
+                Based in Atlanta, transforming the tech industry through code
+                and community.
+              </p>
+              <!-- <div class="hero-cta">
                             <a href="#projects" class="btn btn-primary">View Projects</a>
                             <a href="#contact" class="btn btn-outline">Get In Touch</a>
                         </div> -->
-                    </div>
-                </div>
             </div>
-            <div class="glitch-lines"></div>
-        </section>
+          </div>
+        </div>
+        <div class="glitch-lines"></div>
+      </section>
 
-        <section id="about" class="about-section">
-            <div class="container">
-                <h2 class="section-title">About Me</h2>
-                <div class="about-content centered">
-                    <div class="about-text">
-                        <p>I'm a builder who doesn't just create things; I connect them.</p>
-                        
-                        <p>With a deep command of <strong>UI</strong>, <strong>Data Engineering</strong>, and <strong>AI Engineering</strong>, I specialize in crafting systems where each layer supports the next, and all of it serves the user. My background allows me to bridge the gap between intuitive design, reliable infrastructure, and intelligent automation. That connection is where the real magic happens.</p>
-                        
-                        <p>I design interfaces with tools like React, Next.js, and Tailwind CSS that feel invisible because the best UI doesn't call attention to itself; it delivers value. I build data pipelines that quietly power those experiences, taking in real-time signals, structuring them, and ensuring they land where they matter. I integrate AI through platforms like <strong>Google Gemini</strong> and <strong>Azure OpenAI</strong> to surface intelligence at just the right moment, whether that's through language models, recommendation systems, or automation agents.</p>
-                        
-                        <p>For the past <strong>three years</strong>, I've worked at scale in both <strong>Data and AI Engineering</strong>, building solutions that work across contexts—internal tools, external platforms, and direct-to-human products. I'm just as comfortable designing workflows for a company dashboard as I am creating AI-powered translators or misinformation detectors.</p>
-                        
-                        <p>But the heart of it is this: I make complex systems feel simple. I believe in building technology that gets out of the way so the user, whether it's a company, a team, or a single person, gets what they need with clarity and speed.</p>
-                        
-                        <p>I build at scale. I connect with intention. I deliver with impact.</p>
-                        
-                        <!-- <div class="about-cta">
+      <section id="about" class="about-section">
+        <div class="container">
+          <h2 class="section-title">About Me</h2>
+          <div class="about-content centered">
+            <div class="about-text">
+              <p>
+                I'm a builder who doesn't just create things; I connect them.
+              </p>
+
+              <p>
+                With a deep command of <strong>UI</strong>,
+                <strong>Data Engineering</strong>, and
+                <strong>AI Engineering</strong>, I specialize in crafting
+                systems where each layer supports the next, and all of it serves
+                the user. My background allows me to bridge the gap between
+                intuitive design, reliable infrastructure, and intelligent
+                automation. That connection is where the real magic happens.
+              </p>
+
+              <p>
+                I design interfaces with tools like React, Next.js, and Tailwind
+                CSS that feel invisible because the best UI doesn't call
+                attention to itself; it delivers value. I build data pipelines
+                that quietly power those experiences, taking in real-time
+                signals, structuring them, and ensuring they land where they
+                matter. I integrate AI through platforms like
+                <strong>Google Gemini</strong> and
+                <strong>Azure OpenAI</strong> to surface intelligence at just
+                the right moment, whether that's through language models,
+                recommendation systems, or automation agents.
+              </p>
+
+              <p>
+                For the past <strong>three years</strong>, I've worked at scale
+                in both <strong>Data and AI Engineering</strong>, building
+                solutions that work across contexts—internal tools, external
+                platforms, and direct-to-human products. I'm just as comfortable
+                designing workflows for a company dashboard as I am creating
+                AI-powered translators or misinformation detectors.
+              </p>
+
+              <p>
+                But the heart of it is this: I make complex systems feel simple.
+                I believe in building technology that gets out of the way so the
+                user, whether it's a company, a team, or a single person, gets
+                what they need with clarity and speed.
+              </p>
+
+              <p>
+                I build at scale. I connect with intention. I deliver with
+                impact.
+              </p>
+
+              <!-- <div class="about-cta">
                             <a href="#contact" class="btn btn-primary">Let's Connect</a>
                         </div> -->
-                    </div>
-                </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section id="skills" class="skills-section">
-            <div class="container">
-                <h2 class="section-title">My Skills & Tools</h2>
-                <div id="skillGrid">
+      <section id="skills" class="skills-section">
+        <div class="container">
+          <h2 class="section-title">My Skills & Tools</h2>
+          <div class="skills-summary">
+            <p>
+              I’ve spent the last decade evolving into what I call a
+              <strong>Triple T-shaped engineer</strong>, someone with deep,
+              battle-tested expertise in <strong>UI, Data, and AI</strong>. My
+              journey started in government, working as a data analyst at the
+              Department of Homeland Security, where I learned how to turn raw
+              information into decision-making tools. That experience taught me
+              the importance of structure, security, and clarity in everything I
+              build.
+            </p>
 
-                  <!-- Core Skills -->
-                  <div class="vertical" data-vertical="Core Skills">
-                    <h2>Core Skills</h2>
-                    <div class="tools-list">
-                      <div class="tool" data-description="TypeScript is my default for writing scalable, safe applications across the stack.">TypeScript</div>
-                      <div class="tool" data-description="JavaScript powers my frontend, backend, and scripting workflows.">JavaScript</div>
-                      <div class="tool" data-description="Python is my main language for AI, automation, scripting, and backends.">Python</div>
-                      <div class="tool" data-description="GitHub is my source of truth for version control, collaboration, and open source.">GitHub</div>
-                      <div class="tool" data-description="Google Cloud provides my compute, storage, and big data services.">Google Cloud</div>
-                      <div class="tool" data-description="Azure powers my enterprise-level services and AI infrastructure.">Azure</div>
-                        <div class="tool" data-description="Firebase gives me real-time syncing, auth, and DBs out of the box.">Firebase</div>
-                      <div class="tool" data-description="PostgreSQL is my default relational database for structured, production-grade storage.">PostgreSQL</div>
-                      <div class="tool" data-description="Neon gives me serverless, scalable Postgres with branching and instant preview support.">Neon</div>
-                                            <div class="tool" data-description="FastAPI is my go-to for serving AI models with low-latency APIs.">FastAPI</div>
-                      <div class="tool" data-description="Streamlit helps me quickly demo and deploy AI tools.">Streamlit</div>
-                      <div class="tool" data-description="Flask is my lightweight option for creating custom AI backends.">Flask</div>
-                    </div>
-                  </div>
+            <p>
+              But I wanted to create things people could see and touch, so I
+              leaned into front-end development, teaching myself jQuery and
+              Bootstrap and building interfaces that made complex tasks feel
+              simple. I followed that passion to a dev shop where I picked up
+              WordPress and Rails, and sharpened my product sense through client
+              work. A pivotal moment came when I earned a LinkedIn engineering
+              award that sent me to New York for a year of intense growth,
+              focused on transitioning from a coder to a systems-thinking
+              engineer. During that period, Node.js was gaining traction, and
+              the front-end landscape was exploding. I mastered Angular, Ember,
+              and Backbone, learning how to stitch them into backend services
+              and bring full-stack apps to life.
+            </p>
 
-                  <!-- UI Engineering -->
-                  <div class="vertical" data-vertical="UI Engineering">
-                    <h2>UI Engineering</h2>
-                    <div class="tools-list">
-                      <div class="tool" data-description="I build full-stack apps using Next.js with server components and API routes.">Next.js</div>
-                      <div class="tool" data-description="Tailwind helps me build clean, scalable interfaces fast.">Tailwind CSS</div>
-                      <div class="tool" data-description="I use Vercel for frontend deployments with edge function support.">Vercel</div>
-                      <div class="tool" data-description="D3 helps me build interactive, expressive data visualizations in React/Next.js.">D3.js</div>
-                        <div class="tool" data-description="I use Vanta.js for stunning animated backgrounds and effects.">Vanta.js</div>
-                        <div class="tool" data-description="Anime.js powers my UI animations and transitions.">Anime.js</div>
-                      <div class="tool" data-description="Recharts gives me a fast and responsive charting layer for dashboards.">Recharts</div>
-                    </div>
-                  </div>
+            <p>
+              Discovering React changed everything. Its component model aligned
+              with how I naturally solve problems, and it fueled my love for
+              building clean, elegant UIs that scale. But even as I deepened my
+              UI chops, I stayed close to the data. When Microsoft reached out,
+              it opened the door to work at enterprise scale. My first project
+              was in retail, using Scala to build reliable data flows in a
+              high-throughput environment. Next, I led efforts on a global cloud
+              modernization initiative for the automotive space.
+            </p>
 
-                  <!-- Data Engineering -->
-                  <div class="vertical" data-vertical="Data Engineering">
-                    <h2>Data Engineering</h2>
-                    <div class="tools-list">
-                      <div class="tool" data-description="Pandas is my go-to tool for wrangling and cleaning data.">Pandas</div>
-                      <div class="tool" data-description="NumPy powers all my vectorized data processing tasks.">NumPy</div>
-                      <div class="tool" data-description="Polars speeds up large dataset processing beyond Pandas.">Polars</div>
-                      <div class="tool" data-description="Jupyter Notebooks are my playground for data exploration and analysis.">Jupyter Notebooks</div>
-                      <div class="tool" data-description="Azure Data Factory (ADF) orchestrates my data pipelines and ETL workflows.">Azure Data Factory</div>
-                      <div class="tool" data-description="Azure Synapse Analytics provides a unified analytics service for big data and data warehousing.">Azure Synapse Analytics</div>
-                      <div class="tool" data-description="Azure Databricks is my collaborative platform for big data analytics and AI.">Azure Databricks</div>
-                      <div class="tool" data-description="Azure Data Lake stores my structured and unstructured data at scale.">Azure Data Lake</div>
-                      <div class="tool" data-description="Azure Blob Storage is my go-to for scalable object storage.">Azure Blob Storage</div>
-                      <div class="tool" data-description="Power BI is my tool for creating interactive reports and dashboards.">Power BI</div>
-                    </div>
-                  </div>
+            <p>
+              Then I took on a project that let me go end to end on data
+              engineering—building pipelines that connected data lakes to data
+              warehouses, designing and automating ETL flows, implementing
+              DevOps processes, and writing test coverage to ensure data quality
+              and resilience at every layer. That was the project that made me
+              fall in love with data engineering and pushed me deep into Python,
+              distributed systems, and ML tooling.
+            </p>
 
-                  <!-- AI Engineering -->
-                  <div class="vertical" data-vertical="AI Engineering">
-                    <h2>AI Engineering</h2>
-                    <div class="tools-list">
-                      <div class="tool" data-description="Gemini powers my multimodal and generative AI applications.">Google Gemini</div>
-                      <div class="tool" data-description="Azure OpenAI helps me build enterprise-ready LLM apps.">Azure OpenAI</div>
-                      <div class="tool" data-description="I use PyTorch for flexible model building and experimentation.">PyTorch</div>
-                      <div class="tool" data-description="TensorFlow handles large-scale training and inference pipelines.">TensorFlow</div>
-                      <div class="tool" data-description="Transformers.js allows me to run LLMs directly in the browser.">Transformers.js</div>
-                      <div class="tool" data-description="LangChain helps me build intelligent, agent-style LLM systems.">LangChain</div>
-                      <div class="tool" data-description="MLflow tracks experiments and manages my model lifecycle.">MLflow</div>
-                      <div class="tool" data-description="DeepSpeed helps me train massive models efficiently.">DeepSpeed</div>
-                    </div>
-                  </div>
+            <p>
+              From there, I worked on two high-impact projects with a major
+              international retail brand. One focused on machine learning and
+              product intelligence in the U.S. market. The other, built for the
+              China market, introduced me to real-time computer vision systems
+              and required optimizing performance across interfaces used by
+              hundreds of people simultaneously. I followed that with an
+              internal tool that evaluated the quality of code generated by AI,
+              helping teams assess reliability and correctness.
+            </p>
+
+            <p>
+              My final project at Microsoft combined everything—using Python,
+              React, Node, and Azure AI to create an enterprise-grade AI system
+              that enabled large organizations to place complex event-based
+              orders through a natural language interface.
+            </p>
+
+            <p>
+              Today, I see my strength not in one discipline, but in how I bring
+              them together. UI makes my work intuitive, data makes it reliable,
+              and AI makes it adaptive. Being a Triple T-shaped engineer means I
+              can speak all three languages fluently—and use them to build
+              technology that feels human, moves fast, and scales with purpose.
+            </p>
+          </div>
+          <div id="skillGrid">
+            <!-- Core Skills -->
+            <div class="vertical" data-vertical="Core Skills">
+              <h2>Core Skills</h2>
+              <div class="tools-list">
+                <div
+                  class="tool"
+                  data-description="TypeScript is my default for writing scalable, safe applications across the stack."
+                >
+                  TypeScript
                 </div>
-
-                <div id="tooltip"></div>
+                <div
+                  class="tool"
+                  data-description="JavaScript powers my frontend, backend, and scripting workflows."
+                >
+                  JavaScript
+                </div>
+                <div
+                  class="tool"
+                  data-description="Python is my main language for AI, automation, scripting, and backends."
+                >
+                  Python
+                </div>
+                <div
+                  class="tool"
+                  data-description="GitHub is my source of truth for version control, collaboration, and open source."
+                >
+                  GitHub
+                </div>
+                <div
+                  class="tool"
+                  data-description="Google Cloud provides my compute, storage, and big data services."
+                >
+                  Google Cloud
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure powers my enterprise-level services and AI infrastructure."
+                >
+                  Azure
+                </div>
+                <div
+                  class="tool"
+                  data-description="Firebase gives me real-time syncing, auth, and DBs out of the box."
+                >
+                  Firebase
+                </div>
+                <div
+                  class="tool"
+                  data-description="PostgreSQL is my default relational database for structured, production-grade storage."
+                >
+                  PostgreSQL
+                </div>
+                <div
+                  class="tool"
+                  data-description="Neon gives me serverless, scalable Postgres with branching and instant preview support."
+                >
+                  Neon
+                </div>
+                <div
+                  class="tool"
+                  data-description="FastAPI is my go-to for serving AI models with low-latency APIs."
+                >
+                  FastAPI
+                </div>
+                <div
+                  class="tool"
+                  data-description="Streamlit helps me quickly demo and deploy AI tools."
+                >
+                  Streamlit
+                </div>
+                <div
+                  class="tool"
+                  data-description="Flask is my lightweight option for creating custom AI backends."
+                >
+                  Flask
+                </div>
+              </div>
             </div>
-        </section>
 
-        <!-- <section id="projects" class="projects-section">
+            <!-- UI Engineering -->
+            <div class="vertical" data-vertical="UI Engineering">
+              <h2>UI Engineering</h2>
+              <div class="tools-list">
+                <div
+                  class="tool"
+                  data-description="I build full-stack apps using Next.js with server components and API routes."
+                >
+                  Next.js
+                </div>
+                <div
+                  class="tool"
+                  data-description="Tailwind helps me build clean, scalable interfaces fast."
+                >
+                  Tailwind CSS
+                </div>
+                <div
+                  class="tool"
+                  data-description="I use Vercel for frontend deployments with edge function support."
+                >
+                  Vercel
+                </div>
+                <div
+                  class="tool"
+                  data-description="D3 helps me build interactive, expressive data visualizations in React/Next.js."
+                >
+                  D3.js
+                </div>
+                <div
+                  class="tool"
+                  data-description="I use Vanta.js for stunning animated backgrounds and effects."
+                >
+                  Vanta.js
+                </div>
+                <div
+                  class="tool"
+                  data-description="Anime.js powers my UI animations and transitions."
+                >
+                  Anime.js
+                </div>
+                <div
+                  class="tool"
+                  data-description="Recharts gives me a fast and responsive charting layer for dashboards."
+                >
+                  Recharts
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Engineering -->
+            <div class="vertical" data-vertical="Data Engineering">
+              <h2>Data Engineering</h2>
+              <div class="tools-list">
+                <div
+                  class="tool"
+                  data-description="Pandas is my go-to tool for wrangling and cleaning data."
+                >
+                  Pandas
+                </div>
+                <div
+                  class="tool"
+                  data-description="NumPy powers all my vectorized data processing tasks."
+                >
+                  NumPy
+                </div>
+                <div
+                  class="tool"
+                  data-description="Polars speeds up large dataset processing beyond Pandas."
+                >
+                  Polars
+                </div>
+                <div
+                  class="tool"
+                  data-description="Jupyter Notebooks are my playground for data exploration and analysis."
+                >
+                  Jupyter Notebooks
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure Data Factory (ADF) orchestrates my data pipelines and ETL workflows."
+                >
+                  Azure Data Factory
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure Synapse Analytics provides a unified analytics service for big data and data warehousing."
+                >
+                  Azure Synapse Analytics
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure Databricks is my collaborative platform for big data analytics and AI."
+                >
+                  Azure Databricks
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure Data Lake stores my structured and unstructured data at scale."
+                >
+                  Azure Data Lake
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure Blob Storage is my go-to for scalable object storage."
+                >
+                  Azure Blob Storage
+                </div>
+                <div
+                  class="tool"
+                  data-description="Power BI is my tool for creating interactive reports and dashboards."
+                >
+                  Power BI
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Engineering -->
+            <div class="vertical" data-vertical="AI Engineering">
+              <h2>AI Engineering</h2>
+              <div class="tools-list">
+                <div
+                  class="tool"
+                  data-description="Gemini powers my multimodal and generative AI applications."
+                >
+                  Google Gemini
+                </div>
+                <div
+                  class="tool"
+                  data-description="Azure OpenAI helps me build enterprise-ready LLM apps."
+                >
+                  Azure OpenAI
+                </div>
+                <div
+                  class="tool"
+                  data-description="I use PyTorch for flexible model building and experimentation."
+                >
+                  PyTorch
+                </div>
+                <div
+                  class="tool"
+                  data-description="TensorFlow handles large-scale training and inference pipelines."
+                >
+                  TensorFlow
+                </div>
+                <div
+                  class="tool"
+                  data-description="Transformers.js allows me to run LLMs directly in the browser."
+                >
+                  Transformers.js
+                </div>
+                <div
+                  class="tool"
+                  data-description="LangChain helps me build intelligent, agent-style LLM systems."
+                >
+                  LangChain
+                </div>
+                <div
+                  class="tool"
+                  data-description="MLflow tracks experiments and manages my model lifecycle."
+                >
+                  MLflow
+                </div>
+                <div
+                  class="tool"
+                  data-description="DeepSpeed helps me train massive models efficiently."
+                >
+                  DeepSpeed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="tooltip"></div>
+        </div>
+      </section>
+
+      <!-- <section id="projects" class="projects-section">
             <div class="container">
                 <h2 class="section-title">Featured Projects</h2>
                 <div class="projects-grid">
@@ -270,38 +589,78 @@
     </main>
 
     <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3>Jerome Hardaway</h3>
-                    <p>Software Engineer & Veteran Advocate</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <!-- <li><a href="#projects">Projects</a></li>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <h3>Jerome Hardaway</h3>
+            <p>Software Engineer & Veteran Advocate</p>
+          </div>
+          <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#skills">Skills</a></li>
+              <!-- <li><a href="#projects">Projects</a></li>
                         <li><a href="#contact">Contact</a></li> -->
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h4>Social Media</h4>
-                    <div class="social-icons">
-                        <a href="https://linkedin.com/in/jeromehardaway" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a>
-                        <a href="https://github.com/jeromehardaway" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                        </a>
-                    </div>
-                </div>
+            </ul>
+          </div>
+          <div class="footer-social">
+            <h4>Social Media</h4>
+            <div class="social-icons">
+              <a
+                href="https://linkedin.com/in/jeromehardaway"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  ></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+              <a
+                href="https://github.com/jeromehardaway"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                  ></path>
+                </svg>
+              </a>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Jerome Hardaway. All rights reserved.</p>
-            </div>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Jerome Hardaway. All rights reserved.</p>
+        </div>
+      </div>
     </footer>
-</body>
+  </body>
 </html>
