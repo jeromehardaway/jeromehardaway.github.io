@@ -982,7 +982,6 @@ a:hover {
   margin-bottom: 0;
 }
 
-/* Projects Section */
 .projects-section {
   background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
   position: relative;
@@ -1127,7 +1126,6 @@ a:hover {
   margin-top: var(--spacing-sm);
 }
 
-/* Contact Section */
 .contact-section {
   background-color: var(--bg-secondary);
 }
@@ -1202,7 +1200,6 @@ a:hover {
   box-shadow: 0 0 0 2px rgba(197, 32, 62, 0.2);
 }
 
-/* Footer */
 .main-footer {
   background-color: var(--navy);
   color: var(--white);
@@ -1283,7 +1280,6 @@ a:hover {
   margin-bottom: 0;
 }
 
-/* Animation Classes */
 .animate-in {
   animation: fadeInUp 0.8s ease forwards;
 }
@@ -1322,7 +1318,6 @@ a:hover {
   }
 }
 
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .hero-name {
     font-size: 3rem;
@@ -1461,7 +1456,6 @@ a:hover {
   }
 }
 
-/* Skills Grid with Anime.js Styling */
 .skills-section #skillGrid {
   display: flex !important;
   flex-direction: row !important;
@@ -1470,7 +1464,7 @@ a:hover {
   gap: 20px !important;
   width: 100% !important;
   margin-top: 2rem !important;
-  overflow-x: auto !important; /* Allow horizontal scrolling on small screens */
+  overflow-x: auto !important;
 }
 
 .skills-section .vertical {
