@@ -1,3 +1,143 @@
+// --- Skills Web Graph Connections ---
+document.addEventListener('DOMContentLoaded', function () {
+  const svg = document.getElementById('skills-graph-svg');
+  const nodes = document.querySelectorAll('#skills-graph-nodes .skills-node');
+  if (!svg || nodes.length !== 3) return;
+
+  // Helper: get center of a node
+  function getNodeCenter(node) {
+    const rect = node.getBoundingClientRect();
+    const parentRect = node.parentElement.getBoundingClientRect();
+    return {
+      x: rect.left - parentRect.left + rect.width / 2,
+      y: rect.top - parentRect.top + rect.height / 2
+    };
+  }
+
+  // Draw lines between the three main nodes (triangle)
+  function drawLines() {
+    svg.innerHTML = '';
+    const [dataNode, mlNode, aiNode] = nodes;
+    const c1 = getNodeCenter(dataNode);
+    const c2 = getNodeCenter(mlNode);
+    const c3 = getNodeCenter(aiNode);
+
+    // Main triangle
+    const lines = [
+      [c1, c2],
+      [c2, c3],
+      [c3, c1]
+    ];
+    lines.forEach((pair, i) => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', pair[0].x);
+      line.setAttribute('y1', pair[0].y);
+      line.setAttribute('x2', pair[1].x);
+      line.setAttribute('y2', pair[1].y);
+      line.setAttribute('stroke', '#c5203e');
+      line.setAttribute('stroke-width', '4');
+      line.setAttribute('stroke-linecap', 'round');
+      line.setAttribute('opacity', '0.7');
+      svg.appendChild(line);
+      // Animate line drawing
+      if (typeof anime !== 'undefined') {
+        anime({
+          targets: line,
+          strokeDashoffset: [anime.setDashoffset, 0],
+          duration: 1200,
+          delay: i * 200,
+          easing: 'easeInOutSine',
+          direction: 'alternate',
+          loop: false
+        });
+      }
+    });
+
+    // Draw lines from each node to its tools (sub-nodes)
+    [dataNode, mlNode, aiNode].forEach((node, idx) => {
+      const center = getNodeCenter(node);
+      const tools = node.querySelectorAll('.tool');
+      tools.forEach((tool, tIdx) => {
+        const tRect = tool.getBoundingClientRect();
+        const pRect = node.parentElement.getBoundingClientRect();
+        const tx = tRect.left - pRect.left + tRect.width / 2;
+        const ty = tRect.top - pRect.top + tRect.height / 2;
+        const tline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        tline.setAttribute('x1', center.x);
+        tline.setAttribute('y1', center.y);
+        tline.setAttribute('x2', tx);
+        tline.setAttribute('y2', ty);
+        tline.setAttribute('stroke', '#e84e6a');
+        tline.setAttribute('stroke-width', '2');
+        tline.setAttribute('stroke-linecap', 'round');
+        tline.setAttribute('opacity', '0.4');
+        svg.appendChild(tline);
+        // Animate sub-node lines
+        if (typeof anime !== 'undefined') {
+          anime({
+            targets: tline,
+            strokeDashoffset: [anime.setDashoffset, 0],
+            duration: 900,
+            delay: 600 + tIdx * 40 + idx * 100,
+            easing: 'easeInOutSine',
+            direction: 'alternate',
+            loop: false
+          });
+        }
+      });
+    });
+  }
+
+  // Redraw on resize for responsiveness
+  window.addEventListener('resize', () => setTimeout(drawLines, 300));
+  setTimeout(drawLines, 400); // Initial draw after layout
+});
+// Live Data Pipeline Animation
+document.addEventListener('DOMContentLoaded', function () {
+  // Progress Bar Animation
+  function animateProgressBar(barId, fillId, min, max, duration, delay) {
+    var fill = document.getElementById(fillId);
+    if (!fill) return;
+    anime({
+      targets: fill,
+      width: [min + '%', max + '%'],
+      easing: 'easeInOutSine',
+      duration: duration,
+      direction: 'alternate',
+      loop: true,
+      delay: delay
+    });
+  }
+
+  animateProgressBar('progress-ingest', 'progress-ingest-fill', 10, 95, 2200, 0);
+  animateProgressBar('progress-transform', 'progress-transform-fill', 5, 85, 1800, 400);
+  animateProgressBar('progress-load', 'progress-load-fill', 15, 100, 2600, 800);
+
+  // Streaming Chart Bars
+  var streamBarsContainer = document.getElementById('stream-bars');
+  if (streamBarsContainer) {
+    // Create 30 bars
+    for (let i = 0; i < 30; i++) {
+      let bar = document.createElement('div');
+      bar.className = 'stream-bar';
+      bar.setAttribute('role', 'presentation');
+      streamBarsContainer.appendChild(bar);
+    }
+    var bars = Array.from(streamBarsContainer.children);
+    // Animate bars
+    bars.forEach((bar, i) => {
+      anime({
+        targets: bar,
+        height: [20 + Math.random() * 40, 60 + Math.random() * 20],
+        direction: 'alternate',
+        easing: 'easeInOutSine',
+        duration: 900 + Math.random() * 800,
+        delay: i * 40,
+        loop: true
+      });
+    });
+  }
+});
 // Utility functions
 const debounce = (func, wait) => {
   let timeout;
@@ -750,7 +890,7 @@ class FormManager {
   }
 }
 
-// Initialize when the DOM is fully loaded
+// --- 3D Skills Graph with Three.js ---
 document.addEventListener('DOMContentLoaded', () => {
   try {
     // Initialize all managers
@@ -761,8 +901,297 @@ document.addEventListener('DOMContentLoaded', () => {
     const glitchManager = new GlitchManager();
     const skillsAnimationManager = new SkillsAnimationManager();
     const projectAnimationManager = new ProjectAnimationManager();
-    
+
+    // 3D Skills Graph
+    initSkills3DGraph();
   } catch (error) {
     console.error('Initialization error:', error);
   }
 });
+
+function initSkills3DGraph() {
+  const canvas = document.getElementById('skills-3d-canvas');
+  const tooltip = document.getElementById('skills-tooltip');
+  if (!canvas || !window.THREE) return;
+
+  // --- Skills Data ---
+  const skills = [
+    // Data Engineering
+    { name: 'Data Engineering', group: 'Data', color: '#c5203e', size: 1.2, description: 'Data pipelines, ETL, cloud data infra', main: true },
+    { name: 'Python', group: 'Data', color: '#fff', size: 0.8, description: 'Python for data engineering', main: false },
+    { name: 'SQL', group: 'Data', color: '#fff', size: 0.8, description: 'SQL for analytics and pipelines', main: false },
+    { name: 'Databricks', group: 'Data', color: '#fff', size: 0.8, description: 'Databricks platform', main: false },
+    { name: 'Azure Data', group: 'Data', color: '#fff', size: 0.8, description: 'Azure Data Services', main: false },
+    { name: 'Streaming', group: 'Data', color: '#fff', size: 0.8, description: 'Streaming data pipelines', main: false },
+    // ML
+    { name: 'Machine Learning', group: 'ML', color: '#c5203e', size: 1.2, description: 'ML models, MLOps, deployment', main: true },
+    { name: 'scikit-learn', group: 'ML', color: '#fff', size: 0.8, description: 'scikit-learn for ML', main: false },
+    { name: 'TensorFlow', group: 'ML', color: '#fff', size: 0.8, description: 'TensorFlow for deep learning', main: false },
+    { name: 'PyTorch', group: 'ML', color: '#fff', size: 0.8, description: 'PyTorch for deep learning', main: false },
+    { name: 'MLOps', group: 'ML', color: '#fff', size: 0.8, description: 'ML operations and deployment', main: false },
+    // AI
+    { name: 'AI', group: 'AI', color: '#c5203e', size: 1.2, description: 'LLMs, generative AI, cloud AI', main: true },
+    { name: 'Azure OpenAI', group: 'AI', color: '#fff', size: 0.8, description: 'Azure OpenAI platform', main: false },
+    { name: 'Google Gemini', group: 'AI', color: '#fff', size: 0.8, description: 'Google Gemini LLMs', main: false },
+    { name: 'LLMs', group: 'AI', color: '#fff', size: 0.8, description: 'Large Language Models', main: false },
+    { name: 'Generative AI', group: 'AI', color: '#fff', size: 0.8, description: 'Generative AI techniques', main: false },
+  ];
+  // Edges: connect main to sub-skills, and main nodes to each other
+  const edges = [
+    // Data main
+    [0,1],[0,2],[0,3],[0,4],[0,5],
+    // ML main
+    [6,7],[6,8],[6,9],[6,10],
+    // AI main
+    [11,12],[11,13],[11,14],[11,15],
+    // Main nodes triangle
+    [0,6],[6,11],[11,0]
+  ];
+
+  // --- Three.js Setup ---
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x091f40, 0); // transparent bg
+  const width = canvas.clientWidth || canvas.offsetWidth || 600;
+  const height = canvas.clientHeight || canvas.offsetHeight || 400;
+  renderer.setSize(width, height, false);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, width/height, 0.1, 100);
+  camera.position.set(0, 0, 10);
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(ambient);
+  const directional = new THREE.DirectionalLight(0xffffff, 0.7);
+  directional.position.set(5,5,10);
+  scene.add(directional);
+
+  // --- Node Objects ---
+  const nodeObjs = skills.map((skill, i) => {
+    const geometry = new THREE.SphereGeometry(skill.size, 32, 32);
+    const material = new THREE.MeshStandardMaterial({ color: skill.color, emissive: skill.main ? 0xc5203e : 0x222222, emissiveIntensity: skill.main ? 0.5 : 0.15, transparent: true, opacity: 0.95 });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.userData = { ...skill, index: i };
+    scene.add(mesh);
+    return mesh;
+  });
+
+  // --- 2D Labels for Spheres ---
+  // Create a label div for each node
+  const labelContainer = document.createElement('div');
+  labelContainer.style.position = 'absolute';
+  labelContainer.style.left = '0';
+  labelContainer.style.top = '0';
+  labelContainer.style.pointerEvents = 'none';
+  labelContainer.style.width = '100%';
+  labelContainer.style.height = '100%';
+  labelContainer.style.zIndex = '2';
+  labelContainer.setAttribute('aria-hidden', 'true');
+  canvas.parentElement.appendChild(labelContainer);
+
+  const labels = nodeObjs.map((obj, i) => {
+    const label = document.createElement('div');
+    label.textContent = skills[i].name;
+    label.style.position = 'absolute';
+    label.style.color = skills[i].main ? '#fff' : '#fff';
+    label.style.fontWeight = skills[i].main ? 'bold' : 'normal';
+    label.style.fontSize = skills[i].main ? '1.1rem' : '0.95rem';
+    label.style.textShadow = '0 2px 8px #091f40, 0 0px 2px #000';
+    label.style.padding = '2px 8px';
+    label.style.borderRadius = '8px';
+    label.style.background = skills[i].main ? 'rgba(197,32,62,0.85)' : 'rgba(9,31,64,0.7)';
+    label.style.opacity = '0.92';
+    label.style.transform = 'translate(-50%, -50%)';
+    label.style.pointerEvents = 'none';
+    labelContainer.appendChild(label);
+    return label;
+  });
+
+  // --- Force-directed Layout ---
+  // Initial positions: main nodes in triangle, sub-nodes around their main
+  const mainPos = [
+    [ -4, 1.5, 0 ], // Data
+    [ 0, -3, 0 ],   // ML
+    [ 4, 1.5, 0 ]   // AI
+  ];
+  nodeObjs.forEach((obj, i) => {
+    if (skills[i].main) {
+      // Place main nodes
+      obj.position.set(...mainPos.shift());
+    } else if (skills[i].group === 'Data') {
+      obj.position.set(-4 + Math.random()*2-1, 2.5-Math.random()*2, Math.random()*2-1);
+    } else if (skills[i].group === 'ML') {
+      obj.position.set(-1+Math.random()*2, -3.5+Math.random()*2, Math.random()*2-1);
+    } else if (skills[i].group === 'AI') {
+      obj.position.set(4+Math.random()*2-1, 2.5-Math.random()*2, Math.random()*2-1);
+    }
+  });
+
+  // --- Edge Objects ---
+  const edgeObjs = edges.map(([a,b]) => {
+    const mat = new THREE.LineBasicMaterial({ color: 0xc5203e, transparent: true, opacity: 0.5 });
+    const pts = [ nodeObjs[a].position.clone(), nodeObjs[b].position.clone() ];
+    const geom = new THREE.BufferGeometry().setFromPoints(pts);
+    const line = new THREE.Line(geom, mat);
+    scene.add(line);
+    return { line, a, b };
+  });
+
+  // --- Force Simulation ---
+  function applyForces() {
+    // Simple repulsion and spring forces
+    for (let i=0; i<nodeObjs.length; ++i) {
+      let objA = nodeObjs[i];
+      objA.userData.v = objA.userData.v || new THREE.Vector3();
+      for (let j=0; j<nodeObjs.length; ++j) {
+        if (i===j) continue;
+        let objB = nodeObjs[j];
+        let d = objA.position.clone().sub(objB.position);
+        let dist = d.length();
+        if (dist < 0.01) continue;
+        // Repulsion
+        let repulse = 0.04 / (dist*dist);
+        objA.userData.v.add(d.normalize().multiplyScalar(repulse));
+      }
+    }
+    // Spring edges
+    edgeObjs.forEach(({a,b}) => {
+      let objA = nodeObjs[a], objB = nodeObjs[b];
+      let d = objB.position.clone().sub(objA.position);
+      let dist = d.length();
+      let spring = 0.04 * (dist-2.2); // target length
+      objA.userData.v.add(d.normalize().multiplyScalar(spring));
+      objB.userData.v.add(d.normalize().multiplyScalar(-spring));
+    });
+    // Apply velocity, dampen
+    nodeObjs.forEach(obj => {
+      obj.position.add(obj.userData.v.clone().multiplyScalar(0.12));
+      obj.userData.v.multiplyScalar(0.85);
+    });
+  }
+
+  // --- Animation Loop ---
+  let animating = true;
+  function animate() {
+    if (!animating) return;
+    applyForces();
+    // Update edge positions
+    edgeObjs.forEach(({line,a,b}) => {
+      const pts = [ nodeObjs[a].position, nodeObjs[b].position ];
+      line.geometry.setFromPoints(pts);
+    });
+    // Subtle rotation
+    scene.rotation.y += 0.002;
+    // Update 2D label positions
+    nodeObjs.forEach((obj, i) => {
+      const vector = obj.position.clone();
+      vector.project(camera);
+      const x = (vector.x * 0.5 + 0.5) * canvas.clientWidth;
+      const y = (-vector.y * 0.5 + 0.5) * canvas.clientHeight;
+      labels[i].style.left = `${x}px`;
+      labels[i].style.top = `${y}px`;
+      // Hide if behind camera
+      labels[i].style.display = (vector.z < 1) ? 'block' : 'none';
+    });
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // --- Interactivity ---
+  // Raycaster for hover
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let hovered = null;
+  function onPointerMove(event) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(nodeObjs);
+    if (intersects.length > 0) {
+      const obj = intersects[0].object;
+      if (hovered !== obj) {
+        if (hovered) hovered.material.emissiveIntensity = hovered.userData.main ? 0.5 : 0.15;
+        hovered = obj;
+        hovered.material.emissiveIntensity = 1.0;
+        // Tooltip
+        tooltip.style.display = 'block';
+        tooltip.innerHTML = `<strong>${hovered.userData.name}</strong><br><span style='font-size:0.95em;'>${hovered.userData.description}</span>`;
+        tooltip.style.left = event.clientX + 12 + 'px';
+        tooltip.style.top = event.clientY - 12 + 'px';
+      } else {
+        // Move tooltip
+        tooltip.style.left = event.clientX + 12 + 'px';
+        tooltip.style.top = event.clientY - 12 + 'px';
+      }
+      canvas.style.cursor = 'pointer';
+    } else {
+      if (hovered) hovered.material.emissiveIntensity = hovered.userData.main ? 0.5 : 0.15;
+      hovered = null;
+      tooltip.style.display = 'none';
+      canvas.style.cursor = '';
+    }
+  }
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('mouseleave', () => {
+    if (hovered) hovered.material.emissiveIntensity = hovered.userData.main ? 0.5 : 0.15;
+    hovered = null;
+    tooltip.style.display = 'none';
+    canvas.style.cursor = '';
+  });
+
+  // Drag to rotate
+  let isDragging = false, lastX = 0, lastY = 0;
+  canvas.addEventListener('pointerdown', e => {
+    isDragging = true; lastX = e.clientX; lastY = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointerup', e => {
+    isDragging = false;
+    canvas.releasePointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const dx = (e.clientX - lastX) * 0.01;
+    const dy = (e.clientY - lastY) * 0.01;
+    scene.rotation.y += dx;
+    scene.rotation.x += dy;
+    lastX = e.clientX; lastY = e.clientY;
+  });
+
+  // Keyboard accessibility: focus and arrow rotate
+  canvas.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') scene.rotation.y -= 0.1;
+    if (e.key === 'ArrowRight') scene.rotation.y += 0.1;
+    if (e.key === 'ArrowUp') scene.rotation.x -= 0.1;
+    if (e.key === 'ArrowDown') scene.rotation.x += 0.1;
+  });
+
+  // Responsive resize
+  window.addEventListener('resize', () => {
+    const w = canvas.clientWidth || canvas.offsetWidth || 600;
+    const h = canvas.clientHeight || canvas.offsetHeight || 400;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  });
+
+  // Animate main nodes with Anime.js pulse
+  if (window.anime) {
+    nodeObjs.forEach((obj, i) => {
+      if (skills[i].main) {
+        anime({
+          targets: obj.scale,
+          x: [1, 1.18, 1],
+          y: [1, 1.18, 1],
+          z: [1, 1.18, 1],
+          duration: 2200,
+          delay: i*400,
+          loop: true,
+          easing: 'easeInOutSine'
+        });
+      }
+    });
+  }
+}
