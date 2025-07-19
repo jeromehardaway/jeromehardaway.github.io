@@ -1,5 +1,4 @@
 /* Front End Development Banner Section */
-/* Front End Development Banner Section */
 #frontend-banner.frontend-banner-section {
   width: 100%;
   min-height: 70vh;
@@ -40,18 +39,10 @@
   }
 }
 
-@media (max-width: 900px) {
-  #frontend-banner.frontend-banner-section {
-    min-height: 40vh;
-    height: 40vh;
-  }
-}
-
-@media (max-width: 600px) {
-  #frontend-banner.frontend-banner-section {
-    min-height: 28vh;
-    height: 28vh;
-  }
+/* Red highlight for About section and other key phrases */
+.red-highlight {
+  color: #c5203e;
+  font-weight: bold;
 }
 /* Live Data Pipeline Section Title */
 #live-data-title.section-title {
