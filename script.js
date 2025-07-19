@@ -240,3 +240,167 @@ function Banner() {
     context.fillRect(0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
   };
 }
+
+// Initialize banner on DOM content loaded
+document.addEventListener('DOMContentLoaded', async function () {
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  // Short delay to ensure DOM is stable before any initialization
+  await wait(300);
+  
+  // Initialize Banner (just set up, don't start animation yet)
+  initBanner();
+  
+  // Wait a bit more to ensure all layout is complete before setting up observer
+  await wait(500);
+  
+  // Set up Intersection Observer to start animation when fully visible
+  setupBannerIntersectionObserver();
+});
+
+// Create a global banner reference
+var bannerInstance;
+
+function initBanner() {
+  var canvasElement = document.getElementById('canvas');
+  if (canvasElement) {
+    console.log('Initializing banner with canvas element');
+    try {
+      bannerInstance = new Banner();
+      bannerInstance.initialize('canvas');
+      
+      // Add a small message to indicate initialization status
+      const statusElement = document.createElement('div');
+      statusElement.style.position = 'absolute';
+      statusElement.style.bottom = '10px';
+      statusElement.style.right = '10px';
+      statusElement.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      statusElement.style.color = 'white';
+      statusElement.style.padding = '5px 10px';
+      statusElement.style.borderRadius = '3px';
+      statusElement.style.fontSize = '12px';
+      statusElement.style.zIndex = '1000';
+      statusElement.textContent = 'Banner initialized';
+      document.body.appendChild(statusElement);
+      
+      setTimeout(() => {
+        statusElement.style.opacity = '0';
+        statusElement.style.transition = 'opacity 1s ease';
+        setTimeout(() => statusElement.remove(), 1000);
+      }, 3000);
+    } catch (e) {
+      console.error('Error initializing banner:', e);
+      
+      // Show error message on the canvas element
+      const errorMsg = document.createElement('div');
+      errorMsg.style.position = 'absolute';
+      errorMsg.style.top = '50%';
+      errorMsg.style.left = '50%';
+      errorMsg.style.transform = 'translate(-50%, -50%)';
+      errorMsg.style.color = 'white';
+      errorMsg.style.backgroundColor = 'rgba(255,0,0,0.7)';
+      errorMsg.style.padding = '10px';
+      errorMsg.style.borderRadius = '5px';
+      errorMsg.style.zIndex = '1000';
+      errorMsg.textContent = 'Canvas initialization error: ' + e.message;
+      canvasElement.parentNode.appendChild(errorMsg);
+    }
+  } else {
+    console.error('Canvas element not found');
+    
+    // Add error message to the frontend-banner section
+    const bannerSection = document.getElementById('frontend-banner');
+    if (bannerSection) {
+      const errorMsg = document.createElement('div');
+      errorMsg.style.textAlign = 'center';
+      errorMsg.style.padding = '20px';
+      errorMsg.style.color = 'white';
+      errorMsg.style.backgroundColor = 'rgba(255,0,0,0.7)';
+      errorMsg.textContent = 'Canvas element not found. Please check your HTML.';
+      bannerSection.appendChild(errorMsg);
+    }
+  }
+}
+
+function setupBannerIntersectionObserver() {
+  if (!bannerInstance) {
+    console.error('Banner instance not initialized');
+    return;
+  }
+  
+  // Get the section that contains the canvas
+  var bannerSection = document.getElementById('frontend-banner');
+  if (!bannerSection) {
+    console.error('Banner section not found');
+    
+    // Fallback: Just start the animation directly if we can't find the section
+    setTimeout(() => {
+      if (bannerInstance) {
+        console.log('Fallback: Starting animation directly');
+        bannerInstance.startAnimation();
+      }
+    }, 1000);
+    
+    return;
+  }
+  
+  console.log('Setting up intersection observer for banner');
+  
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  // Check if IntersectionObserver is supported
+  if (!('IntersectionObserver' in window)) {
+    console.log('IntersectionObserver not supported, starting animation directly');
+    
+    // Fallback for browsers that don't support IntersectionObserver
+    setTimeout(() => {
+      bannerInstance.startAnimation();
+    }, 1000);
+    
+    return;
+  }
+  
+  // Create an intersection observer
+  try {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(async function(entry) {
+        // If the section is fully visible (or nearly so) and banner exists
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.9 && bannerInstance) {
+          console.log('Banner is visible, starting animation');
+          
+          // Delay animation start slightly to ensure rendering is stable
+          await wait(200);
+          
+          // Start the animation smoothly
+          requestAnimationFrame(function() {
+            bannerInstance.startAnimation();
+          });
+          
+          // Once started, no need to observe anymore
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      // Only trigger when nearly 100% of the section is visible
+      threshold: [0.9, 1.0],
+      // Add rootMargin to trigger a bit before the element is fully in view
+      rootMargin: '0px 0px -10% 0px'
+    });
+    
+    // Start observing the banner section
+    observer.observe(bannerSection);
+    console.log('Banner observer set up');
+  } catch (e) {
+    console.error('Error setting up IntersectionObserver:', e);
+    
+    // Fallback if observer setup fails
+    setTimeout(() => {
+      bannerInstance.startAnimation();
+    }, 1000);
+  }
+}
+
+// Add console.log to help debug
+console.log('Script.js loaded successfully');
