@@ -168,11 +168,14 @@ function Banner() {
   };
   
   // Public method to start the animation
-  this.startAnimation = function() {
+  this.startAnimation = async function() {
     if (!isInitialized) return;
     
     // Don't restart if already running
     if (hasStartedAnimation) return;
+    
+    // Helper function to wait
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     
     // Mark as starting
     hasStartedAnimation = true;
@@ -185,12 +188,15 @@ function Banner() {
     }
     
     // Start animation with a slight delay for stability
-    setTimeout(function() {
-      // Start on next frame to avoid any DOM repainting issues
+    await wait(100);
+    
+    // Start on next frame to avoid any DOM repainting issues
+    return new Promise(resolve => {
       requestAnimationFrame(function() {
         start();
+        resolve();
       });
-    }, 100);
+    });
   };
 
   var getCoords = function() {
@@ -438,18 +444,21 @@ function Banner() {
 }
 
 // Add a small delay to ensure the DOM is fully rendered
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
   // Short delay to ensure DOM is stable before any initialization
-  setTimeout(function() {
-    // Initialize Banner (just set up, don't start animation yet)
-    initBanner();
-    
-    // Wait a bit more to ensure all layout is complete before setting up observer
-    setTimeout(function() {
-      // Set up Intersection Observer to start animation when fully visible
-      setupBannerIntersectionObserver();
-    }, 500);
-  }, 300);
+  await wait(300);
+  
+  // Initialize Banner (just set up, don't start animation yet)
+  initBanner();
+  
+  // Wait a bit more to ensure all layout is complete before setting up observer
+  await wait(500);
+  
+  // Set up Intersection Observer to start animation when fully visible
+  setupBannerIntersectionObserver();
 });
 
 // Create a global banner reference
@@ -471,18 +480,21 @@ function setupBannerIntersectionObserver() {
   var bannerSection = document.getElementById('frontend-banner');
   if (!bannerSection) return;
   
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
   // Create an intersection observer
   var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
+    entries.forEach(async function(entry) {
       // If the section is fully visible (or nearly so) and banner exists
       if (entry.isIntersecting && entry.intersectionRatio >= 0.9 && bannerInstance) {
         // Delay animation start slightly to ensure rendering is stable
-        setTimeout(function() {
-          // Start the animation smoothly
-          requestAnimationFrame(function() {
-            bannerInstance.startAnimation();
-          });
-        }, 200);
+        await wait(200);
+        
+        // Start the animation smoothly
+        requestAnimationFrame(function() {
+          bannerInstance.startAnimation();
+        });
         
         // Once started, no need to observe anymore
         observer.unobserve(entry.target);
@@ -655,15 +667,18 @@ const debounce = (func, wait) => {
 class GlitchManager {
   constructor() {
     // Wait for next frame to ensure the DOM is fully ready
-    requestAnimationFrame(() => {
-      this.heroSection = document.querySelector('.hero-section');
-      this.glitchTitle = document.querySelector('.glitch-title');
-      this.glitchLines = document.querySelector('.glitch-lines');
-      this.glitchImages = document.querySelectorAll('.glitch-image');
-      
-      if (this.heroSection && this.glitchTitle) {
-        this.init();
-      }
+    this.initialized = new Promise(resolve => {
+      requestAnimationFrame(() => {
+        this.heroSection = document.querySelector('.hero-section');
+        this.glitchTitle = document.querySelector('.glitch-title');
+        this.glitchLines = document.querySelector('.glitch-lines');
+        this.glitchImages = document.querySelectorAll('.glitch-image');
+        
+        if (this.heroSection && this.glitchTitle) {
+          this.init();
+        }
+        resolve();
+      });
     });
   }
   
@@ -735,45 +750,44 @@ class SkillsAnimationManager {
     });
   }
 
-  init() {
-    // Stagger initialization to prevent layout thrashing
-    setTimeout(() => {
-      this.setupTooltip();
+  async init() {
+    // Helper function to wait - returns a promise that resolves after ms milliseconds
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    
+    // Sequential initialization with proper delays to prevent layout thrashing
+    await wait(100);
+    this.setupTooltip();
+    
+    await wait(100);
+    this.setupModal();
+    
+    await wait(100);
+    // Prepare animations without playing them
+    if (typeof anime !== 'undefined') {
+      this.toolsAnimation = anime({
+        targets: '.skills-section .tool',
+        opacity: [0, 1],
+        translateY: [-15, 0],
+        scale: [0.95, 1],
+        delay: anime.stagger(30, {grid: [3, 5], from: 'center'}),
+        duration: 700,
+        easing: 'easeOutExpo',
+        autoplay: false
+      });
       
-      setTimeout(() => {
-        this.setupModal();
-        
-        setTimeout(() => {
-          // Prepare animations without playing them
-          if (typeof anime !== 'undefined') {
-            this.toolsAnimation = anime({
-              targets: '.skills-section .tool',
-              opacity: [0, 1],
-              translateY: [-15, 0],
-              scale: [0.95, 1],
-              delay: anime.stagger(30, {grid: [3, 5], from: 'center'}),
-              duration: 700,
-              easing: 'easeOutExpo',
-              autoplay: false
-            });
-            
-            this.verticalAnimation = anime({
-              targets: '.skills-section .vertical',
-              opacity: [0, 1],
-              translateY: [20, 0],
-              delay: anime.stagger(150),
-              duration: 1000,
-              easing: 'easeOutQuint',
-              autoplay: false
-            });
-          }
-          
-          setTimeout(() => {
-            this.setupObserver();
-          }, 100);
-        }, 100);
-      }, 100);
-    }, 100);
+      this.verticalAnimation = anime({
+        targets: '.skills-section .vertical',
+        opacity: [0, 1],
+        translateY: [20, 0],
+        delay: anime.stagger(150),
+        duration: 1000,
+        easing: 'easeOutQuint',
+        autoplay: false
+      });
+    }
+    
+    await wait(100);
+    this.setupObserver();
   }
 
   setupTooltip() {
@@ -963,47 +977,54 @@ class SkillsAnimationManager {
     }, 500);
   }
 
-  playAnimations() {
+  async playAnimations() {
     if (typeof anime === 'undefined') return;
     
+    // Helper function to wait
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    
     // Use a slight delay before starting animations
-    setTimeout(() => {
-      // First animate all vertical sections together
-      anime({
-        targets: '.skills-section .vertical',
-        opacity: [0, 1],
-        translateY: [20, 0],
-        delay: function(el, i) { return i * 150; }, // Sequential delay based on index
-        duration: 800,
-        easing: 'easeOutQuint',
-        begin: function(anim) {
-          // Ensure elements are visible before animation starts
-          document.querySelectorAll('.skills-section .vertical').forEach(el => {
-            el.style.opacity = '0';
-            el.style.visibility = 'visible';
-          });
-        }
-      }).finished.then(() => {
-        // Then animate all tool elements with a slight delay
-        setTimeout(() => {
-          anime({
-            targets: '.skills-section .tool',
-            opacity: [0, 1],
-            translateY: [-10, 0],
-            delay: anime.stagger(40),
-            duration: 600,
-            easing: 'easeOutExpo',
-            begin: function(anim) {
-              // Ensure elements are visible before animation starts
-              document.querySelectorAll('.skills-section .tool').forEach(el => {
-                el.style.opacity = '0';
-                el.style.visibility = 'visible';
-              });
-            }
-          });
-        }, 100);
-      });
-    }, 200);
+    await wait(200);
+    
+    // Ensure elements are visible before animation starts
+    document.querySelectorAll('.skills-section .vertical').forEach(el => {
+      el.style.opacity = '0';
+      el.style.visibility = 'visible';
+    });
+    
+    // First animate all vertical sections together
+    const verticalAnimation = anime({
+      targets: '.skills-section .vertical',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      delay: function(el, i) { return i * 150; }, // Sequential delay based on index
+      duration: 800,
+      easing: 'easeOutQuint'
+    });
+    
+    // Wait for vertical animation to finish
+    await new Promise(resolve => {
+      verticalAnimation.finished.then(resolve);
+    });
+    
+    // Add a small delay between animations
+    await wait(100);
+    
+    // Ensure tool elements are visible before animation starts
+    document.querySelectorAll('.skills-section .tool').forEach(el => {
+      el.style.opacity = '0';
+      el.style.visibility = 'visible';
+    });
+    
+    // Then animate all tool elements
+    anime({
+      targets: '.skills-section .tool',
+      opacity: [0, 1],
+      translateY: [-10, 0],
+      delay: anime.stagger(40),
+      duration: 600,
+      easing: 'easeOutExpo'
+    });
   }
 }
 
@@ -1491,40 +1512,35 @@ class FormManager {
 // --- 3D Skills Graph with Three.js ---
 document.addEventListener('DOMContentLoaded', () => {
   // Small delay to ensure DOM is fully ready
-  setTimeout(() => {
+  setTimeout(async () => {
     try {
-      // Initialize all managers one by one with small delays to prevent DOM thrashing
-      const themeManager = new ThemeManager();
+      // Helper function to wait - returns a promise that resolves after ms milliseconds
+      const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
       
-      // Delay each initialization slightly to avoid simultaneous DOM operations
-      setTimeout(() => {
-        const navigationManager = new NavigationManager();
-        
-        setTimeout(() => {
-          const animationManager = new AnimationManager();
-          
-          setTimeout(() => {
-            const formManager = new FormManager();
-            
-            setTimeout(() => {
-              const glitchManager = new GlitchManager();
-              
-              setTimeout(() => {
-                const skillsAnimationManager = new SkillsAnimationManager();
-                
-                setTimeout(() => {
-                  const projectAnimationManager = new ProjectAnimationManager();
-                  
-                  // 3D Skills Graph initialized last
-                  setTimeout(() => {
-                    initSkills3DGraph();
-                  }, 100);
-                }, 100);
-              }, 100);
-            }, 100);
-          }, 100);
-        }, 100);
-      }, 100);
+      // Initialize all managers sequentially with small delays
+      const themeManager = new ThemeManager();
+      await wait(100);
+      
+      const navigationManager = new NavigationManager();
+      await wait(100);
+      
+      const animationManager = new AnimationManager();
+      await wait(100);
+      
+      const formManager = new FormManager();
+      await wait(100);
+      
+      const glitchManager = new GlitchManager();
+      await wait(100);
+      
+      const skillsAnimationManager = new SkillsAnimationManager();
+      await wait(100);
+      
+      const projectAnimationManager = new ProjectAnimationManager();
+      await wait(100);
+      
+      // 3D Skills Graph initialized last
+      initSkills3DGraph();
     } catch (error) {
       console.error('Initialization error:', error);
     }
