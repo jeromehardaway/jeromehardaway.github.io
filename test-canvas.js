@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update debug element
     const debugElement = document.getElementById('canvas-debug');
     if (debugElement) {
-      debugElement.innerHTML = 'Canvas test successful!';
+      debugElement.textContent = 'Canvas test successful!';
     }
   } catch (e) {
     console.error('Error drawing to canvas:', e);
