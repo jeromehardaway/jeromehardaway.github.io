@@ -477,12 +477,10 @@ function setupBannerIntersectionObserver() {
       // If the section is fully visible (or nearly so) and banner exists
       if (entry.isIntersecting && entry.intersectionRatio >= 0.9 && bannerInstance) {
         // Delay animation start slightly to ensure rendering is stable
-        setTimeout(function() {
-          // Start the animation smoothly
-          requestAnimationFrame(function() {
-            bannerInstance.startAnimation();
-          });
-        }, 200);
+        // Start the animation smoothly
+        requestAnimationFrame(function() {
+          bannerInstance.startAnimation();
+        });
         
         // Once started, no need to observe anymore
         observer.unobserve(entry.target);
