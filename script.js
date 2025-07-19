@@ -1,3 +1,367 @@
+// --- Front End Development Banner Animation (Enhanced Implementation) ---
+function Banner() {
+  var keyword = 'JAVASCRIPT';
+  var canvas;
+  var context;
+  var bgCanvas;
+  var bgContext;
+  var denseness = 10;
+  var parts = [];
+  var mouse = {x: -100, y: -100};
+  var mouseOnScreen = false;
+  var itercount = 0;
+  var itertot = 80; // Increased from 40 to 80 to make initial animation slower
+  var animationFrameId;
+  var repelRadius = 80; // Maximum distance for particles to be affected by mouse
+  var repelStrength = 0.3; // Reduced from 0.5 to 0.3 for gentler repulsion
+  var easing = 0.04; // Reduced from 0.08 to 0.04 for slower return to position
+
+  this.initialize = function(canvas_id) {
+    canvas = document.getElementById(canvas_id);
+    if (!canvas) {
+      return;
+    }
+    
+    // Try to get context
+    try {
+      context = canvas.getContext('2d');
+      if (!context) {
+        return;
+      }
+    } catch (e) {
+      return;
+    }
+    
+    // Set up background canvas
+    try {
+      bgCanvas = document.createElement('canvas');
+      bgContext = bgCanvas.getContext('2d');
+    } catch (e) {
+      return;
+    }
+    
+    // Set up events
+    try {
+      canvas.addEventListener('mousemove', MouseMove, false);
+      canvas.addEventListener('mouseout', MouseOut, false);
+      canvas.addEventListener('touchmove', TouchMove, false);
+      canvas.addEventListener('touchend', TouchEnd, false);
+    } catch (e) {
+    }
+    
+    // Initial resize
+    try {
+      resizeCanvas();
+    } catch (e) {
+    }
+    
+    // Add resize handler
+    window.addEventListener('resize', debounceResize);
+  };
+  
+  var debounceResize = debounce(() => {
+    resizeCanvas();
+  }, 150);
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+
+  var resizeCanvas = () => {
+    var W = window.innerWidth;
+    var H = Math.round(window.innerHeight * 0.7);
+    
+    // Apply device pixel ratio for sharp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    context.scale(dpr, dpr);
+    
+    if (bgCanvas) {
+      bgCanvas.width = W * dpr;
+      bgCanvas.height = H * dpr;
+      bgContext.scale(dpr, dpr);
+    }
+    
+    // Reset animation state
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+    
+    parts = [];
+    itercount = 0;
+    start();
+  };
+
+  var start = function() {
+    // Note: We'll render the text directly in getCoords to avoid duplication
+    
+    // Clear the canvas first
+    clear();
+    
+    // Get coordinates from text rendering
+    getCoords();
+  };
+
+  var getCoords = function() {
+    // Clear before rendering text
+    bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    
+    // Use pure white for better detection
+    bgContext.fillStyle = '#ffffff';
+    
+    // Responsive font size based on canvas width
+    const dpr = window.devicePixelRatio || 1;
+    const fontSize = Math.min(200, Math.max(50, canvas.width / (8 * dpr)));
+    bgContext.font = `bold ${fontSize}px Impact, IBM Plex Sans, Arial, sans-serif`;
+    bgContext.textAlign = 'center';
+    bgContext.textBaseline = 'middle';
+    
+    // Center text
+    const x = bgCanvas.width / (2 * dpr);
+    const y = bgCanvas.height / (2 * dpr);
+    
+    // Draw text
+    bgContext.fillText(keyword, x, y);
+    
+    // Get image data from the background canvas
+    var imageData = bgContext.getImageData(0, 0, bgCanvas.width, bgCanvas.height);
+    
+    // Adaptive denseness based on canvas size and text size
+    const canvasSize = bgCanvas.width * bgCanvas.height;
+    let adjustedDenseness = Math.max(5, Math.min(15, Math.sqrt(canvasSize) / 100));
+    
+    // Count detected pixels for debugging
+    let detectedPixels = 0;
+    
+    // Loop through the canvas to find white pixels (text)
+    for (let height = 0; height < bgCanvas.height; height += adjustedDenseness) {
+      for (let width = 0; width < bgCanvas.width; width += adjustedDenseness) {
+        const index = (width + (height * bgCanvas.width)) * 4;
+        
+        // Check if the pixel is white (RGB values close to 255)
+        // Using a threshold to account for anti-aliasing
+        if (imageData.data[index] > 200 && 
+            imageData.data[index + 1] > 200 && 
+            imageData.data[index + 2] > 200 && 
+            imageData.data[index + 3] > 200) {
+          
+          drawCircle(width / dpr, height / dpr);
+          detectedPixels++;
+        }
+      }
+    }
+    
+    // If we didn't find any pixels, try again with a different approach
+    if (detectedPixels === 0) {
+      console.warn('No pixels detected in the text. Trying alternative method...');
+      
+      // Reset and try a different approach
+      bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgContext.fillStyle = '#ffffff';
+      bgContext.font = `bold ${fontSize * 1.5}px Arial, sans-serif`;
+      bgContext.fillText(keyword, x, y);
+      
+      imageData = bgContext.getImageData(0, 0, bgCanvas.width, bgCanvas.height);
+      
+      // Try with a lower threshold
+      for (let height = 0; height < bgCanvas.height; height += adjustedDenseness / 2) {
+        for (let width = 0; width < bgCanvas.width; width += adjustedDenseness / 2) {
+          const index = (width + (height * bgCanvas.width)) * 4;
+          
+          // Lower threshold
+          if (imageData.data[index] > 150) {
+            drawCircle(width / dpr, height / dpr);
+            detectedPixels++;
+          }
+        }
+      }
+    }
+    
+    // Use requestAnimationFrame for animation
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+    
+    animationFrameId = requestAnimationFrame(animate);
+  };
+
+  var drawCircle = function(x, y) {
+    // Generate random starting position anywhere on the canvas
+    var startx = Math.random() * canvas.width / (window.devicePixelRatio || 1);
+    var starty = Math.random() * canvas.height / (window.devicePixelRatio || 1);
+    
+    // Calculate velocity for smooth transition to destination
+    var velx = (x - startx) / itertot;
+    var vely = (y - starty) / itertot;
+    
+    // Alternate between red and white particles
+    const colors = ['#c5203e', '#ffffff'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Size variation for more natural look
+    const size = 2 + Math.random() * 3;
+    
+    parts.push({
+      c: color,
+      x: x,         // Target x position (in text)
+      y: y,         // Target y position (in text)
+      x2: startx,   // Current x position
+      y2: starty,   // Current y position
+      size: size,   // Particle size
+      r: true,      // In motion flag
+      v: {x: velx, y: vely},  // Current velocity
+      home: {x: x, y: y}      // Original position to return to
+    });
+  };
+
+  var animate = function() {
+    update();
+    animationFrameId = requestAnimationFrame(animate);
+  };
+
+  var update = function() {
+    itercount++;
+    clear();
+    
+    // If no particles generated, retry
+    if (parts.length === 0 && itercount > 10) {
+      start();
+      return;
+    }
+    
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      
+      // Flying into position phase (initial animation)
+      if (itercount <= itertot && part.r === true) {
+        // Slow down the initial particle movement with a multiplier
+        part.x2 += part.v.x * 0.6; // Reduced to 60% speed
+        part.y2 += part.v.y * 0.6; // Reduced to 60% speed
+      } 
+      // After formation, apply interactive behavior
+      else if (itercount > itertot) {
+        // Check for mouse repulsion
+        if (mouseOnScreen) {
+          let dx = part.x2 - mouse.x;
+          let dy = part.y2 - mouse.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          
+          // Apply repelling force if mouse is close enough
+          if (distance < repelRadius) {
+            // Force decreases with distance
+            let force = (1 - distance / repelRadius) * repelStrength;
+            
+            // Calculate repulsion vector (normalized)
+            let angle = Math.atan2(dy, dx);
+            let repelX = Math.cos(angle) * force;
+            let repelY = Math.sin(angle) * force;
+            
+            // Apply repulsion
+            part.x2 += repelX * 3; // Reduced from 5 to 3 for gentler repulsion
+            part.y2 += repelY * 3; // Reduced from 5 to 3 for gentler repulsion
+            part.r = true;  // Mark as needing to return home
+          }
+        }
+        
+        // Apply easing to return to original position
+        if (part.r) {
+          // Easing formula: current += (target - current) * easing
+          part.x2 += (part.home.x - part.x2) * easing;
+          part.y2 += (part.home.y - part.y2) * easing;
+          
+          // If close enough to home, stop easing
+          const homeDx = part.home.x - part.x2;
+          const homeDy = part.home.y - part.y2;
+          const homeDistance = Math.sqrt(homeDx * homeDx + homeDy * homeDy);
+          
+          if (homeDistance < 0.5) {
+            part.r = false;
+            part.x2 = part.home.x;
+            part.y2 = part.home.y;
+          }
+        }
+      }
+      
+      // Make particles slightly larger for better visibility
+      const particleSize = part.size || 4;
+      
+      // Draw the particle
+      context.fillStyle = part.c;
+      context.beginPath();
+      context.arc(part.x2, part.y2, particleSize, 0, Math.PI * 2, true);
+      context.closePath();
+      context.fill();
+    }
+  };
+
+  var MouseMove = function(e) {
+    e.preventDefault();
+    mouseOnScreen = true;
+    
+    // Get accurate mouse position relative to canvas
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+    
+    mouse.x = ((e.clientX - rect.left) * scaleX);
+    mouse.y = ((e.clientY - rect.top) * scaleY);
+  };
+
+  var TouchMove = function(e) {
+    e.preventDefault();
+    mouseOnScreen = true;
+    
+    if (e.touches.length > 0) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1);
+      mouse.y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1);
+    }
+  };
+
+  var MouseOut = function(e) {
+    mouseOnScreen = false;
+    mouse.x = -100;
+    mouse.y = -100;
+  };
+
+  var TouchEnd = function(e) {
+    mouseOnScreen = false;
+    mouse.x = -100;
+    mouse.y = -100;
+  };
+
+  var clear = function() {
+    // Use fillRect instead of path for better performance
+    context.fillStyle = '#091f40';
+    context.fillRect(0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+  };
+}
+
+// Add a small delay to ensure the DOM is fully rendered
+document.addEventListener('DOMContentLoaded', function () {
+  // Try to initialize immediately
+  initBanner();
+  
+  // Also try with a slight delay as a fallback
+  setTimeout(initBanner, 100);
+});
+
+function initBanner() {
+  var canvasElement = document.getElementById('canvas');
+  if (canvasElement) {
+    var banner = new Banner();
+    banner.initialize('canvas');
+  }
+}
 // --- Skills Web Graph Connections ---
 document.addEventListener('DOMContentLoaded', function () {
   const svg = document.getElementById('skills-graph-svg');
