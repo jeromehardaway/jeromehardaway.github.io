@@ -15,6 +15,8 @@ function Banner() {
   var repelRadius = 80; // Maximum distance for particles to be affected by mouse
   var repelStrength = 0.3; // Reduced from 0.5 to 0.3 for gentler repulsion
   var easing = 0.04; // Reduced from 0.08 to 0.04 for slower return to position
+  var isInitialized = false; // Track if banner is fully initialized
+  var hasStartedAnimation = false; // Track if animation has started
 
   this.initialize = function(canvas_id) {
     canvas = document.getElementById(canvas_id);
@@ -49,18 +51,30 @@ function Banner() {
     } catch (e) {
     }
     
-    // Initial resize
-    try {
-      resizeCanvas();
-    } catch (e) {
-    }
-    
-    // Add resize handler
+    // Add resize handler with debounce
     window.addEventListener('resize', debounceResize);
+    
+    // Defer initial resize to next frame to avoid layout thrashing
+    requestAnimationFrame(() => {
+      try {
+        resizeCanvasOnly();
+      } catch (e) {
+      }
+      
+      // Mark as initialized
+      isInitialized = true;
+      
+      // Draw initial background only
+      clear();
+    });
   };
   
   var debounceResize = debounce(() => {
-    resizeCanvas();
+    if (hasStartedAnimation) {
+      resizeCanvas();
+    } else {
+      resizeCanvasOnly();
+    }
   }, 150);
 
   function debounce(func, wait) {
@@ -72,46 +86,120 @@ function Banner() {
       timeout = setTimeout(() => func.apply(context, args), wait);
     };
   }
-
-  var resizeCanvas = () => {
+  
+  // Method to only resize the canvas without starting animation
+  var resizeCanvasOnly = () => {
+    if (!canvas || !context) return;
+    
+    // Save the old dimensions to check if we need to resize
+    const oldWidth = canvas.width;
+    const oldHeight = canvas.height;
+    
     var W = window.innerWidth;
     var H = Math.round(window.innerHeight * 0.7);
     
     // Apply device pixel ratio for sharp rendering
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    context.scale(dpr, dpr);
+    const newWidth = W * dpr;
+    const newHeight = H * dpr;
     
-    if (bgCanvas) {
-      bgCanvas.width = W * dpr;
-      bgCanvas.height = H * dpr;
-      bgContext.scale(dpr, dpr);
+    // Only resize if dimensions actually changed
+    if (oldWidth !== newWidth || oldHeight !== newHeight) {
+      // Reset animation state if running
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      
+      // Update canvas dimensions
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      
+      // Safe context scaling
+      try {
+        context.scale(dpr, dpr);
+      } catch (e) {
+        console.warn('Context scale error', e);
+      }
+      
+      if (bgCanvas && bgContext) {
+        bgCanvas.width = newWidth;
+        bgCanvas.height = newHeight;
+        try {
+          bgContext.scale(dpr, dpr);
+        } catch (e) {
+          console.warn('Background context scale error', e);
+        }
+      }
+      
+      // Reset particle array
+      parts = [];
+      itercount = 0;
     }
     
-    // Reset animation state
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
+    // Clear the canvas
+    if (context) {
+      clear();
     }
+  };
+
+  var resizeCanvas = () => {
+    resizeCanvasOnly();
     
-    parts = [];
-    itercount = 0;
+    // Start or restart the animation
     start();
   };
 
   var start = function() {
-    // Note: We'll render the text directly in getCoords to avoid duplication
+    // Don't start if already running
+    if (animationFrameId) {
+      return;
+    }
     
-    // Clear the canvas first
+    hasStartedAnimation = true;
+    
+    // Use already resized canvas, just clear it
     clear();
     
     // Get coordinates from text rendering
     getCoords();
   };
+  
+  // Public method to start the animation
+  this.startAnimation = function() {
+    if (!isInitialized) return;
+    
+    // Don't restart if already running
+    if (hasStartedAnimation) return;
+    
+    // Mark as starting
+    hasStartedAnimation = true;
+    
+    // Make sure canvas is properly sized before starting
+    try {
+      resizeCanvasOnly();
+    } catch (e) {
+      console.warn('Canvas resize error', e);
+    }
+    
+    // Start animation with a slight delay for stability
+    setTimeout(function() {
+      // Start on next frame to avoid any DOM repainting issues
+      requestAnimationFrame(function() {
+        start();
+      });
+    }, 100);
+  };
 
   var getCoords = function() {
+    // If animation already exists, clean it up first
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+    
     // Clear before rendering text
     bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     
@@ -308,8 +396,9 @@ function Banner() {
     mouseOnScreen = true;
     
     // Get accurate mouse position relative to canvas
-    const scaleX = canvas.width / (cachedRect.width * cachedDevicePixelRatio);
-    const scaleY = canvas.height / (cachedRect.height * cachedDevicePixelRatio);
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
     
     mouse.x = ((e.clientX - rect.left) * scaleX);
     mouse.y = ((e.clientY - rect.top) * scaleY);
@@ -320,9 +409,12 @@ function Banner() {
     mouseOnScreen = true;
     
     if (e.touches.length > 0) {
-      // Use cached values for rect and scale
-      mouse.x = (e.touches[0].clientX - cachedRect.left) * cachedScaleX;
-      mouse.y = (e.touches[0].clientY - cachedRect.top) * cachedScaleY;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+      const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+      
+      mouse.x = (e.touches[0].clientX - rect.left) * scaleX;
+      mouse.y = (e.touches[0].clientY - rect.top) * scaleY;
     }
   };
 
@@ -347,19 +439,64 @@ function Banner() {
 
 // Add a small delay to ensure the DOM is fully rendered
 document.addEventListener('DOMContentLoaded', function () {
-  // Try to initialize immediately
-  initBanner();
-  
-  // Also try with a slight delay as a fallback
-  setTimeout(initBanner, 100);
+  // Short delay to ensure DOM is stable before any initialization
+  setTimeout(function() {
+    // Initialize Banner (just set up, don't start animation yet)
+    initBanner();
+    
+    // Wait a bit more to ensure all layout is complete before setting up observer
+    setTimeout(function() {
+      // Set up Intersection Observer to start animation when fully visible
+      setupBannerIntersectionObserver();
+    }, 500);
+  }, 300);
 });
+
+// Create a global banner reference
+var bannerInstance;
 
 function initBanner() {
   var canvasElement = document.getElementById('canvas');
   if (canvasElement) {
-    var banner = new Banner();
-    banner.initialize('canvas');
+    // Create and initialize banner instance
+    bannerInstance = new Banner();
+    bannerInstance.initialize('canvas');
   }
+}
+
+function setupBannerIntersectionObserver() {
+  if (!bannerInstance) return;
+  
+  // Get the section that contains the canvas
+  var bannerSection = document.getElementById('frontend-banner');
+  if (!bannerSection) return;
+  
+  // Create an intersection observer
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      // If the section is fully visible (or nearly so) and banner exists
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.9 && bannerInstance) {
+        // Delay animation start slightly to ensure rendering is stable
+        setTimeout(function() {
+          // Start the animation smoothly
+          requestAnimationFrame(function() {
+            bannerInstance.startAnimation();
+          });
+        }, 200);
+        
+        // Once started, no need to observe anymore
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    // Only trigger when nearly 100% of the section is visible
+    threshold: [0.9, 1.0],
+    // Add rootMargin to trigger a bit before the element is fully in view
+    rootMargin: '0px 0px -10% 0px'
+  });
+  
+  // Start observing the banner section
+  observer.observe(bannerSection);
 }
 // --- Skills Web Graph Connections ---
 document.addEventListener('DOMContentLoaded', function () {
@@ -517,12 +654,17 @@ const debounce = (func, wait) => {
 // Glitch Manager for handling glitch effects
 class GlitchManager {
   constructor() {
-    this.heroSection = document.querySelector('.hero-section');
-    this.glitchTitle = document.querySelector('.glitch-title');
-    this.glitchLines = document.querySelector('.glitch-lines');
-    this.glitchImages = document.querySelectorAll('.glitch-image');
-    
-    this.init();
+    // Wait for next frame to ensure the DOM is fully ready
+    requestAnimationFrame(() => {
+      this.heroSection = document.querySelector('.hero-section');
+      this.glitchTitle = document.querySelector('.glitch-title');
+      this.glitchLines = document.querySelector('.glitch-lines');
+      this.glitchImages = document.querySelectorAll('.glitch-image');
+      
+      if (this.heroSection && this.glitchTitle) {
+        this.init();
+      }
+    });
   }
   
   init() {
@@ -574,22 +716,64 @@ class GlitchManager {
 // Skills Animation with Anime.js
 class SkillsAnimationManager {
   constructor() {
-    this.tooltip = document.getElementById('tooltip');
-    this.tools = document.querySelectorAll('.tool');
-    this.modal = document.getElementById('skillModal');
-    this.modalTitle = document.getElementById('modalTitle');
-    this.modalDescription = document.getElementById('modalDescription');
-    this.closeModalBtn = document.getElementById('closeModal');
-    this.modalBackdrop = document.querySelector('.modal-backdrop');
-    
-    this.init();
+    // Delay initialization to ensure DOM stability
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        this.tooltip = document.getElementById('tooltip');
+        this.tools = document.querySelectorAll('.tool');
+        this.modal = document.getElementById('skillModal');
+        this.modalTitle = document.getElementById('modalTitle');
+        this.modalDescription = document.getElementById('modalDescription');
+        this.closeModalBtn = document.getElementById('closeModal');
+        this.modalBackdrop = document.querySelector('.modal-backdrop');
+        
+        // Only initialize if required elements exist
+        if (this.tools.length > 0) {
+          this.init();
+        }
+      }, 300);
+    });
   }
 
   init() {
-    this.setupTooltip();
-    this.setupModal();
-    this.animateSkills();
-    this.setupObserver();
+    // Stagger initialization to prevent layout thrashing
+    setTimeout(() => {
+      this.setupTooltip();
+      
+      setTimeout(() => {
+        this.setupModal();
+        
+        setTimeout(() => {
+          // Prepare animations without playing them
+          if (typeof anime !== 'undefined') {
+            this.toolsAnimation = anime({
+              targets: '.skills-section .tool',
+              opacity: [0, 1],
+              translateY: [-15, 0],
+              scale: [0.95, 1],
+              delay: anime.stagger(30, {grid: [3, 5], from: 'center'}),
+              duration: 700,
+              easing: 'easeOutExpo',
+              autoplay: false
+            });
+            
+            this.verticalAnimation = anime({
+              targets: '.skills-section .vertical',
+              opacity: [0, 1],
+              translateY: [20, 0],
+              delay: anime.stagger(150),
+              duration: 1000,
+              easing: 'easeOutQuint',
+              autoplay: false
+            });
+          }
+          
+          setTimeout(() => {
+            this.setupObserver();
+          }, 100);
+        }, 100);
+      }, 100);
+    }, 100);
   }
 
   setupTooltip() {
@@ -755,40 +939,71 @@ class SkillsAnimationManager {
     const skillSection = document.querySelector('#skills');
     if (!skillSection) return;
 
+    // Hide elements initially to prevent flash
+    document.querySelectorAll('.skills-section .vertical, .skills-section .tool').forEach(el => {
+      el.style.opacity = '0';
+      el.style.visibility = 'hidden';
+    });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          this.playAnimations();
+          // Add a slight delay before playing animations
+          setTimeout(() => {
+            this.playAnimations();
+          }, 300);
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1 });
 
-    observer.observe(skillSection);
+    // Start observing after a delay
+    setTimeout(() => {
+      observer.observe(skillSection);
+    }, 500);
   }
 
   playAnimations() {
     if (typeof anime === 'undefined') return;
     
-    // First animate all vertical sections together
-    anime({
-      targets: '.skills-section .vertical',
-      opacity: [0, 1],
-      translateY: [20, 0],
-      delay: function(el, i) { return i * 150; }, // Sequential delay based on index
-      duration: 800,
-      easing: 'easeOutQuint',
-    }).finished.then(() => {
-      // Then animate all tool elements
+    // Use a slight delay before starting animations
+    setTimeout(() => {
+      // First animate all vertical sections together
       anime({
-        targets: '.skills-section .tool',
+        targets: '.skills-section .vertical',
         opacity: [0, 1],
-        translateY: [-10, 0],
-        delay: anime.stagger(40),
-        duration: 600,
-        easing: 'easeOutExpo'
+        translateY: [20, 0],
+        delay: function(el, i) { return i * 150; }, // Sequential delay based on index
+        duration: 800,
+        easing: 'easeOutQuint',
+        begin: function(anim) {
+          // Ensure elements are visible before animation starts
+          document.querySelectorAll('.skills-section .vertical').forEach(el => {
+            el.style.opacity = '0';
+            el.style.visibility = 'visible';
+          });
+        }
+      }).finished.then(() => {
+        // Then animate all tool elements with a slight delay
+        setTimeout(() => {
+          anime({
+            targets: '.skills-section .tool',
+            opacity: [0, 1],
+            translateY: [-10, 0],
+            delay: anime.stagger(40),
+            duration: 600,
+            easing: 'easeOutExpo',
+            begin: function(anim) {
+              // Ensure elements are visible before animation starts
+              document.querySelectorAll('.skills-section .tool').forEach(el => {
+                el.style.opacity = '0';
+                el.style.visibility = 'visible';
+              });
+            }
+          });
+        }, 100);
       });
-    });
+    }, 200);
   }
 }
 
@@ -923,23 +1138,29 @@ class ProjectAnimationManager {
 class ThemeManager {
   constructor() {
     this.darkModeKey = 'darkMode';
-    this.toggleBtn = document.getElementById('dark-mode-toggle');
-    this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     
-    this.init();
+    // Delay initialization to avoid DOM thrashing
+    setTimeout(() => {
+      this.toggleBtn = document.getElementById('dark-mode-toggle');
+      this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      this.init();
+    }, 200);
   }
 
   init() {
     try {
-      // Initialize theme based on localStorage or system preference
+      // Set initial theme class on HTML before any other operations
       const savedTheme = localStorage.getItem(this.darkModeKey);
-      if (savedTheme === 'dark' || (!savedTheme && this.prefersDark.matches)) {
-        this.enableDarkMode(false); // false to skip animation on initial load
-      } else {
-        this.enableLightMode(false);
-      }
-
-      this.setupEventListeners();
+      const initialTheme = savedTheme === 'dark' || (!savedTheme && this.prefersDark.matches) ? 'dark' : 'light';
+      
+      // Add the theme attribute without animation
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      
+      // Set up event listeners after a short delay
+      setTimeout(() => {
+        this.setupEventListeners();
+      }, 100);
     } catch (error) {
       console.error('Theme initialization failed:', error);
     }
@@ -1107,13 +1328,16 @@ class NavigationManager {
 // Animation Manager
 class AnimationManager {
   constructor() {
-    this.animatedElements = document.querySelectorAll('section, .hero-image, .project-card, .expertise-card');
-    this.observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px 0px -100px 0px'
-    };
-    
-    this.init();
+    // Delay initialization to ensure DOM stability
+    setTimeout(() => {
+      this.animatedElements = document.querySelectorAll('section, .hero-image, .project-card, .expertise-card');
+      this.observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -100px 0px'
+      };
+      
+      this.init();
+    }, 200);
   }
 
   init() {
@@ -1121,9 +1345,12 @@ class AnimationManager {
       this.setupIntersectionObserver();
     } else {
       // Fallback for browsers that don't support IntersectionObserver
-      this.animatedElements.forEach(el => {
-        el.classList.add('animate-in');
-      });
+      // Add animation classes after a delay
+      setTimeout(() => {
+        this.animatedElements.forEach(el => {
+          el.classList.add('animate-in');
+        });
+      }, 300);
     }
   }
 
@@ -1131,14 +1358,22 @@ class AnimationManager {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
+          // Add animation class after a short delay to avoid layout thrashing
+          setTimeout(() => {
+            entry.target.classList.add('animate-in');
+          }, 50);
           observer.unobserve(entry.target);
         }
       });
     }, this.observerOptions);
 
+    // Observe elements with a slight delay between each
+    let delay = 0;
     this.animatedElements.forEach(el => {
-      observer.observe(el);
+      setTimeout(() => {
+        observer.observe(el);
+      }, delay);
+      delay += 10; // 10ms delay between observing each element
     });
   }
 }
@@ -1255,21 +1490,45 @@ class FormManager {
 
 // --- 3D Skills Graph with Three.js ---
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    // Initialize all managers
-    const themeManager = new ThemeManager();
-    const navigationManager = new NavigationManager();
-    const animationManager = new AnimationManager();
-    const formManager = new FormManager();
-    const glitchManager = new GlitchManager();
-    const skillsAnimationManager = new SkillsAnimationManager();
-    const projectAnimationManager = new ProjectAnimationManager();
-
-    // 3D Skills Graph
-    initSkills3DGraph();
-  } catch (error) {
-    console.error('Initialization error:', error);
-  }
+  // Small delay to ensure DOM is fully ready
+  setTimeout(() => {
+    try {
+      // Initialize all managers one by one with small delays to prevent DOM thrashing
+      const themeManager = new ThemeManager();
+      
+      // Delay each initialization slightly to avoid simultaneous DOM operations
+      setTimeout(() => {
+        const navigationManager = new NavigationManager();
+        
+        setTimeout(() => {
+          const animationManager = new AnimationManager();
+          
+          setTimeout(() => {
+            const formManager = new FormManager();
+            
+            setTimeout(() => {
+              const glitchManager = new GlitchManager();
+              
+              setTimeout(() => {
+                const skillsAnimationManager = new SkillsAnimationManager();
+                
+                setTimeout(() => {
+                  const projectAnimationManager = new ProjectAnimationManager();
+                  
+                  // 3D Skills Graph initialized last
+                  setTimeout(() => {
+                    initSkills3DGraph();
+                  }, 100);
+                }, 100);
+              }, 100);
+            }, 100);
+          }, 100);
+        }, 100);
+      }, 100);
+    } catch (error) {
+      console.error('Initialization error:', error);
+    }
+  }, 300);
 });
 
 function initSkills3DGraph() {
