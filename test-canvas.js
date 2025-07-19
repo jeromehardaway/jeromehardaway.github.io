@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update debug element
     const debugElement = document.getElementById('canvas-debug');
     if (debugElement) {
-      debugElement.innerHTML = 'Canvas error: ' + e.message;
+      debugElement.textContent = 'Canvas error: ' + e.message;
     }
   }
 });
