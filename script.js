@@ -321,9 +321,9 @@ function Banner() {
     mouseOnScreen = true;
     
     if (e.touches.length > 0) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1);
-      mouse.y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1);
+      // Use cached values for rect and scale
+      mouse.x = (e.touches[0].clientX - cachedRect.left) * cachedScaleX;
+      mouse.y = (e.touches[0].clientY - cachedRect.top) * cachedScaleY;
     }
   };
 
