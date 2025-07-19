@@ -563,6 +563,16 @@ a:hover {
   align-items: center;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-header-left);
+}
+
+.logo {
+  margin-left: var(--spacing-small);
+}
+
 .logo h1 {
   font-size: 1.75rem;
   margin-bottom: 0;
