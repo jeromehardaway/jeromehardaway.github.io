@@ -308,9 +308,8 @@ function Banner() {
     mouseOnScreen = true;
     
     // Get accurate mouse position relative to canvas
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
-    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+    const scaleX = canvas.width / (cachedRect.width * cachedDevicePixelRatio);
+    const scaleY = canvas.height / (cachedRect.height * cachedDevicePixelRatio);
     
     mouse.x = ((e.clientX - rect.left) * scaleX);
     mouse.y = ((e.clientY - rect.top) * scaleY);
