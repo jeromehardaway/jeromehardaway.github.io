@@ -570,7 +570,7 @@ a:hover {
 }
 
 .logo {
-  margin-left: 0.2rem;
+  margin-left: var(--spacing-small);
 }
 
 .logo h1 {
