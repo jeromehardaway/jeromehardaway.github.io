@@ -1,3 +1,8 @@
+/* Red highlight for About section and other key phrases */
+.red-highlight {
+  color: #c5203e;
+  font-weight: bold;
+}
 /* Live Data Pipeline Section Title */
 #live-data-title.section-title {
   color: #fff;
