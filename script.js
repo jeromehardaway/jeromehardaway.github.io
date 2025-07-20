@@ -265,8 +265,25 @@ var bannerInstance;
 function initBanner() {
   var canvasElement = document.getElementById('canvas');
   if (canvasElement) {
-    console.log('Initializing banner with canvas element');
+    console.log('Initializing banner with canvas element', {
+      width: canvasElement.width,
+      height: canvasElement.height,
+      clientWidth: canvasElement.clientWidth,
+      clientHeight: canvasElement.clientHeight,
+      offsetWidth: canvasElement.offsetWidth,
+      offsetHeight: canvasElement.offsetHeight
+    });
+    
     try {
+      // Make sure canvas dimensions are set
+      if (canvasElement.clientWidth > 0 && canvasElement.clientHeight > 0) {
+        if (canvasElement.width === 0 || canvasElement.height === 0) {
+          console.log('Canvas dimensions not set, setting initial dimensions');
+          canvasElement.width = canvasElement.clientWidth * (window.devicePixelRatio || 1);
+          canvasElement.height = canvasElement.clientHeight * (window.devicePixelRatio || 1);
+        }
+      }
+      
       bannerInstance = new Banner();
       bannerInstance.initialize('canvas');
       
@@ -512,48 +529,6 @@ function setupETLAnimation() {
     observer.observe(section);
   }
 }
-
-// Initialize all animations on DOM content loaded
-document.addEventListener('DOMContentLoaded', async function () {
-  // Helper function to wait
-  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  
-  // Short delay to ensure DOM is stable before any initialization
-  await wait(300);
-  
-  // Initialize Banner (just set up, don't start animation yet)
-  initBanner();
-  
-  // Initialize ETL Animation
-  setupETLAnimation();
-  
-  // Wait a bit more to ensure all layout is complete before setting up observer
-  await wait(500);
-  
-  // Set up Intersection Observer to start animation when fully visible
-  setupBannerIntersectionObserver();
-});
-
-// Initialize all animations on DOM content loaded
-document.addEventListener('DOMContentLoaded', async function () {
-  // Helper function to wait
-  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  
-  // Short delay to ensure DOM is stable before any initialization
-  await wait(300);
-  
-  // Initialize Banner (just set up, don't start animation yet)
-  initBanner();
-  
-  // Initialize ETL Animation
-  setupETLAnimation();
-  
-  // Wait a bit more to ensure all layout is complete before setting up observer
-  await wait(500);
-  
-  // Set up Intersection Observer to start animation when fully visible
-  setupBannerIntersectionObserver();
-});
 
 // Initialize all animations on DOM content loaded
 document.addEventListener('DOMContentLoaded', async function () {

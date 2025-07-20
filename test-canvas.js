@@ -1,5 +1,5 @@
 // Test script to verify canvas functionality
-document.addEventListener('DOMContentLoaded', function() {
+function runCanvasTest() {
   console.log('Testing canvas functionality...');
   
   // Get the canvas element
@@ -53,4 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
       debugElement.textContent = 'Canvas error: ' + e.message;
     }
   }
-});
+}
+
+// Only run test when specifically requested via URL parameter
+// e.g., yoursite.com?testCanvas=true
+if (window.location.search.includes('testCanvas=true')) {
+  document.addEventListener('DOMContentLoaded', runCanvasTest);
+}
