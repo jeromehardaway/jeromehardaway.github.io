@@ -404,3 +404,174 @@ function setupBannerIntersectionObserver() {
 
 // Add console.log to help debug
 console.log('Script.js loaded successfully');
+
+// --- ETL Animation ---
+function setupETLAnimation() {
+  // Get elements
+  const extractEl = document.querySelector('.extract');
+  const transformEl = document.querySelector('.transform');
+  const loadEl = document.querySelector('.load');
+  
+  // Only proceed if all elements exist
+  if (!extractEl || !transformEl || !loadEl) return;
+  
+  // Animate icons
+  function animateIcons() {
+    // Subtle rotation animation for extract icon
+    anime({
+      targets: '.extract i',
+      translateY: [0, -5, 0],
+      duration: 3000,
+      easing: 'easeInOutSine',
+      loop: true,
+      delay: 500
+    });
+    
+    // Rotation animation for transform icon
+    anime({
+      targets: '.transform i',
+      rotate: '360deg',
+      duration: 8000,
+      loop: true,
+      easing: 'linear'
+    });
+    
+    // Fade animation for load icon
+    anime({
+      targets: '.load i',
+      opacity: [0.6, 1, 0.6],
+      duration: 2000,
+      loop: true,
+      easing: 'easeInOutQuad'
+    });
+  }
+  
+  // Animate the decorative elements
+  function animateDecorations() {
+    anime({
+      targets: '.pipeline-decoration',
+      opacity: [0.05, 0.1, 0.05],
+      scale: [1, 1.1, 1],
+      duration: 5000,
+      loop: true,
+      easing: 'easeInOutSine',
+      delay: anime.stagger(1000)
+    });
+  }
+  
+  // Add hover effects for stages
+  function setupHoverEffects() {
+    const stages = document.querySelectorAll('.stage');
+    stages.forEach(stage => {
+      stage.addEventListener('mouseenter', () => {
+        anime({
+          targets: stage,
+          borderWidth: ['3px', '5px'],
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      });
+      
+      stage.addEventListener('mouseleave', () => {
+        anime({
+          targets: stage,
+          borderWidth: '3px',
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      });
+    });
+  }
+  
+  // Main animation function
+  function animateETL() {
+    // Start icon animations
+    animateIcons();
+    
+    // Animate decorative elements
+    animateDecorations();
+    
+    // Setup hover effects
+    setupHoverEffects();
+  }
+  
+  // Run animation when section becomes visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Start the animation with a small delay to ensure everything is rendered
+        setTimeout(() => {
+          animateETL();
+        }, 300);
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  const section = document.getElementById('data-engineering');
+  if (section) {
+    observer.observe(section);
+  }
+}
+
+// Initialize all animations on DOM content loaded
+document.addEventListener('DOMContentLoaded', async function () {
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  // Short delay to ensure DOM is stable before any initialization
+  await wait(300);
+  
+  // Initialize Banner (just set up, don't start animation yet)
+  initBanner();
+  
+  // Initialize ETL Animation
+  setupETLAnimation();
+  
+  // Wait a bit more to ensure all layout is complete before setting up observer
+  await wait(500);
+  
+  // Set up Intersection Observer to start animation when fully visible
+  setupBannerIntersectionObserver();
+});
+
+// Initialize all animations on DOM content loaded
+document.addEventListener('DOMContentLoaded', async function () {
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  // Short delay to ensure DOM is stable before any initialization
+  await wait(300);
+  
+  // Initialize Banner (just set up, don't start animation yet)
+  initBanner();
+  
+  // Initialize ETL Animation
+  setupETLAnimation();
+  
+  // Wait a bit more to ensure all layout is complete before setting up observer
+  await wait(500);
+  
+  // Set up Intersection Observer to start animation when fully visible
+  setupBannerIntersectionObserver();
+});
+
+// Initialize all animations on DOM content loaded
+document.addEventListener('DOMContentLoaded', async function () {
+  // Helper function to wait
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  // Short delay to ensure DOM is stable before any initialization
+  await wait(300);
+  
+  // Initialize Banner (just set up, don't start animation yet)
+  initBanner();
+  
+  // Initialize ETL Animation
+  setupETLAnimation();
+  
+  // Wait a bit more to ensure all layout is complete before setting up observer
+  await wait(500);
+  
+  // Set up Intersection Observer to start animation when fully visible
+  setupBannerIntersectionObserver();
+});
