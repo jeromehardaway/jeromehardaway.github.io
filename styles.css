@@ -1857,6 +1857,16 @@ a:hover {
   gap: 0.5rem !important;
 }
 
+/* JavaScript Story section styling */
+#js-story ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#js-story li {
+  margin-bottom: 0.5rem;
+}
+
 /* Media queries for responsive behavior */
 @media (max-width: 1200px) {
   .skills-section #skillGrid {
