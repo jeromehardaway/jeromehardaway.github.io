@@ -1573,7 +1573,7 @@ a:hover {
 }
 
 .main-footer {
-  background-color: #c5203e;
+  background-color: var(--navy);
   color: var(--white);
   padding: var(--spacing-lg) 0 var(--spacing-sm);
 }
