@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="skills.css" />
     <link rel="stylesheet" href="etl.css" />
+    <link rel="stylesheet" href="frontend.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.139.0/build/three.min.js"></script>
     <script src="script.js" defer></script>
     <link
       rel="stylesheet"
@@ -108,15 +108,30 @@
         </div>
       </section>
 
-      <!-- Front End Development Banner Section -->
-      <section id="frontend-banner" class="frontend-banner-section">
-        <canvas id="canvas" tabindex="0" aria-label="Front End Development banner animation" width="800" height="400"></canvas>
-        <!-- Fallback message in case canvas doesn't load -->
-        <noscript>
-          <div style="text-align: center; padding: 20px; color: white;">
-            JavaScript is required to view the interactive animation.
+      <!-- Front End Development Animation Section -->
+      <section id="frontend-animation">
+        <div class="container">
+          <h2 class="section-title">Front End Technologies</h2>
+          
+          <div class="frontend-container">
+            <div class="frontend-stack">
+              <div class="layer html">
+                <i class="fab fa-html5"></i>
+                <div class="layer-name">HTML</div>
+              </div>
+              <div class="layer css">
+                <i class="fab fa-css3-alt"></i>
+                <div class="layer-name">CSS</div>
+              </div>
+              <div class="layer javascript">
+                <i class="fab fa-js"></i>
+                <div class="layer-name">JavaScript</div>
+              </div>
+              <div class="frontend-connector" id="frontend-connector1"></div>
+              <div class="frontend-connector" id="frontend-connector2"></div>
+            </div>
           </div>
-        </noscript>
+        </div>
       </section>
         
       <!-- JavaScript Story Section -->

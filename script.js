@@ -530,6 +530,107 @@ function setupETLAnimation() {
   }
 }
 
+// --- Frontend Animation ---
+function setupFrontendAnimation() {
+  // Get elements
+  const htmlEl = document.querySelector('.html');
+  const cssEl = document.querySelector('.css');
+  const jsEl = document.querySelector('.javascript');
+  
+  // Only proceed if all elements exist
+  if (!htmlEl || !cssEl || !jsEl) return;
+  
+  // Animate icons
+  function animateIcons() {
+    // HTML animation
+    anime({
+      targets: '.html i',
+      scale: [1, 1.2, 1],
+      duration: 3000,
+      easing: 'easeInOutSine',
+      loop: true,
+      delay: 500
+    });
+    
+    // CSS animation
+    anime({
+      targets: '.css i',
+      translateY: [0, -5, 0],
+      duration: 2500,
+      loop: true,
+      easing: 'easeInOutQuad'
+    });
+    
+    // JavaScript animation
+    anime({
+      targets: '.javascript i',
+      rotate: [0, 15, 0, -15, 0],
+      duration: 4000,
+      loop: true,
+      easing: 'easeInOutQuad'
+    });
+  }
+  
+  // Add hover effects for layers
+  function setupHoverEffects() {
+    const layers = document.querySelectorAll('.layer');
+    layers.forEach(layer => {
+      layer.addEventListener('mouseenter', () => {
+        anime({
+          targets: layer,
+          scale: 1.1,
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      });
+      
+      layer.addEventListener('mouseleave', () => {
+        anime({
+          targets: layer,
+          scale: 1,
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      });
+    });
+  }
+  
+  // Main animation function
+  function animateFrontend() {
+    // Start icon animations
+    animateIcons();
+    
+    // Setup hover effects
+    setupHoverEffects();
+    
+    // Add special animation for connectors
+    anime({
+      targets: '.frontend-connector::before',
+      backgroundPosition: ['0px 0px', '40px 0px'],
+      duration: 1500,
+      loop: true,
+      easing: 'linear'
+    });
+  }
+  
+  // Run animation when section becomes visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Start the animation with a small delay to ensure everything is rendered
+        setTimeout(() => {
+          animateFrontend();
+        }, 300);
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  const section = document.getElementById('frontend-animation');
+  if (section) {
+    observer.observe(section);
+  }
+}
+
 // Initialize all animations on DOM content loaded
 document.addEventListener('DOMContentLoaded', async function () {
   // Helper function to wait
@@ -538,15 +639,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   // Short delay to ensure DOM is stable before any initialization
   await wait(300);
   
-  // Initialize Banner (just set up, don't start animation yet)
-  initBanner();
-  
   // Initialize ETL Animation
   setupETLAnimation();
   
-  // Wait a bit more to ensure all layout is complete before setting up observer
-  await wait(500);
-  
-  // Set up Intersection Observer to start animation when fully visible
-  setupBannerIntersectionObserver();
+  // Initialize Frontend Animation
+  setupFrontendAnimation();
 });
