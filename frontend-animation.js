@@ -8,19 +8,19 @@
 const techConfig = {
   tailwind: {
     name: 'Tailwind',
-    color: '#c5203e', // VWC red
+    color: '#eeeeee', // VWC light gray
     icon: 'fab fa-css3-alt', // Using CSS icon as base
     description: 'Utility-First CSS'
   },
   nextjs: {
     name: 'Next.js',
-    color: '#091f40', // VWC navy
+    color: '#eeeeee', // VWC light gray
     icon: 'fab fa-react', // React-based framework
     description: 'React Framework'
   },
   mdx: {
     name: 'MDX',
-    color: '#c5203e', // VWC red
+    color: '#eeeeee', // VWC light gray
     icon: 'fas fa-file-code',
     description: 'Markdown + JSX'
   },
@@ -32,13 +32,13 @@ const techConfig = {
   },
   typescript: {
     name: 'TypeScript',
-    color: '#091f40', // VWC navy
+    color: '#eeeeee', // VWC light gray
     icon: 'fab fa-js-square',
     description: 'Typed JavaScript'
   },
   vite: {
     name: 'Vite',
-    color: '#c5203e', // VWC red
+    color: '#eeeeee', // VWC light gray
     icon: 'fas fa-bolt',
     description: 'Next-Gen Bundler'
   }
@@ -201,7 +201,7 @@ function setupInteractiveEffects(container) {
         scale: [1, 1.15, 1],
         boxShadow: [
           '0 10px 30px rgba(0, 0, 0, 0.3)',
-          '0 20px 50px rgba(197, 32, 62, 0.6)',
+          '0 20px 50px rgba(238, 238, 238, 0.6)',
           '0 10px 30px rgba(0, 0, 0, 0.3)'
         ],
         duration: 800,

@@ -78,16 +78,16 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(197, 32, 62, 0.3); /* VWC red border */
+  border: 1px solid rgba(238, 238, 238, 0.3); /* VWC light gray border */
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
   cursor: pointer;
   overflow: hidden;
 }
 
 .tech-card:hover {
-  box-shadow: 0 15px 40px rgba(197, 32, 62, 0.4); /* VWC red glow on hover */
+  box-shadow: 0 15px 40px rgba(238, 238, 238, 0.4); /* VWC light gray glow on hover */
   transform: translateY(-5px) scale(1.02);
-  border-color: rgba(197, 32, 62, 0.6);
+  border-color: rgba(238, 238, 238, 0.6);
 }
 
 .tech-card::before {
@@ -177,16 +177,16 @@
 
 /* Specific technology styling */
 .tech-card.tailwind .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
 }
 
 .tech-card.nextjs .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(9, 31, 64, 0.5)); /* VWC navy */
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
   animation: bounce 3s ease-in-out infinite;
 }
 
 .tech-card.mdx .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
   animation: typewriter 3s steps(8) infinite;
 }
 
@@ -195,11 +195,11 @@
 }
 
 .tech-card.typescript .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(9, 31, 64, 0.5)); /* VWC navy */
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
 }
 
 .tech-card.vite .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
   animation: pulse 2s infinite alternate;
 }
 
