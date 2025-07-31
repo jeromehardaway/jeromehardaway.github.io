@@ -1,5 +1,5 @@
 #frontend-animation {
-  background: #091f40;
+  background: #091f40; /* VWC Navy */
   color: white;
   padding: 6rem 1rem;
   text-align: center;
@@ -15,7 +15,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(30, 60, 114, 0.8) 0%, rgba(9, 31, 64, 1) 70%);
+  background: radial-gradient(circle at center, rgba(9, 31, 64, 0.8) 0%, rgba(9, 31, 64, 1) 70%);
   z-index: 0;
 }
 
@@ -42,7 +42,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, #e34c26, #264de4, #f7df1e);
+  background: linear-gradient(90deg, #c5203e, #091f40, #eeeeee); /* VWC colors */
   border-radius: 2px;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .tech-card {
-  background: rgba(20, 30, 48, 0.7);
+  background: rgba(9, 31, 64, 0.8); /* VWC navy with transparency */
   border-radius: 15px;
   padding: 20px;
   display: flex;
@@ -78,10 +78,16 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(197, 32, 62, 0.3); /* VWC red border */
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
   cursor: pointer;
   overflow: hidden;
+}
+
+.tech-card:hover {
+  box-shadow: 0 15px 40px rgba(197, 32, 62, 0.4); /* VWC red glow on hover */
+  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(197, 32, 62, 0.6);
 }
 
 .tech-card::before {
@@ -170,25 +176,31 @@
 }
 
 /* Specific technology styling */
-.tech-card.html .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(227, 76, 38, 0.5));
+.tech-card.tailwind .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
 }
 
-.tech-card.css .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(38, 77, 228, 0.5));
+.tech-card.nextjs .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(9, 31, 64, 0.5)); /* VWC navy */
+  animation: bounce 3s ease-in-out infinite;
 }
 
-.tech-card.js .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(247, 223, 30, 0.5));
+.tech-card.mdx .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
+  animation: typewriter 3s steps(8) infinite;
 }
 
-.tech-card.react .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(97, 218, 251, 0.5));
-  animation: spin 8s linear infinite;
+.tech-card.vercel .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
 }
 
-.tech-card.next .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(0, 112, 243, 0.5));
+.tech-card.typescript .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(9, 31, 64, 0.5)); /* VWC navy */
+}
+
+.tech-card.vite .tech-icon i {
+  filter: drop-shadow(0 0 15px rgba(197, 32, 62, 0.5)); /* VWC red */
+  animation: pulse 2s infinite alternate;
 }
 
 @keyframes spin {
@@ -197,6 +209,35 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes typewriter {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1) translateX(5px);
   }
 }
 

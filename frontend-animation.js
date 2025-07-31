@@ -1,39 +1,46 @@
 /**
  * Advanced Frontend Technologies Animation
- * Uses anime.js to create an interactive 3D-like experience showcasing frontend technologies
+ * Uses anime.js to create an interactive 3D-like experience showcasing modern web technologies
+ * Uses Vets Who Code brand colors: #c5203e (red), #091f40 (navy), #eeeeee (light gray)
  */
 
 // Configuration
 const techConfig = {
-  html: {
-    name: 'HTML5',
-    color: '#e34c26',
-    icon: 'fab fa-html5',
-    description: 'Structure'
+  tailwind: {
+    name: 'Tailwind',
+    color: '#c5203e', // VWC red
+    icon: 'fab fa-css3-alt', // Using CSS icon as base
+    description: 'Utility-First CSS'
   },
-  css: {
-    name: 'CSS3',
-    color: '#264de4',
-    icon: 'fab fa-css3-alt',
-    description: 'Style'
-  },
-  js: {
-    name: 'JavaScript',
-    color: '#f7df1e',
-    icon: 'fab fa-js',
-    description: 'Logic'
-  },
-  react: {
-    name: 'React',
-    color: '#61dafb',
-    icon: 'fab fa-react',
-    description: 'Components'
-  },
-  next: {
+  nextjs: {
     name: 'Next.js',
-    color: '#0070f3',
-    icon: 'fas fa-n',
-    description: 'Framework'
+    color: '#091f40', // VWC navy
+    icon: 'fab fa-react', // React-based framework
+    description: 'React Framework'
+  },
+  mdx: {
+    name: 'MDX',
+    color: '#c5203e', // VWC red
+    icon: 'fas fa-file-code',
+    description: 'Markdown + JSX'
+  },
+  vercel: {
+    name: 'Vercel',
+    color: '#eeeeee', // VWC light gray
+    icon: 'fas fa-server',
+    description: 'Deployment Platform'
+  },
+  typescript: {
+    name: 'TypeScript',
+    color: '#091f40', // VWC navy
+    icon: 'fab fa-js-square',
+    description: 'Typed JavaScript'
+  },
+  vite: {
+    name: 'Vite',
+    color: '#c5203e', // VWC red
+    icon: 'fas fa-bolt',
+    description: 'Next-Gen Bundler'
   }
 };
 
@@ -191,7 +198,12 @@ function setupInteractiveEffects(container) {
       // Pulse animation on click
       anime({
         targets: card,
-        scale: [1, 1.1, 1],
+        scale: [1, 1.15, 1],
+        boxShadow: [
+          '0 10px 30px rgba(0, 0, 0, 0.3)',
+          '0 20px 50px rgba(197, 32, 62, 0.6)',
+          '0 10px 30px rgba(0, 0, 0, 0.3)'
+        ],
         duration: 800,
         easing: 'easeOutElastic(1, .5)'
       });
