@@ -187,7 +187,6 @@
 
 .tech-card.mdx .tech-icon i {
   filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
-  animation: typewriter 3s steps(8) infinite;
 }
 
 .tech-card.vercel .tech-icon i {
@@ -232,14 +231,7 @@
   }
 }
 
-@keyframes typewriter {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1) translateX(5px);
-  }
-}
+/* Removing typewriter animation since MDX animation is removed */
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
