@@ -185,10 +185,6 @@
   animation: bounce 3s ease-in-out infinite;
 }
 
-.tech-card.mdx .tech-icon i {
-  filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
-}
-
 .tech-card.vercel .tech-icon i {
   filter: drop-shadow(0 0 15px rgba(238, 238, 238, 0.5)); /* VWC light gray */
 }

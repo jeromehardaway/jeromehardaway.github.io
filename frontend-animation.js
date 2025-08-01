@@ -18,12 +18,6 @@ const techConfig = {
     icon: 'fab fa-react', // React-based framework
     description: 'React Framework'
   },
-  mdx: {
-    name: 'MDX',
-    color: '#eeeeee', // VWC light gray
-    icon: 'fas fa-file-code',
-    description: 'Markdown + JSX'
-  },
   vercel: {
     name: 'Vercel',
     color: '#eeeeee', // VWC light gray
