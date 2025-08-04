@@ -102,25 +102,36 @@ body.dark-mode .main-footer {
 
 /* Dark Mode Toggle Button */
 .dark-mode-toggle {
-  background: rgba(0, 0, 0, 0.05);
+  background: #091f40; /* Dark blue (VWC navy) for light mode */
   border: none;
   cursor: pointer;
   padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--light-text);
-  transition: color 0.3s ease, background-color 0.3s ease;
+  color: #ffffff; /* White icon for better contrast */
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
   position: relative; /* Added to contain absolute positioned children */
   width: 30px; /* Fixed width */
   height: 30px; /* Fixed height */
   border-radius: 50%; /* Make it a circle */
   overflow: hidden; /* Keep the moon inside */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .dark-mode-toggle {
-  color: var(--dark-text);
-  background: rgba(255, 255, 255, 0.1);
+  color: #091f40; /* Dark blue icon for contrast on light background */
+  background: #e0e0e0; /* Light grey for dark mode */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
 }
 
 .sun-icon,
@@ -131,6 +142,8 @@ body.dark-mode .dark-mode-toggle {
   top: 50%;
   left: 50%;
   transform-origin: center;
+  width: 18px; /* Slightly smaller icons for better fit */
+  height: 18px;
 }
 
 .sun-icon {
