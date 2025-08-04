@@ -102,7 +102,7 @@ body.dark-mode .main-footer {
 
 /* Dark Mode Toggle Button */
 .dark-mode-toggle {
-  background: none;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
   cursor: pointer;
   padding: 5px;
@@ -110,38 +110,47 @@ body.dark-mode .main-footer {
   align-items: center;
   justify-content: center;
   color: var(--light-text);
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  position: relative; /* Added to contain absolute positioned children */
+  width: 30px; /* Fixed width */
+  height: 30px; /* Fixed height */
+  border-radius: 50%; /* Make it a circle */
+  overflow: hidden; /* Keep the moon inside */
 }
 
 body.dark-mode .dark-mode-toggle {
   color: var(--dark-text);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sun-icon,
 .moon-icon {
   fill: currentColor;
   transition: opacity 0.3s ease, transform 0.5s ease;
+  position: absolute; /* Both icons positioned absolutely */
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
 }
 
 .sun-icon {
   opacity: 1;
-  transform: rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 .moon-icon {
   opacity: 0;
-  transform: rotate(-90deg) scale(0);
-  position: absolute;
+  transform: translate(-50%, -50%) rotate(-90deg) scale(0);
 }
 
 body.dark-mode .sun-icon {
   opacity: 0;
-  transform: rotate(90deg) scale(0);
+  transform: translate(-50%, -50%) rotate(90deg) scale(0);
 }
 
 body.dark-mode .moon-icon {
   opacity: 1;
-  transform: rotate(0deg) scale(1);
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
 }
 
 /* JavaScript Story Section */
