@@ -54,6 +54,10 @@ body.dark-mode .main-header {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+body.dark-mode .logo h1 {
+  color: #ffffff; /* Pure white for Jerome Hardaway in header */
+}
+
 body.dark-mode .red-highlight {
   color: var(--dark-accent);
 }
