@@ -1,0 +1,166 @@
+/* Compact ETL diagram styles for the about section */
+.about-data-engineering {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: rgba(9, 31, 64, 0.05);
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--navy);
+}
+
+body.dark-mode .about-data-engineering {
+  background-color: rgba(9, 31, 64, 0.2);
+  border-left: 3px solid var(--red);
+}
+
+.about-data-engineering h3 {
+  color: var(--navy);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+body.dark-mode .about-data-engineering h3 {
+  color: var(--white);
+}
+
+.etl-compact {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+body.dark-mode .etl-compact {
+  background-color: rgba(42, 42, 42, 0.7);
+}
+
+.etl-stages-compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.stage-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background-color: var(--light-card-bg);
+  border: 2px solid var(--red);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+.stage-compact:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .stage-compact {
+  background-color: var(--dark-card-bg);
+  border-color: var(--dark-accent);
+}
+
+.stage-compact i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--red);
+}
+
+body.dark-mode .stage-compact i {
+  color: var(--dark-accent);
+}
+
+.stage-compact span {
+  font-weight: 500;
+  color: var(--light-text);
+}
+
+body.dark-mode .stage-compact span {
+  color: var(--dark-text);
+}
+
+.connector-compact {
+  flex-grow: 1;
+  height: 3px;
+  margin: 0 10px;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--red),
+    var(--red) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  background-size: 32px 100%;
+  animation: moveLines 2s linear infinite;
+}
+
+body.dark-mode .connector-compact {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--dark-accent),
+    var(--dark-accent) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.connector-compact::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--red);
+  border-right: 2px solid var(--red);
+  transform: rotate(45deg);
+}
+
+body.dark-mode .connector-compact::before {
+  border-color: var(--dark-accent);
+}
+
+@media (max-width: 768px) {
+  .etl-stages-compact {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .connector-compact {
+    width: 3px;
+    height: 30px;
+    margin: 0;
+    background-image: repeating-linear-gradient(
+      180deg,
+      var(--red),
+      var(--red) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+    background-size: 100% 32px;
+    animation: moveVerticalLines 2s linear infinite;
+  }
+  
+  body.dark-mode .connector-compact {
+    background-image: repeating-linear-gradient(
+      180deg,
+      var(--dark-accent),
+      var(--dark-accent) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  }
+  
+  .connector-compact::before {
+    top: auto;
+    right: auto;
+    bottom: -5px;
+    left: -3.5px;
+    transform: rotate(135deg);
+  }
+}

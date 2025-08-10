@@ -16,11 +16,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="dashboard.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="data-api.js" defer></script>
     <script src="script.js" defer></script>
-    <script src="data-dashboard-new.js" defer></script>
+    <script src="data-dashboard.js" defer></script>
     <!-- <script src="frontend-animation.js" defer></script> -->
     <link
       rel="stylesheet"
@@ -61,7 +59,6 @@
             <li><a href="#home" class="nav-link active">Home</a></li>
             <li><a href="#about" class="nav-link">About</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#data-dashboard" class="nav-link">Data Dashboard</a></li>
             <!-- <li><a href="#projects" class="nav-link">Projects</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li> -->
           </ul>
@@ -145,93 +142,6 @@
       <section id="js-story" class="hidden">
         <div class="container">
           <!-- Content removed as per request to focus on AI and Data Engineering -->
-        </div>
-      </section>
-      
-      <!-- Data Dashboard Section -->
-      <section id="data-dashboard" class="data-dashboard-section">
-        <div class="container">
-          <h2 class="section-title">Data Engineering Dashboard</h2>
-          <p class="section-description">This interactive dashboard demonstrates my data processing and visualization skills, using real demographic data from the Data USA API.</p>
-          
-          <div class="dashboard-container">
-            <div class="dashboard-controls">
-              <div class="control-group">
-                <label for="data-source">Data Source:</label>
-                <select id="data-source" class="dashboard-select">
-                  <option value="realtime">Population Data</option>
-                  <option value="historical">Income Data</option>
-                  <option value="anomaly">Education Data</option>
-                </select>
-              </div>
-              <div class="control-group">
-                <label for="visualization-type">Visualization:</label>
-                <select id="visualization-type" class="dashboard-select">
-                  <option value="timeseries">Time Series</option>
-                  <option value="distribution">Distribution</option>
-                  <option value="correlation">Correlation</option>
-                </select>
-              </div>
-              <div class="button-wrapper">
-                <button id="process-data-btn" class="dashboard-btn">Process Data</button>
-              </div>
-            </div>
-            
-            <div class="dashboard-metrics">
-              <div class="metric-box">
-                <span class="metric-label">Records Processed</span>
-                <span id="processed-records" class="metric-value">0</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Processing Time (s)</span>
-                <span id="processing-time" class="metric-value">0</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Accuracy Score</span>
-                <span id="accuracy-score" class="metric-value">0</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Anomalies Detected</span>
-                <span id="anomalies-detected" class="metric-value">0</span>
-              </div>
-            </div>
-            
-            <div class="pipeline-container">
-              <h3 class="pipeline-title">Data Pipeline Status</h3>
-              <div class="pipeline-steps">
-                <div id="extraction-step" class="pipeline-step">
-                  <span class="step-name">Extract</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="transform-step" class="pipeline-step">
-                  <span class="step-name">Transform</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="analyze-step" class="pipeline-step">
-                  <span class="step-name">Analyze</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="visualize-step" class="pipeline-step">
-                  <span class="step-name">Visualize</span>
-                  <span class="step-status">Pending</span>
-                </div>
-              </div>
-            </div>
-            
-            <div id="main-chart" class="dashboard-chart">
-              <div class="chart-placeholder">
-                <i class="fas fa-chart-line"></i>
-                <p>Select data source and visualization type, then click "Process Data"</p>
-              </div>
-            </div>
-            
-            <div class="insights-container">
-              <h3 class="insights-title">Data Insights</h3>
-              <div id="insights-content" class="insights-content">
-                <p>Process data to generate AI-powered insights</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </main>
