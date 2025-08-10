@@ -152,7 +152,11 @@ a:hover {
   transition: color 0.3s ease;
 }
 
-/* Screen reader only class */
+/* Utility Classes */
+.hidden {
+  display: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
