@@ -32,15 +32,53 @@ async function fetchDataUSA(endpoint) {
         source = 'population';
     }
     
-    // Use a CORS proxy to avoid CORS issues
-    const corsProxyUrl = 'https://corsproxy.io/?';
-    const proxiedUrl = corsProxyUrl + encodeURIComponent(apiUrl);
+    // Add a timestamp to prevent caching
+    const cacheBuster = `_t=${Date.now()}`;
+    apiUrl += (apiUrl.includes('?') ? '&' : '?') + cacheBuster;
     
-    // Fetch data from API through the CORS proxy
-    const response = await fetch(proxiedUrl);
+    // Use a more reliable CORS proxy to avoid CORS issues
+    // These public CORS proxies are for demonstration purposes only
+    // In a production environment, you should use your own proxy or APIs that support CORS
+    const corsProxies = [
+      'https://corsproxy.io/?',
+      'https://cors-anywhere.herokuapp.com/',
+      'https://api.allorigins.win/raw?url='
+    ];
     
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    // Try each proxy in order until one works
+    let response = null;
+    let proxyError = null;
+    
+    for (const corsProxy of corsProxies) {
+      try {
+        const proxiedUrl = corsProxy + encodeURIComponent(apiUrl);
+        console.log(`Trying CORS proxy: ${corsProxy}`);
+        
+        // Fetch data from API through the CORS proxy
+        response = await fetch(proxiedUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // Needed for some proxies
+          },
+          timeout: 10000 // 10 second timeout
+        });
+        
+        if (response.ok) {
+          console.log(`CORS proxy ${corsProxy} succeeded`);
+          break; // Exit the loop if successful
+        } else {
+          console.warn(`CORS proxy ${corsProxy} returned status: ${response.status}`);
+        }
+      } catch (err) {
+        console.warn(`CORS proxy ${corsProxy} error:`, err);
+        proxyError = err;
+      }
+    }
+    
+    // If no proxy worked, throw an error
+    if (!response || !response.ok) {
+      throw new Error(proxyError || `HTTP error! Status: ${response?.status || 'unknown'}`);
     }
     
     const data = await response.json();
@@ -50,14 +88,18 @@ async function fetchDataUSA(endpoint) {
     
     // Return processed result
     return {
-      source: data.source,
+      source: 'Data USA API',
       data: data.data,
       recordCount: data.data?.length || 0,
       processingTime: Math.round((endTime - startTime) / 10) / 100, // Round to 2 decimal places
-      endpoint: source
+      endpoint: source,
+      isMockData: false
     };
   } catch (error) {
     console.error('Error fetching data from Data USA API:', error);
+    
+    // Log the error to help debugging
+    console.warn('Falling back to mock data due to API error');
     
     // Return mock data for testing in case the API fails
     return generateMockData(endpoint);

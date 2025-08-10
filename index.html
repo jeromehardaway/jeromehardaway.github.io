@@ -16,15 +16,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="dashboard.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="data-api.js" defer></script>
+    <link rel="stylesheet" href="skills.css" />
     <script src="script.js" defer></script>
-    <script src="visualization-utils.js" defer></script>
-    <script src="anime-visualizations.js" defer></script>
-    <script src="data-dashboard-fixed.js" defer></script>
-    <script src="visualization-safeguards.js" defer></script>
-    <script src="income-distribution-fix.js" defer></script>
     <!-- <script src="frontend-animation.js" defer></script> -->
     <link
       rel="stylesheet"
@@ -65,7 +58,6 @@
             <li><a href="#home" class="nav-link active">Home</a></li>
             <li><a href="#about" class="nav-link">About</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#data-dashboard" class="nav-link">Data Dashboard</a></li>
             <!-- <li><a href="#projects" class="nav-link">Projects</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li> -->
           </ul>
@@ -152,88 +144,101 @@
         </div>
       </section>
       
-      <!-- Data Dashboard Section -->
-      <section id="data-dashboard" class="data-dashboard-section">
+      <!-- Skills Section -->
+      <section id="skills" class="skills-section">
         <div class="container">
-          <h2 class="section-title">Data Engineering Dashboard</h2>
-          <p class="section-description">This interactive dashboard demonstrates my data processing and visualization skills, using real demographic data from the Data USA API.</p>
+          <h2 class="section-title">Technical Skills</h2>
+          <p class="section-description">My expertise spans across data engineering, AI systems, and software development, with a focus on building scalable and reliable solutions.</p>
           
-          <div class="dashboard-container">
-            <div class="dashboard-controls">
-              <div class="control-group">
-                <label for="data-source">Data Source:</label>
-                <select id="data-source" class="dashboard-select">
-                  <option value="realtime">Population Data</option>
-                  <option value="historical">Income Data</option>
-                  <option value="anomaly">Education Data</option>
-                </select>
+          <div class="skills-container">
+            <div class="skill-category">
+              <div class="skill-header">
+                <i class="fas fa-database skill-icon"></i>
+                <h3 class="skill-title">Data Engineering</h3>
               </div>
-              <div class="control-group">
-                <label for="visualization-type">Visualization:</label>
-                <select id="visualization-type" class="dashboard-select">
-                  <option value="timeseries">Time Series</option>
-                  <option value="distribution">Distribution</option>
-                  <option value="correlation">Correlation</option>
-                </select>
-              </div>
-              <div class="button-wrapper">
-                <button id="process-data-btn" class="dashboard-btn">Process Data</button>
-              </div>
+              <ul class="skill-list">
+                <li class="skill-item">
+                  <span class="skill-name">ETL Pipeline Design</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Azure Data Factory</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">SQL & NoSQL Databases</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Data Warehousing</span>
+                  <span class="skill-level">Advanced</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Spark & Hadoop</span>
+                  <span class="skill-level">Advanced</span>
+                </li>
+              </ul>
+              <p class="skill-description">I design and implement robust data pipelines that process massive datasets with high reliability and performance, focusing on clean architecture and maintainability.</p>
             </div>
             
-            <div class="dashboard-metrics">
-              <div class="metric-box">
-                <span class="metric-label">Records Processed</span>
-                <span id="processed-records" class="metric-value">0</span>
+            <div class="skill-category">
+              <div class="skill-header">
+                <i class="fas fa-brain skill-icon"></i>
+                <h3 class="skill-title">AI & Machine Learning</h3>
               </div>
-              <div class="metric-box">
-                <span class="metric-label">Processing Time (s)</span>
-                <span id="processing-time" class="metric-value">0</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Accuracy Score</span>
-                <span id="accuracy-score" class="metric-value">0</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Anomalies Detected</span>
-                <span id="anomalies-detected" class="metric-value">0</span>
-              </div>
+              <ul class="skill-list">
+                <li class="skill-item">
+                  <span class="skill-name">LLM Integration</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Azure OpenAI Service</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Google Gemini</span>
+                  <span class="skill-level">Advanced</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">ML Model Deployment</span>
+                  <span class="skill-level">Advanced</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">MLOps</span>
+                  <span class="skill-level">Intermediate</span>
+                </li>
+              </ul>
+              <p class="skill-description">I build AI-powered applications that leverage large language models and machine learning to solve complex business problems with a focus on practical implementation and real-world impact.</p>
             </div>
             
-            <div class="pipeline-container">
-              <h3 class="pipeline-title">Data Pipeline Status</h3>
-              <div class="pipeline-steps">
-                <div id="extraction-step" class="pipeline-step">
-                  <span class="step-name">Extract</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="transform-step" class="pipeline-step">
-                  <span class="step-name">Transform</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="analyze-step" class="pipeline-step">
-                  <span class="step-name">Analyze</span>
-                  <span class="step-status">Pending</span>
-                </div>
-                <div id="visualize-step" class="pipeline-step">
-                  <span class="step-name">Visualize</span>
-                  <span class="step-status">Pending</span>
-                </div>
+            <div class="skill-category">
+              <div class="skill-header">
+                <i class="fas fa-code skill-icon"></i>
+                <h3 class="skill-title">Programming</h3>
               </div>
-            </div>
-            
-            <div id="main-chart" class="dashboard-chart">
-              <div class="chart-placeholder">
-                <i class="fas fa-chart-line"></i>
-                <p>Select data source and visualization type, then click "Process Data"</p>
-              </div>
-            </div>
-            
-            <div class="insights-container">
-              <h3 class="insights-title">Data Insights</h3>
-              <div id="insights-content" class="insights-content">
-                <p>Process data to generate AI-powered insights</p>
-              </div>
+              <ul class="skill-list">
+                <li class="skill-item">
+                  <span class="skill-name">Python</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">JavaScript/TypeScript</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">SQL</span>
+                  <span class="skill-level">Expert</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">C#/.NET</span>
+                  <span class="skill-level">Intermediate</span>
+                </li>
+                <li class="skill-item">
+                  <span class="skill-name">Terraform & IaC</span>
+                  <span class="skill-level">Advanced</span>
+                </li>
+              </ul>
+              <p class="skill-description">I write clean, maintainable code with a focus on performance, scalability, and readability. My experience spans both frontend and backend development, with a particular expertise in data-intensive applications.</p>
             </div>
           </div>
         </div>
