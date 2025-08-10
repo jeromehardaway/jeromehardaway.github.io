@@ -319,6 +319,119 @@
   font-weight: 600;
 }
 
+/* Anime.js Visualization Styles */
+.chart-area {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.dark-mode .chart-area {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.anime-visualization {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+/* Time Series Bars */
+.time-bar {
+  position: absolute;
+  bottom: 30px;
+  width: 3%;
+  background-color: #091f40; /* VWC navy */
+  border-radius: 4px 4px 0 0;
+  transition: background-color 0.3s;
+}
+
+.time-bar:hover {
+  background-color: #c5203e; /* VWC red */
+}
+
+.dark-mode .time-bar {
+  background-color: #3a5998;
+}
+
+.dark-mode .time-bar:hover {
+  background-color: #e63e5c;
+}
+
+/* Distribution Bars */
+.dist-bar {
+  position: absolute;
+  bottom: 30px;
+  width: 4%;
+  background-color: #c5203e; /* VWC red */
+  border-radius: 4px 4px 0 0;
+  transition: background-color 0.3s;
+}
+
+.dist-bar:hover {
+  background-color: #091f40; /* VWC navy */
+}
+
+.dark-mode .dist-bar {
+  background-color: #e63e5c;
+}
+
+.dark-mode .dist-bar:hover {
+  background-color: #3a5998;
+}
+
+/* Correlation Matrix */
+.corr-grid {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+}
+
+.corr-cell {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  transition: transform 0.3s;
+}
+
+.corr-cell:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Labels */
+.bar-label {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.dark-mode .bar-label {
+  color: #a0a0a0;
+}
+
+.cell-label {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
 .data-source-label {
   font-size: 0.9rem;
   padding: 0.25rem 0.75rem;
