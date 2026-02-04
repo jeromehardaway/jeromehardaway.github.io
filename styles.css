@@ -479,9 +479,16 @@ body.dark-mode .moon-icon {
   z-index: 2;
   padding: var(--space-2xl) 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--space-2xl);
   align-items: center;
+}
+
+/* Two-column layout on desktop */
+@media (min-width: 769px) {
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .hero-text {
