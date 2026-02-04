@@ -1,98 +1,48 @@
-/* Skills Section Styles */
+/* Skills Section - Neural Architecture Design
+   This file extends the main styles.css with additional skill-specific styles
+   Maintained for backward compatibility */
+
+/* Legacy support - most styles now in main styles.css */
 .skills-section {
-  padding: 6rem 0;
-  background-color: var(--bg-color-secondary);
-  color: var(--text-color);
+  /* Inherits from styles.css */
 }
 
-.skills-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+/* Additional hover effects for skill items */
+.skill-item::before {
+  content: '▸ ';
+  color: transparent;
+  transition: color var(--transition-fast);
+  font-weight: 700;
 }
 
-.skill-category {
-  background-color: var(--bg-color);
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.skill-item:hover::before {
+  color: var(--accent-primary);
 }
 
-.skill-category:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+/* Animated progress indicator (optional enhancement) */
+.skill-progress {
+  height: 2px;
+  background: var(--bg-secondary);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-top: var(--space-xs);
+  position: relative;
 }
 
-.skill-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
+.skill-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-500), var(--red-500));
+  width: var(--skill-level, 0%);
+  transition: width 1s ease-out;
 }
 
-.skill-icon {
-  font-size: 2rem;
-  margin-right: 1rem;
-  color: var(--accent-color);
-}
-
-.skill-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.skill-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.skill-item {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.skill-item:last-child {
-  margin-bottom: 0;
-}
-
-.skill-item:before {
-  content: '•';
-  color: var(--accent-color);
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.skill-name {
-  font-weight: 500;
-}
-
-.skill-level {
-  margin-left: auto;
-  font-size: 0.85rem;
-  color: var(--text-color-secondary);
-  background-color: var(--bg-color-alt);
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-}
-
-.skill-description {
-  margin-top: 1.5rem;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--text-color-secondary);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .skills-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .skill-category {
-    padding: 1.5rem;
-  }
-}
+/* Staggered animation delays for skill items */
+.skill-item:nth-child(1) { animation-delay: 0.1s; }
+.skill-item:nth-child(2) { animation-delay: 0.2s; }
+.skill-item:nth-child(3) { animation-delay: 0.3s; }
+.skill-item:nth-child(4) { animation-delay: 0.4s; }
+.skill-item:nth-child(5) { animation-delay: 0.5s; }
