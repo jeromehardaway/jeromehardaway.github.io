@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Jerome Hardaway</title>
+<meta name="description" content="[Page description]">
+<link rel="canonical" href="https://jerome.codes/contact.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jerome Hardaway">
+<meta property="og:title" content="Contact · Jerome Hardaway">
+<meta property="og:description" content="[Page description]">
+<meta property="og:url" content="https://jerome.codes/contact.html">
+<meta property="og:image" content="[OG image]">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact · Jerome Hardaway">
+<meta name="twitter:description" content="[Page description]">
+<meta name="twitter:image" content="[OG image]">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container nav-row">
+    <a class="brand" href="/">
+      <span class="monogram" aria-hidden="true">JH</span>
+      <span>
+        <span class="brand-name">Jerome Hardaway</span>
+        <span class="brand-role">Founder · Vets Who Code</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/work.html">Work</a></li>
+        <li><a href="/writing.html">Writing</a></li>
+      </ul>
+      <a class="btn btn--primary" href="/contact.html" aria-current="page">Let's talk</a>
+    </nav>
+  </div>
+  <div class="ticks" aria-hidden="true"></div>
+</header>
+<main id="main">
+  <section class="section contact">
+    <div class="container">
+      <div class="grid contact-panels">
+        <div class="bg-navy brackets contact-intro">
+          <div class="stack">
+            <p class="eyebrow">Contact</p>
+            <h1>Let's<br>talk<span class="red">.</span></h1>
+            <p class="lede">[One line inviting people to reach out.]</p>
+          </div>
+          <svg class="g contact-radar" viewBox="0 0 600 450" role="img" aria-label="Radar scope with a red sweep and contact">
+            <g fill="none" stroke="currentColor">
+              <circle cx="300" cy="225" r="200" stroke-width="10" stroke-dasharray="1.5 8.97" opacity=".55"/>
+              <circle cx="300" cy="225" r="180" stroke-width="2"/>
+              <circle cx="300" cy="225" r="120" stroke-width="1" opacity=".5"/>
+              <circle cx="300" cy="225" r="60" stroke-width="1" opacity=".5"/>
+              <line x1="100" y1="225" x2="500" y2="225" opacity=".4"/>
+              <line x1="300" y1="25" x2="300" y2="425" opacity=".4"/>
+            </g>
+            <g class="radar-sweep">
+              <path d="M300 225 L300 45 A180 180 0 0 1 427.3 97.7Z" fill="#c5203e" opacity=".16"/>
+              <line x1="300" y1="225" x2="427.3" y2="97.7" stroke="#c5203e" stroke-width="3"/>
+            </g>
+            <circle cx="380" cy="130" r="8" fill="#c5203e"/>
+            <circle cx="225" cy="300" r="5" fill="currentColor" opacity=".7"/>
+            <circle cx="340" cy="320" r="5" fill="currentColor" opacity=".7"/>
+            <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" text-anchor="middle" aria-hidden="true">
+              <text x="300" y="18">N</text><text x="514" y="230">E</text><text x="300" y="446">S</text><text x="78" y="230">W</text>
+            </g>
+          </svg>
+          <ul class="contact-links">
+            <li><span class="meta">LinkedIn</span><a href="https://www.linkedin.com/in/jeromehardaway">/in/jeromehardaway</a></li>
+            <li><span class="meta">GitHub</span><a href="https://github.com/jeromehardaway">@jeromehardaway</a></li>
+            <li><span class="meta">Vets Who Code</span><a href="https://vetswhocode.io">vetswhocode.io</a></li>
+          </ul>
+        </div>
+        <div class="bg-white contact-form">
+          <!-- TODO: wire to form service -->
+          <form action="" method="post">
+            <fieldset class="contact-reason" data-chips>
+              <legend class="contact-label">What's this about?</legend>
+              <div class="chips">
+                <button class="chip" type="button" aria-pressed="true" value="Speaking">Speaking</button>
+                <button class="chip" type="button" aria-pressed="false" value="Partnership">Partnership</button>
+                <button class="chip" type="button" aria-pressed="false" value="Hire our troops">Hire our troops</button>
+                <button class="chip" type="button" aria-pressed="false" value="Other">Other</button>
+              </div>
+              <input type="hidden" name="reason" value="Speaking">
+            </fieldset>
+            <div class="grid contact-pair">
+              <div class="contact-field">
+                <label class="contact-label" for="name">Name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="contact-field">
+                <label class="contact-label" for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="contact-field">
+              <label class="contact-label" for="organization">Organization (optional)</label>
+              <input id="organization" name="organization" type="text" autocomplete="organization">
+            </div>
+            <div class="contact-field">
+              <label class="contact-label" for="message">Message</label>
+              <textarea id="message" name="message" rows="6" required></textarea>
+            </div>
+            <div class="contact-submit">
+              <p class="meta">[Response time note]</p>
+              <button class="btn btn--primary" type="submit">Send message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="ropes" aria-hidden="true"></div>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <span class="monogram monogram--inverse" aria-hidden="true">JH</span>
+        <p class="footer-signoff">[Short sign-off line]</p>
+      </div>
+      <nav aria-label="Footer">
+        <h2 class="footer-label">Site</h2>
+        <ul class="footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/work.html">Work</a></li>
+          <li><a href="/writing.html">Writing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h2 class="footer-label">Vets Who Code</h2>
+        <ul class="footer-links">
+          <li><a href="https://vetswhocode.io">vetswhocode.io</a></li>
+          <li><a href="https://github.com/Vets-Who-Code">GitHub org</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-label">Elsewhere</h2>
+        <ul class="footer-links">
+          <li><a href="https://www.linkedin.com/in/jeromehardaway">LinkedIn</a></li>
+          <li><a href="https://github.com/jeromehardaway">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <p>© <span data-year>2026</span> Jerome Hardaway · jerome.codes</p>
+      <p>Aim high</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
