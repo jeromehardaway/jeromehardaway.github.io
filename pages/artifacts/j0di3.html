@@ -1,0 +1,180 @@
+---
+title: J0DI3 AI backend
+description: Architecture deep dive on J0DI3, the AI teaching backend for Vets Who Code: FastAPI, pgvector RAG, prompt safety, circuit breakers and 670+ tests.
+path: /artifacts/j0di3/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / J0DI3</p>
+          <p class="eyebrow">Deep dive: production AI backend</p>
+          <h1>An AI teaching assistant that is not allowed to hand over the answer</h1>
+          <p class="lede">J0DI3 is the AI backend for the Vets Who Code accelerator. It coaches veterans through a 17-week, 25-module curriculum, grounded in approved course material, with spending limits and safety checks on every model call.</p>
+          <div class="callout">
+            <p><strong>The repository is private.</strong> This page describes the architecture. I walk through the code on a call: <a href="/contact/">get in touch</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>388 of 389</strong><span>commits are mine</span></li>
+            <li><strong>670+</strong><span>tests, with every AI call mocked</span></li>
+            <li><strong>70%</strong><span>coverage floor enforced in CI</span></li>
+            <li><strong>80,000</strong><span>token coaching budget per learner per module</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Architect and sole engineer</dd>
+            <dt>Stack</dt>
+            <dd>Python, FastAPI, PostgreSQL with pgvector, Alembic, DBOS durable workflows, Docker, Google Cloud Run, Terraform</dd>
+            <dt>Models</dt>
+            <dd><code>gemini-2.5-flash</code> and <code>gemini-2.5-pro</code>, defined in one client module. Opt-in Azure OpenAI fallback.</dd>
+            <dt>Scope</dt>
+            <dd>Seven product areas: learning, coding, challenges, jobs, troops, lessons and public, plus admin and events</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>Vets Who Code teaches people who are changing careers, often while working another job. They need help at the moment they are stuck, and mentors are volunteers with their own schedules. A general chatbot solves the wrong problem. It gives the answer, and a learner who is handed answers does not pass a technical interview.</p>
+
+            <h2 id="criteria">What it has to do</h2>
+            <ul>
+              <li><strong>Teach, don’t tell.</strong> Solutions are withheld until a learner has taken at least two hints or failed at least three times.</li>
+              <li><strong>Stay inside the curriculum.</strong> Answers are grounded in approved lessons before anything else.</li>
+              <li><strong>Protect learner data.</strong> Personal fields are encrypted and every access to them is logged.</li>
+              <li><strong>Stay within a nonprofit’s budget.</strong> Model spend per learner is capped.</li>
+              <li><strong>Degrade without falling over.</strong> A failing model must not take the service down.</li>
+            </ul>
+
+            <h2 id="architecture">Approach and architecture</h2>
+            <p>The service is layered: API routes call repositories, repositories own models and schemas, and a core package owns everything that touches a model. Retrieval is a three-tier ladder scoped to the learner’s current module and the two on either side of it. Responses stream to the client over server-sent events.</p>
+          </div>
+
+          <figure class="diagram">
+            <svg viewBox="0 0 760 270" role="img" aria-labelledby="jodie-diagram-title" font-family="inherit" font-size="13">
+              <title id="jodie-diagram-title">J0DI3 request path: the client calls FastAPI, input passes prompt safety, retrieval reads approved lessons then curated books then syllabus chunks from pgvector, the Gemini client is wrapped in a circuit breaker and token budget, output passes guardrails and streams back over server-sent events.</title>
+              <defs>
+                <marker id="arrow-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" fill="currentColor" />
+                </marker>
+              </defs>
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="100" width="100" height="56" />
+                <rect x="150" y="100" width="120" height="56" />
+                <rect x="310" y="100" width="130" height="56" />
+                <rect x="480" y="100" width="130" height="56" />
+                <rect x="650" y="100" width="100" height="56" />
+                <rect x="310" y="196" width="130" height="62" />
+                <rect x="480" y="14" width="130" height="50" />
+                <rect x="150" y="14" width="120" height="50" />
+                <path d="M110 128H148" marker-end="url(#arrow-e)" />
+                <path d="M270 128H308" marker-end="url(#arrow-e)" />
+                <path d="M440 128H478" marker-end="url(#arrow-e)" />
+                <path d="M610 128H648" marker-end="url(#arrow-e)" />
+                <path d="M375 194V158" marker-end="url(#arrow-e)" />
+                <path d="M545 66V98" marker-end="url(#arrow-e)" />
+                <path d="M210 98V66" marker-end="url(#arrow-e)" />
+              </g>
+              <g fill="currentColor">
+                <text x="60" y="124" text-anchor="middle" font-weight="700">Client</text>
+                <text x="60" y="142" text-anchor="middle">SSE stream</text>
+                <text x="210" y="124" text-anchor="middle" font-weight="700">Prompt safety</text>
+                <text x="210" y="142" text-anchor="middle">sanitize, delimit</text>
+                <text x="375" y="124" text-anchor="middle" font-weight="700">Retrieval</text>
+                <text x="375" y="142" text-anchor="middle">module ±2</text>
+                <text x="545" y="124" text-anchor="middle" font-weight="700">Model client</text>
+                <text x="545" y="142" text-anchor="middle">breaker, budget</text>
+                <text x="700" y="124" text-anchor="middle" font-weight="700">Guardrails</text>
+                <text x="700" y="142" text-anchor="middle">tone, PII</text>
+                <text x="375" y="218" text-anchor="middle">1. approved lessons</text>
+                <text x="375" y="234" text-anchor="middle">2. curated books</text>
+                <text x="375" y="250" text-anchor="middle">3. syllabus chunks</text>
+                <text x="545" y="36" text-anchor="middle">Azure OpenAI</text>
+                <text x="545" y="52" text-anchor="middle">opt-in fallback</text>
+                <text x="210" y="36" text-anchor="middle">Rate limits</text>
+                <text x="210" y="52" text-anchor="middle">by tier</text>
+              </g>
+            </svg>
+            <figcaption>Model calls go through one client module, which is where the breakers and budgets live.</figcaption>
+          </figure>
+
+          <div class="prose">
+            <h3>Data model</h3>
+            <p>PostgreSQL is the system of record. Vector embeddings for the three retrieval tiers live in the same database through pgvector, so retrieval and relational data share one transaction boundary and one backup. Schema changes go through Alembic, and CI runs each migration down and back up. Personal fields are encrypted at the field level with rotating keys, and a dedicated table audits every read of them.</p>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>Gate the solution behind effort</h3>
+            <p>Withholding answers frustrates a learner in the moment. It is also the point of the program. The gate is enforced by the solution endpoint itself, so it does not depend on the model choosing to behave. Recorded as <a href="/decisions/#dr-011">DR-011</a>.</p>
+
+            <h3>The backend records and coaches. It never grades.</h3>
+            <p>Learner code runs in the browser. The server never executes untrusted code, which removes a whole class of security work. The cost is that the backend cannot independently verify a result.</p>
+
+            <h3>Mock every AI call in tests</h3>
+            <p>More than 670 tests run in about eight seconds because no test calls a model. The suite is fast, free and deterministic, and it proves the plumbing. It does not measure answer quality, which needs a separate eval. Recorded as <a href="/decisions/#dr-012">DR-012</a>.</p>
+
+            <h3>Hash-pinned lockfile, weekly canary</h3>
+            <p>Production installs from a lockfile with hashes. A scheduled job installs from open version ranges once a week and runs the suite, so an upstream break shows up in the canary instead of during a release.</p>
+
+            <h2 id="outcome">Measurable outcome</h2>
+            <ul>
+              <li>One engineer built and operates a backend with nine product areas and seven durable workflows.</li>
+              <li>CI enforces a 70% coverage floor and runs unit tests, integration tests against a real database, a migration round trip, ruff, mypy, a convention linter, frontend type check, tests and build, and a security scan.</li>
+              <li>10% of successful model responses, and every error and retry, are captured as snapshots for incident replay, with 30-day retention.</li>
+            </ul>
+
+            <h2 id="llm">Evals, cost, latency, fallback and limits</h2>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><th scope="row">Evals</th><td>Behaviour rules are unit tested with mocked models. A canary token in the system prompt reveals a successful prompt injection if it ever appears in output. There is no automated answer-quality eval yet.</td></tr>
+                  <tr><th scope="row">Cost</th><td>80,000 tokens per learner per module for coaching, plus tiered rate limits.</td></tr>
+                  <tr><th scope="row">Latency</th><td>Responses stream over server-sent events, so the learner sees the first words while the rest generates. The admin stats endpoint reports AI usage with p50 and p95.</td></tr>
+                  <tr><th scope="row">Fallback</th><td>A circuit breaker per model. Azure OpenAI can be switched on as a second provider.</td></tr>
+                  <tr><th scope="row">Known limits</th><td>The backend cannot verify that learner code ran correctly. Job matching is off by default and needs labor-market data credentials.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="security">Prompt injection and output validation</h2>
+            <ul>
+              <li><strong>Input:</strong> learner text is sanitized and wrapped in delimiters before it reaches a prompt. The system prompt carries a canary token the model is told never to emit, so a leak is detectable.</li>
+              <li><strong>Output:</strong> guardrails check each response for tone drift, refusals and personal data before it is returned.</li>
+              <li><strong>Data:</strong> field-level encryption with key rotation, and an audit log of personal data access.</li>
+            </ul>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>J0DI3 is built with Claude Code, and the repository carries the tooling that keeps that honest: agents that audit a change before a pull request, audit migrations, audit generated content and verify production after a deploy, and skills that scaffold a new endpoint, migration or AI surface the same way each time. I own the architecture, the eight behaviour rules the assistant cannot break, and every merge.</p>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Build an answer-quality eval</strong> with graded examples for each behaviour rule, and run it on every model or prompt change.</li>
+              <li><strong>Pin dated model snapshots.</strong> The current names follow a model family, so behaviour can shift underneath the tests.</li>
+              <li><strong>Publish the p50 and p95 latency and the cost per request</strong> that the admin endpoint already reports.</li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <ol>
+              <li>Why a helpful chatbot is the wrong product for someone learning to code.</li>
+              <li>The request path, from learner text to streamed response.</li>
+              <li>The retrieval ladder and why it is scoped to nearby modules.</li>
+              <li>How the solution gate is enforced outside the model.</li>
+              <li>What happens when the model provider fails.</li>
+              <li>What 670 mocked tests prove, and what they cannot.</li>
+              <li>How one engineer keeps this reviewable with AI tooling.</li>
+            </ol>
+
+            <h2 id="related">Decision records and related posts</h2>
+            <ul>
+              <li><a href="/decisions/#dr-011">DR-011</a> and <a href="/decisions/#dr-012">DR-012</a></li>
+              <li><a href="https://vetswhocode.io/blogs/intelligence-layer-decade" rel="noopener">300 Veterans Later and a Decade of Teaching Veterans to Code</a></li>
+              <li><a href="https://vetswhocode.io/blogs/how-veterans-use-ai-at-vets-who-code" rel="noopener">Harnessing AI to Transform Coding Education for Veterans</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

@@ -1,0 +1,78 @@
+---
+title: For teams hiring a Senior Data Engineer
+description: Why Jerome Hardaway for a Senior Data Engineer role: a job-code data pipeline, sourced labor market data and a PostgreSQL backend built at Vets Who Code.
+path: /for/data-engineer/
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="eyebrow">For teams hiring a Senior Data Engineer</p>
+          <h1>I build pipelines where every number names its source.</h1>
+          <p class="lede">I turn messy public and commercial data into records people make career decisions on. Each stage writes output a person can read, and each figure says where it came from.</p>
+          <div class="button-row">
+            <a class="button" href="/resume/">Résumé</a>
+            <a class="button secondary" href="/contact/">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <section class="section alt">
+        <div class="container">
+          <h2>What you get</h2>
+          <ul class="stats">
+            <li><strong>4,455</strong><span>military job codes parsed and indexed across five service branches</span></li>
+            <li><strong>8</strong><span>keyed datasets produced by one staged pipeline</span></li>
+            <li><strong>3 tiers</strong><span>of salary data, with the tier recorded on every row</span></li>
+            <li><strong>$0</strong><span>in API keys for the O*NET and BLS scoring chain</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="article">
+        <div class="container">
+          <div class="prose">
+            <h2>The three artifacts to read</h2>
+            <ul class="entry-list">
+              <li>
+                <a href="/artifacts/mos-translator/">MOS Translator</a>
+                <p>A staged, resumable pipeline: parse job codes, generate schema-validated records, join them to a role taxonomy and salary data, publish static pages and a gap report.</p>
+              </li>
+              <li>
+                <a href="/artifacts/ai-era-job-kit/">AI-Era Job Kit</a>
+                <p>Ingests O*NET database files, BLS tables and the BLS API, and public job board APIs with the standard library alone. It stops when a source is unavailable.</p>
+              </li>
+              <li>
+                <a href="/artifacts/j0di3/">J0DI3 AI backend</a>
+                <p>PostgreSQL with pgvector as the system of record, migrations tested down and back up in CI, field-level encryption, access audit logging and 30-day retention.</p>
+              </li>
+            </ul>
+
+            <h2>How I work with data</h2>
+            <ul>
+              <li><strong>Label the source on the row.</strong> Salary records carry a <code>dataSource</code> field, so a reader can tell a live Lightcast figure from a Census estimate or a curated value.</li>
+              <li><strong>Validate at the boundary.</strong> Generated records must match a schema before they are written. A quote that is not in the source text is rejected.</li>
+              <li><strong>Refuse stale data.</strong> Postings older than 14 days and O*NET data older than 30 are rejected, and scripts stop when a live source is down.</li>
+              <li><strong>One definition per number.</strong> Each published outcome statistic is defined once, with its source and date, and pinned by a test.</li>
+              <li><strong>Make runs resumable.</strong> Batches are small and merge into existing output, so a failed run continues where it stopped.</li>
+            </ul>
+            <p>The reasoning behind each of these is in the <a href="/decisions/">decision records</a>.</p>
+
+            <h2>Data experience beyond these artifacts</h2>
+            <ul>
+              <li><strong>Senior Data Engineer, Serket-Tech Cyber Security.</strong> Designed the risk taxonomy and star schema data model behind an enterprise GRC Risk Register for a Fortune 500 healthcare company, and delivered Power BI dashboards with real-time filtering and drill-through.</li>
+              <li><strong>Vets Who Code.</strong> Firebase and GCP engagement data pipelines on Apache Kafka and Spark.</li>
+              <li><strong>Microsoft.</strong> React and Python BI dashboards for Starbucks that cut retrieval time by about 50%.</li>
+            </ul>
+            <p>Dates and detail are on the <a href="/resume/">résumé</a>.</p>
+
+            <h2>Skills</h2>
+            <ul class="tags">
+              <li>Python</li><li>SQL</li><li>Pandas</li><li>NumPy</li><li>Data pipelines and migrations</li><li>Apache Kafka</li><li>Apache Spark</li><li>Star schema modeling</li><li>Power BI</li><li>PostgreSQL</li><li>pgvector</li><li>Database performance</li><li>TypeScript</li><li>CI/CD</li><li>Terraform</li><li>Google Cloud Run</li>
+            </ul>
+
+            <h2>Logistics</h2>
+            <p>I am based in Atlanta, Georgia, and work remotely. I am open to Senior Data Engineer roles, especially on teams building data for AI products.</p>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

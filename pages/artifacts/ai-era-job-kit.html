@@ -1,0 +1,176 @@
+---
+title: AI-Era Job Kit
+description: Deep dive on a free Claude Code plugin that scores a résumé, LinkedIn, GitHub and portfolio against live O*NET and BLS data, with no API keys.
+path: /artifacts/ai-era-job-kit/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / AI-Era Job Kit</p>
+          <p class="eyebrow">Deep dive: agent tooling</p>
+          <h1>A job search kit where every number can be rerun for free</h1>
+          <p class="lede">Seven skills, seven agents and eleven Python scripts that score a résumé, LinkedIn profile, GitHub profile and portfolio against live public labor data, then rebuild them from one source of truth.</p>
+          <div class="button-row">
+            <a class="button" href="https://github.com/Vets-Who-Code/ai-era-job-kit" rel="noopener">Repo</a>
+            <a class="button secondary" href="https://vetswhocode.io/job-hunting-in-the-age-of-ai" rel="noopener">Workshop page</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>$0</strong><span>in API keys or paid data to run the whole chain</span></li>
+            <li><strong>7 + 7 + 3</strong><span>skills, agents and commands</span></li>
+            <li><strong>62</strong><span>offline tests, passing in under a second</span></li>
+            <li><strong>0</strong><span>third-party Python dependencies</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Sole author. Version 1.1.0.</dd>
+            <dt>Stack</dt>
+            <dd>Python 3.10+ standard library, Claude Code skills, subagents and slash commands</dd>
+            <dt>Data</dt>
+            <dd>O*NET database files, BLS Employment Projections, BLS Public Data API, public Greenhouse, Lever and Ashby job boards, GitHub REST API</dd>
+            <dt>Built for</dt>
+            <dd>The <a href="https://master.dev/workshops/getting-a-job-v4/" rel="noopener">Job Hunting in the Age of AI</a> workshop on Master.dev (formerly Frontend Masters), 11 November 2026</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>Job seekers get résumé advice with no source behind it, and AI tools that will happily invent a metric to make a bullet sound better. A candidate then walks into an interview carrying a claim they cannot defend. The people this hurts most are the ones Vets Who Code serves: career changers with real experience and no network to tell them what the market wants.</p>
+
+            <h2 id="criteria">What it has to do</h2>
+            <p>The kit is built on three laws, stated in its README:</p>
+            <ol>
+              <li>Measure everything.</li>
+              <li>Never list what you can’t defend.</li>
+              <li>Distribution beats talent.</li>
+            </ol>
+            <p>In practice that means every score traces to public data a learner can fetch themselves, and the tooling refuses to write a claim the candidate did not supply.</p>
+
+            <h2 id="architecture">Approach and architecture</h2>
+            <p>The portfolio is the master record. A <code>portfolio.json</code> file and a curated brag database hold the facts. The résumé, LinkedIn and GitHub profile are scored against the market, then regenerated from that record so they always agree with each other.</p>
+          </div>
+
+          <figure class="diagram">
+            <svg viewBox="0 0 760 210" role="img" aria-labelledby="kit-diagram-title" font-family="inherit" font-size="13">
+              <title id="kit-diagram-title">Scoring chain: the résumé scorer runs first against live O*NET and BLS data, then LinkedIn, GitHub and portfolio scorers reuse its target, a composite scorer combines them, an improvement plan ranks fixes, and the résumé rebuilder regenerates the résumé from the portfolio record.</title>
+              <defs>
+                <marker id="arrow-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" fill="currentColor" />
+                </marker>
+              </defs>
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="20" width="150" height="46" />
+                <rect x="10" y="130" width="150" height="56" />
+                <rect x="210" y="20" width="130" height="166" />
+                <rect x="390" y="75" width="110" height="56" />
+                <rect x="540" y="20" width="210" height="56" />
+                <rect x="540" y="130" width="210" height="56" />
+                <path d="M85 66V128" marker-end="url(#arrow-c)" />
+                <path d="M160 158H208" marker-end="url(#arrow-c)" />
+                <path d="M340 103H388" marker-end="url(#arrow-c)" />
+                <path d="M500 95L538 60" marker-end="url(#arrow-c)" />
+                <path d="M500 111L538 146" marker-end="url(#arrow-c)" />
+              </g>
+              <g fill="currentColor">
+                <text x="85" y="48" text-anchor="middle">O*NET + BLS, live</text>
+                <text x="85" y="154" text-anchor="middle" font-weight="700">1. Résumé scorer</text>
+                <text x="85" y="172" text-anchor="middle">sets the target</text>
+                <text x="275" y="62" text-anchor="middle">2. LinkedIn</text>
+                <text x="275" y="100" text-anchor="middle">3. GitHub</text>
+                <text x="275" y="138" text-anchor="middle">4. Portfolio</text>
+                <text x="275" y="170" text-anchor="middle" font-size="11">same JSON shape</text>
+                <text x="445" y="99" text-anchor="middle" font-weight="700">5. Composite</text>
+                <text x="445" y="117" text-anchor="middle">two reads</text>
+                <text x="645" y="44" text-anchor="middle" font-weight="700">6. Improvement plan</text>
+                <text x="645" y="62" text-anchor="middle">biggest gain first</text>
+                <text x="645" y="154" text-anchor="middle" font-weight="700">7. Résumé rebuilder</text>
+                <text x="645" y="172" text-anchor="middle">from portfolio.json</text>
+              </g>
+            </svg>
+            <figcaption>Each step is a skill with a script behind it. Every scorer writes the same JSON shape so step 5 can combine them.</figcaption>
+          </figure>
+
+          <div class="prose">
+            <h3>Data model</h3>
+            <ul>
+              <li><code>portfolio.json</code>: profile, experience and artifacts. The master record.</li>
+              <li><code>brag/entries/</code>: curated wins, promoted by hand from an inbox that a Friday script fills from merged pull requests, with redaction.</li>
+              <li><code>resume-score.json</code>: the market target from step 1, reused by steps 2 to 4.</li>
+              <li>One score file per surface, all in the same shape.</li>
+            </ul>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>Standard library only, keyless data only</h3>
+            <p>The kit uses no pip packages and no licensed or keyed data, because, in the words of its method document, “every learner has to be able to rerun every number for free.” That rules out richer commercial labor data. Recorded as <a href="/decisions/#dr-007">DR-007</a>.</p>
+
+            <h3>Live data or stop</h3>
+            <p>If a data source cannot be reached, the script prints <code>STOPPED:</code> and exits. It never falls back to a remembered number. A learner sometimes gets no score, and never gets a stale one presented as current. Recorded as <a href="/decisions/#dr-008">DR-008</a>.</p>
+
+            <h3>Scripts compute, the model grades evidence</h3>
+            <p>Every number comes from a script. The model’s job is to judge whether a line of the résumé is evidence for a skill, and it has to answer with a quote. Scripts reject a quote that is not in the text. Recorded as <a href="/decisions/#dr-009">DR-009</a>.</p>
+
+            <h3>Two composite scores, with the weights declared as judgment</h3>
+            <p>A machine read weights the résumé at 40, LinkedIn 35, GitHub 15 and portfolio 10. A human read weights portfolio 35, GitHub 30, résumé 20 and LinkedIn 15. The documentation calls those weights “a VWC design judgment, not research,” and every one can be overridden from the command line. Recorded as <a href="/decisions/#dr-010">DR-010</a>.</p>
+
+            <h2 id="outcome">Measurable outcome</h2>
+            <ul>
+              <li>The full chain runs with no account, no API key and nothing to install beyond Python.</li>
+              <li>62 tests in 19 classes run offline against synthetic fixtures and pass in under a second. They cover parsing, both O*NET file layouts, matcher false positives, every chain step, the live-data stop and redaction.</li>
+              <li>A GitHub scoring run uses about 20 of the 60 unauthenticated requests an hour the API allows.</li>
+            </ul>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>The kit is itself a set of instructions for an AI assistant, so its guardrails are the product:</p>
+            <ul>
+              <li>The résumé rebuilder may not invent employers, titles, dates, metrics or skills. A missing fact is written as <code>[ask: …]</code> for the person to fill in.</li>
+              <li>Every sourced number carries a tag for where it came from. Unverified figures are never used as rules.</li>
+              <li>Agent tool access is restricted. The final-round panel agent can only read.</li>
+              <li>The mock interviewer does not score tone, accent or pace.</li>
+              <li>Nothing sends, posts or applies on the user’s behalf.</li>
+              <li>Scripts refuse to read or write a résumé inside a git repository, so personal data is not committed by accident.</li>
+            </ul>
+
+            <h2 id="limits">Known limits</h2>
+            <ul>
+              <li>Neither composite is a hiring prediction. The documentation says so.</li>
+              <li>Outside proof is corroboration the user supplies. The kit does not verify it.</li>
+              <li>Interview answers have no second-grader agreement check yet.</li>
+              <li>Portfolio sites rendered entirely in JavaScript cannot be fully audited.</li>
+              <li>The BLS public API has a small daily quota.</li>
+            </ul>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Add CI.</strong> The tests exist and pass locally. They should run on every push.</li>
+              <li><strong>Publish grader agreement numbers.</strong> The tooling to measure agreement between two graders is in the kit, with a target of the same letter on 90% of qualifications. The measured results belong in the repo.</li>
+              <li><strong>Add a second-grader check for interview answers.</strong></li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <ol>
+              <li>The failure this prevents: a candidate defending a number an AI made up.</li>
+              <li>Why the portfolio is the master record and everything else is generated from it.</li>
+              <li>The chain, one step at a time, and why step 1 sets the target for the rest.</li>
+              <li>What the scripts do and what the model is allowed to do.</li>
+              <li>Why the kit stops when data is unavailable.</li>
+              <li>Why there are two scores and why the weights are labelled as judgment.</li>
+            </ol>
+
+            <h2 id="related">Decision records and related posts</h2>
+            <ul>
+              <li><a href="/decisions/#dr-007">DR-007</a> through <a href="/decisions/#dr-010">DR-010</a></li>
+              <li><a href="https://github.com/Vets-Who-Code/ai-era-job-kit/blob/main/METHOD.md" rel="noopener">METHOD.md</a>, the kit’s own account of where each number comes from</li>
+              <li><a href="https://vetswhocode.io/blogs/how-to-beat-the-bots" rel="noopener">How to Beat the Bots</a></li>
+              <li><a href="https://vetswhocode.io/blogs/in-2025-just-having-a-portfolio-wont-cut-it-show-evidence-of-your-skills" rel="noopener">In 2025, Just Having a Portfolio Won’t Cut It</a></li>
+              <li><a href="/artifacts/hashflag-skills/">Hashflag Skills</a>, where the scorer’s grading consistency was first measured</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

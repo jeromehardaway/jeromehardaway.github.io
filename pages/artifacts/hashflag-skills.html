@@ -1,0 +1,180 @@
+---
+title: Hashflag Skills
+description: Deep dive on the Claude Code skills Vets Who Code runs on, including a measured eval that cut résumé grading spread from 5.1 points to 1.2.
+path: /artifacts/hashflag-skills/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / Hashflag Skills</p>
+          <p class="eyebrow">Deep dive: LLM evals</p>
+          <h1>Agent skills that run a nonprofit, with the grading measured</h1>
+          <p class="lede">An open-source Claude Code plugin of six skills Vets Who Code uses to operate from the terminal. Its résumé scorer ships with an eval that measures how much the model’s grading moves between sessions.</p>
+          <div class="button-row">
+            <a class="button" href="https://github.com/Vets-Who-Code/hashflag-skills" rel="noopener">Repo</a>
+            <a class="button secondary" href="https://github.com/Vets-Who-Code/hashflag-skills/blob/main/skills/resume-market-scorer/references/consistency.md" rel="noopener">The eval</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>5.1 → 1.2</strong><span>points of score spread on the hardest résumé, across three rounds</span></li>
+            <li><strong>98–100%</strong><span>pairwise grader agreement in round 3</span></li>
+            <li><strong>6</strong><span>skills in the plugin</span></li>
+            <li><strong>58 of 66</strong><span>commits are mine</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Author and maintainer</dd>
+            <dt>Stack</dt>
+            <dd>Claude Code plugin, TypeScript on Node 22, Python scripts, exact-pinned dependencies</dd>
+            <dt>Skills</dt>
+            <dd><code>hashflagify</code>, <code>resume-market-scorer</code>, <code>project-demo</code>, <code>blog-media</code>, <code>brand-pack</code>, <code>brand-explainer</code></dd>
+            <dt>License</dt>
+            <dd>Apache-2.0, fixtures CC0</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>A small nonprofit has the same recurring work as a larger company: branded media for every post, demos for every project, résumé reviews for every graduate. Vets Who Code does not have the staff for that. Packaging each job as an agent skill lets one engineer do it from a terminal, the same way every time.</p>
+            <p>The résumé scorer raised a harder problem. Its scripts are deterministic, and the step where a model reads a résumé and grades each skill is not. If two sessions grade the same résumé differently, the advice built on that score is noise.</p>
+
+            <h2 id="criteria">Success criteria</h2>
+            <p>The target was written down before measuring: scores from independent grading sessions on the same résumé and the same market data must fall within <strong>±2 points</strong> of each other. The lift a single skill adds to a score is 1 to 6 points, so a wider spread would make the ranking of recommendations meaningless.</p>
+
+            <h2 id="architecture">Approach and architecture</h2>
+            <p>Each skill is a Markdown instruction file with scripts behind it. A shared TypeScript library validates brand packs and checks fonts. The résumé scorer fetches live postings from five public job board APIs plus O*NET and BLS data, a model grades the résumé against that market, and a script computes the score.</p>
+          </div>
+
+          <figure class="diagram">
+            <svg viewBox="0 0 760 200" role="img" aria-labelledby="skills-diagram-title" font-family="inherit" font-size="13">
+              <title id="skills-diagram-title">Résumé market scorer: scripts fetch live postings, O*NET and BLS data; a model session grades the résumé into structured JSON with quoted evidence; a script validates the grades and computes the composite score; a comparison script measures the spread across sessions.</title>
+              <defs>
+                <marker id="arrow-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" fill="currentColor" />
+                </marker>
+              </defs>
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="20" width="170" height="60" />
+                <rect x="10" y="120" width="170" height="60" />
+                <rect x="240" y="70" width="150" height="60" stroke-dasharray="5 4" />
+                <rect x="440" y="70" width="140" height="60" />
+                <rect x="630" y="20" width="120" height="60" />
+                <rect x="630" y="120" width="120" height="60" />
+                <path d="M180 56L238 88" marker-end="url(#arrow-d)" />
+                <path d="M180 144L238 112" marker-end="url(#arrow-d)" />
+                <path d="M390 100H438" marker-end="url(#arrow-d)" />
+                <path d="M580 88L628 60" marker-end="url(#arrow-d)" />
+                <path d="M580 112L628 140" marker-end="url(#arrow-d)" />
+              </g>
+              <g fill="currentColor">
+                <text x="95" y="46" text-anchor="middle" font-weight="700">Market data</text>
+                <text x="95" y="64" text-anchor="middle">postings, O*NET, BLS</text>
+                <text x="95" y="146" text-anchor="middle" font-weight="700">Résumé text</text>
+                <text x="95" y="164" text-anchor="middle">never inside a git repo</text>
+                <text x="315" y="96" text-anchor="middle" font-weight="700">Model grades</text>
+                <text x="315" y="114" text-anchor="middle">quote per skill</text>
+                <text x="510" y="96" text-anchor="middle" font-weight="700">Script scores</text>
+                <text x="510" y="114" text-anchor="middle">validates, computes</text>
+                <text x="690" y="46" text-anchor="middle" font-weight="700">Report</text>
+                <text x="690" y="64" text-anchor="middle">score + lifts</text>
+                <text x="690" y="146" text-anchor="middle" font-weight="700">Compare</text>
+                <text x="690" y="164" text-anchor="middle">spread by session</text>
+              </g>
+            </svg>
+            <figcaption>The dashed box is the only non-deterministic step. The eval measures exactly that box.</figcaption>
+          </figure>
+
+          <div class="prose">
+            <h3>Data model</h3>
+            <ul>
+              <li><code>postings.json</code>: fetched postings with a fetch date. Refused if older than 14 days.</li>
+              <li><code>resume.json</code>: one grade per skill (proven, applied, listed, stale or none), each with the quoted line it rests on.</li>
+              <li><code>report.json</code>: the composite score, weighted 50% postings, 35% O*NET technology skills, 15% O*NET core skills.</li>
+            </ul>
+
+            <h2 id="eval">The eval</h2>
+            <p>Three résumés in three lanes, each graded by three fresh Claude Code sessions with no shared context. Each session received only the skill file, the checklist, the résumé and the fetched market data. Two résumés are fictional fixtures that plant the hard cases on purpose: a role that ended just over five years ago, a tool the person is only “learning”, bullets with a count and no outcome.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Round</th><th>AI lane spread</th><th>Software lane spread</th><th>Data lane spread</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>2.5</td><td>2.8</td><td>5.1</td></tr>
+                  <tr><td>2</td><td>0.0</td><td>5.0</td><td>1.7</td></tr>
+                  <tr><td>3</td><td>0.0</td><td>0.0</td><td>1.2</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Spread is the highest score minus the lowest across the three sessions, in points out of 100. By round 3 every lane was inside the target.</p>
+
+            <h2 id="ai-wrong">Where AI got it wrong</h2>
+            <p>Round 1 showed the model being generous in ways that would have misled a job seeker:</p>
+            <ul>
+              <li><strong>It inferred skills the résumé never named.</strong> “Fixed N+1 queries” became SQL. “On ECS” became AWS. An LLM app became AI agents.</li>
+              <li><strong>It could not agree on what counts as a metric.</strong> Is “40 dashboards” a result or only a count?</li>
+              <li><strong>It disagreed about which sections count as experience.</strong> A meetup demo under Projects was experience in one session and not in another.</li>
+            </ul>
+            <p>Each disagreement became a written rule. The quote must name the skill. Any number in the best named bullet makes it proven. Experience means a bullet under a dated role or a project. The software lane then got worse in round 2 before it got better, which is why there is a round 3.</p>
+            <p>The eval also caught a plain bug: a data file from before a vocabulary rename crashed the scorer. The script now refuses that file and asks for a re-fetch.</p>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>Strict naming over generous inference</h3>
+            <p>Requiring the quote to name the skill means a person who did the work and described it loosely scores lower. That is the right failure. The score tells them to name the skill, and it never credits them with one they would have to defend. Recorded as <a href="/decisions/#dr-009">DR-009</a>.</p>
+            <h3>Refuse stale data</h3>
+            <p>Postings older than 14 days and O*NET data older than 30 are refused. The user re-fetches more often and never gets a score against last quarter’s market. Recorded as <a href="/decisions/#dr-008">DR-008</a>.</p>
+
+            <h2 id="credibility">Engineering signals</h2>
+            <ul>
+              <li>CI runs the Node tests, two Python test suites, brand-pack validation, a font check and <code>claude plugin validate --strict</code>.</li>
+              <li>Dependencies are pinned to exact versions.</li>
+              <li>Score bands are percentiles of a reference pool, and no band is shown with fewer than 20 résumés in it.</li>
+              <li>The scorer refuses to read a résumé stored inside a git repository.</li>
+            </ul>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>The skills are instructions for Claude Code, and Claude Code sessions were the graders in the eval. I wrote the rules, designed the fixtures to break them, read every split, and decided which rule each one became.</p>
+
+            <h2 id="limits">Known limits</h2>
+            <ul>
+              <li>“Different graders” means different sessions of the same model. There are no human graders yet.</li>
+              <li>Workday-hosted postings are not fetched, and the sample still leans toward tech and startup employers.</li>
+              <li>AI and ML engineers have no O*NET occupation of their own, so that lane borrows the software developer code.</li>
+              <li>The score is not a hiring prediction.</li>
+            </ul>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Add human graders</strong> to the consistency eval and report agreement with them.</li>
+              <li><strong>Record the model version</strong> used for each eval round, so a model upgrade can be compared against it.</li>
+              <li><strong>Run the eval in CI</strong> when the grading rules change.</li>
+              <li><strong>Bring the README up to date.</strong> It names three skills and six ship.</li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <ol>
+              <li>Why a deterministic script around a non-deterministic grader still gives a noisy score.</li>
+              <li>How the ±2 target was derived from the size of a single recommendation.</li>
+              <li>The fixtures and the traps planted in them.</li>
+              <li>Round 1: what the model inferred and why that is dangerous for a job seeker.</li>
+              <li>The rules that came out of it, and the round where one lane got worse.</li>
+              <li>What the eval still cannot tell me.</li>
+            </ol>
+
+            <h2 id="related">Decision records and related work</h2>
+            <ul>
+              <li><a href="/decisions/#dr-008">DR-008</a> and <a href="/decisions/#dr-009">DR-009</a></li>
+              <li><a href="https://github.com/Vets-Who-Code/hashflag-skills/pull/36" rel="noopener">Pull request #36</a>: measure grading consistency and tighten the rules</li>
+              <li><a href="https://github.com/Vets-Who-Code/hashflag-skills/pull/16" rel="noopener">Pull request #16</a>: add the résumé market scorer</li>
+              <li><a href="/artifacts/ai-era-job-kit/">AI-Era Job Kit</a>, which builds the full scoring chain on this approach</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

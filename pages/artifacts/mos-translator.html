@@ -1,0 +1,181 @@
+---
+title: MOS Translator
+description: Deep dive on the pipeline that turns 4,455 military job codes into civilian tech career guides with Gemini, schema-checked output and sourced salary data.
+path: /artifacts/mos-translator/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / MOS Translator</p>
+          <p class="eyebrow">Deep dive: LLM pipeline</p>
+          <h1>4,455 military job codes, translated into tech careers</h1>
+          <p class="lede">A veteran types in their military job code and gets a guide to the tech roles it maps to, with skills, certifications and salary data that names its source.</p>
+          <div class="button-row">
+            <a class="button" href="https://vetswhocode.io/career-guides" rel="noopener">Live demo</a>
+            <a class="button secondary" href="https://github.com/Vets-Who-Code/vets-who-code-app/tree/master/scripts" rel="noopener">Pipeline source</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>4,455</strong><span>job codes indexed across five service branches</span></li>
+            <li><strong>4,201</strong><span>codes with a generated tech pathway (94%)</span></li>
+            <li><strong>35</strong><span>tech roles in the taxonomy, each with a BLS SOC code</span></li>
+            <li><strong>0</strong><span>model calls at request time</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Designed and built the pipeline and the pages that render it</dd>
+            <dt>Stack</dt>
+            <dd>TypeScript, Vercel AI SDK, Zod schemas, Google Gemini, Next.js static generation</dd>
+            <dt>Model</dt>
+            <dd><code>gemini-2.0-flash</code>, named in each generator script</dd>
+            <dt>Data</dt>
+            <dd>Lightcast, Census ACS 2023 estimates, a curated fallback table</dd>
+            <dt>Shipped</dt>
+            <dd>Pathways generator merged 2 May 2026 (<a href="https://github.com/Vets-Who-Code/vets-who-code-app/pull/1104" rel="noopener">#1104</a>)</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>A military job code tells a civilian recruiter almost nothing. A veteran leaving the service knows what they did, and usually does not know which software roles value it or what those roles pay. Vets Who Code answers that question one conversation at a time. There are thousands of job codes across the Army, Navy, Air Force, Marine Corps and Coast Guard, and nobody can hold all of them in their head.</p>
+
+            <h2 id="criteria">What it has to do</h2>
+            <ul>
+              <li><strong>Cover every code it can.</strong> A veteran who looks up their own code should find it.</li>
+              <li><strong>Return the same structure every time.</strong> Pages are generated from the data, so free-form model output is not acceptable.</li>
+              <li><strong>Say where each salary came from.</strong> A veteran is making a career decision on these numbers.</li>
+              <li><strong>Cost nothing per page view.</strong> The organization cannot pay for a model call each time someone reads a guide.</li>
+            </ul>
+
+            <h2 id="architecture">Approach and architecture</h2>
+            <p>The pipeline runs offline in stages. Each stage reads the previous stage’s JSON, asks Gemini for an object that must match a Zod schema, and writes JSON back to the repository. The site then builds static pages from those files.</p>
+          </div>
+
+          <figure class="diagram">
+            <svg viewBox="0 0 760 250" role="img" aria-labelledby="mos-diagram-title" font-family="inherit" font-size="13">
+              <title id="mos-diagram-title">Pipeline: job code text files are parsed into an index, four Gemini steps generate skill, systems, training and certification maps, a pathways step joins them with a role taxonomy and salary data, and the site renders static career guides.</title>
+              <defs>
+                <marker id="arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" fill="currentColor" />
+                </marker>
+              </defs>
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="95" width="130" height="60" />
+                <rect x="190" y="20" width="170" height="210" />
+                <rect x="410" y="95" width="150" height="60" />
+                <rect x="410" y="20" width="150" height="46" />
+                <rect x="410" y="184" width="150" height="46" />
+                <rect x="610" y="95" width="140" height="60" />
+                <path d="M140 125H188" marker-end="url(#arrow-b)" />
+                <path d="M360 125H408" marker-end="url(#arrow-b)" />
+                <path d="M485 66V93" marker-end="url(#arrow-b)" />
+                <path d="M485 184V157" marker-end="url(#arrow-b)" />
+                <path d="M560 125H608" marker-end="url(#arrow-b)" />
+              </g>
+              <g fill="currentColor">
+                <text x="75" y="121" text-anchor="middle" font-weight="700">Job codes</text>
+                <text x="75" y="139" text-anchor="middle">parsed, no LLM</text>
+                <text x="275" y="46" text-anchor="middle" font-weight="700">Gemini + Zod</text>
+                <text x="275" y="82" text-anchor="middle">cognitive skills</text>
+                <text x="275" y="110" text-anchor="middle">military systems</text>
+                <text x="275" y="138" text-anchor="middle">training pipeline</text>
+                <text x="275" y="166" text-anchor="middle">cert equivalencies</text>
+                <text x="275" y="194" text-anchor="middle">career pathways</text>
+                <text x="485" y="48" text-anchor="middle">35-role taxonomy</text>
+                <text x="485" y="121" text-anchor="middle" font-weight="700">Tech pathways</text>
+                <text x="485" y="139" text-anchor="middle">resumable join</text>
+                <text x="485" y="212" text-anchor="middle">Salary data</text>
+                <text x="680" y="121" text-anchor="middle" font-weight="700">Static guides</text>
+                <text x="680" y="139" text-anchor="middle">+ gap report</text>
+              </g>
+            </svg>
+            <figcaption>Every box writes JSON to the repository. The final step also produces a curriculum gap report.</figcaption>
+          </figure>
+
+          <div class="prose">
+            <h3>Data model</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>File</th><th>Keyed by</th><th>Entries</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>job-codes-index.json</code></td><td>Job code</td><td>4,455</td></tr>
+                  <tr><td><code>cognitive-skills-map.json</code></td><td>Job code</td><td>4,392</td></tr>
+                  <tr><td><code>military-systems-map.json</code></td><td>Job code</td><td>4,386</td></tr>
+                  <tr><td><code>cert-equivalencies.json</code></td><td>Job code</td><td>4,350</td></tr>
+                  <tr><td><code>career-pathways-map.json</code></td><td>Job code</td><td>4,231</td></tr>
+                  <tr><td><code>training-pipeline.json</code></td><td>Job code</td><td>4,203</td></tr>
+                  <tr><td><code>tech-pathways-map.json</code></td><td>Job code, joined to role and salary</td><td>4,201</td></tr>
+                  <tr><td><code>tech-roles-taxonomy.json</code></td><td>Role, with BLS SOC code</td><td>35</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>Generate offline, commit the output</h3>
+            <p>Model output is generated ahead of time and reviewed as a diff, then served as static pages. A guide loads with no model latency and no token cost, and a model outage cannot take a page down. The cost is freshness: a guide is as current as the last run. Recorded as <a href="/decisions/#dr-005">DR-005</a>.</p>
+
+            <h3>Salary data falls back in three tiers and labels itself</h3>
+            <p>The pipeline asks Lightcast first, then Census ACS, then a curated table. Each record carries a <code>dataSource</code> field so the page can show which tier answered. The pipeline always completes, and a reader can tell a live figure from a curated one. Recorded as <a href="/decisions/#dr-006">DR-006</a>.</p>
+
+            <h3>Small batches, resumable runs</h3>
+            <p>Generators work in batches of 10 with a one-second pause, and the pathways step merges into existing output. A failed run resumes where it stopped instead of paying to regenerate four thousand entries.</p>
+
+            <h2 id="outcome">Measurable outcome</h2>
+            <ul>
+              <li>4,201 job codes have a published guide with roles, certifications, demand and salary.</li>
+              <li>Each guide carries Occupation structured data so search engines and AI assistants can read it (<a href="https://github.com/Vets-Who-Code/vets-who-code-app/pull/1407" rel="noopener">#1407</a>).</li>
+              <li>The same data produces a curriculum gap report that ranks tech roles by how many job codes map to them. Data Analyst leads with 3,796 codes, then Security Engineer with 3,723.</li>
+            </ul>
+
+            <h2 id="llm">Evals, cost, latency, fallback and limits</h2>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><th scope="row">Evals</th><td>Output is validated against a Zod schema on every call. There is no labelled accuracy set yet. See v2.</td></tr>
+                  <tr><th scope="row">Cost</th><td>Zero at request time. Generation cost per run is not recorded yet.</td></tr>
+                  <tr><th scope="row">Latency</th><td>Zero model latency for readers. Pages are static.</td></tr>
+                  <tr><th scope="row">Fallback</th><td>Salary: Lightcast, then Census ACS, then curated. Generation: resumable from existing output.</td></tr>
+                  <tr><th scope="row">Known limits</th><td>254 indexed codes have no tech pathway. Mappings are model-generated and schema-checked, and have not been reviewed code by code by a subject-matter expert.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>The model writes the per-code content. I own the schemas that constrain it, the role taxonomy it has to map into, the salary sourcing and the decision about what gets published. Generated files are committed and reviewed like any other change.</p>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Build an accuracy set.</strong> Have veterans from each branch grade a sample of guides for their own job codes, and track the score across model versions.</li>
+              <li><strong>Record tokens and cost for each generation run</strong> alongside the output.</li>
+              <li><strong>Move the model name to one shared constant.</strong> It is currently repeated in each script.</li>
+              <li><strong>Close the 254-code gap</strong> or state on the page why a code has no pathway.</li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <ol>
+              <li>Why job code translation is the first question every transitioning veteran asks.</li>
+              <li>The stages, and why each one writes a file a person can read.</li>
+              <li>How a Zod schema turns a language model into a function with a return type.</li>
+              <li>The three salary tiers and why the page shows which one answered.</li>
+              <li>What the gap report shows about demand by role.</li>
+              <li>What is not measured yet, and how I would measure it.</li>
+            </ol>
+
+            <h2 id="related">Decision records and related posts</h2>
+            <ul>
+              <li><a href="/decisions/#dr-005">DR-005</a> and <a href="/decisions/#dr-006">DR-006</a></li>
+              <li><a href="https://vetswhocode.io/blogs/what-we-are-building-at-vets-who-code" rel="noopener">What We’re Building at Vets Who Code</a></li>
+              <li><a href="https://vetswhocode.io/blogs/intelligence-layer-decade" rel="noopener">300 Veterans Later and a Decade of Teaching Veterans to Code</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

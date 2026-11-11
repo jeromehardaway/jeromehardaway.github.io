@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}" />
+    <meta name="author" content="Jerome Hardaway" />
+    <link rel="canonical" href="{{canonical}}" />
+    <meta property="og:type" content="{{og_type}}" />
+    <meta property="og:site_name" content="Jerome Hardaway" />
+    <meta property="og:title" content="{{title}}" />
+    <meta property="og:description" content="{{description}}" />
+    <meta property="og:url" content="{{canonical}}" />
+    <meta property="og:image" content="{{og_image}}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/site.js"></script>
+    {{head_extra}}
+  </head>
+  <body class="{{body_class}}">
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">Jerome Hardaway<span>.</span></a>
+        <div class="header-actions">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul>
+            {{nav}}
+            </ul>
+          </nav>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 3v18" />
+              <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
+          <button class="icon-button nav-toggle" id="nav-toggle" type="button" aria-label="Menu" aria-controls="site-nav" aria-expanded="false">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+{{content}}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h2>Contact</h2>
+            <ul>
+              <li><a href="https://www.linkedin.com/in/jeromehardaway/" rel="me noopener">LinkedIn</a></li>
+              <li><a href="https://github.com/jeromehardaway" rel="me noopener">GitHub</a></li>
+              <li><a href="/contact/">All contact options</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Hiring</h2>
+            <ul>
+              <li><a href="/recruiters/">Recruiter fast lane</a></li>
+              <li><a href="/refer/">Referral kit</a></li>
+              <li><a href="/resume/">Résumé</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Roles</h2>
+            <ul>
+              <li><a href="/for/ai-engineer/">Senior AI Engineer</a></li>
+              <li><a href="/for/data-engineer/">Senior Data Engineer</a></li>
+              <li><a href="/for/ai-engineering-leader/">AI Engineering Leader</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Site</h2>
+            <ul>
+              <li><a href="/decisions/">Decision records</a></li>
+              <li><a href="/changelog/">What’s new</a></li>
+              <li><a href="https://vetswhocode.io" rel="noopener">Vets Who Code</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="footer-bottom">© {{year}} Jerome Hardaway.</p>
+      </div>
+    </footer>
+  </body>
+</html>

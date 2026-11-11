@@ -1,49 +1,45 @@
-# Jerome Hardaway's Portfolio
+# jerome.codes
 
-Welcome to my personal portfolio website!
+Jerome Hardaway's portfolio. Everything on it is work done at [Vets Who Code](https://vetswhocode.io), and it is built against the [Vets Who Code portfolio checklist](https://vetswhocode.io/portfolio-checklist).
 
-## Technologies Used
+## Run it
 
-- **HTML5** for the structure of the website
-- **CSS3** for styling and layout
-- **JavaScript** for interactivity
+Python 3.10 or newer. No dependencies.
 
-## Project Structure
+```sh
+python3 build.py --serve
+```
 
-- `index.html`: The main HTML file that structures the webpage.
-- `styles.css`: The CSS file for styling the webpage.
-- `script.js`: The JavaScript file for adding interactivity.
+That builds the site into `_site/` and serves it at http://127.0.0.1:8000.
 
-## Sections
+## How it is put together
 
-### Header
+| Path | What it is |
+| --- | --- |
+| `pages/` | One HTML file per page: a front matter block (`title`, `description`, `path`, optional `nav`) and the page body |
+| `templates/base.html` | The shell every page is wrapped in: head, nav, footer |
+| `templates/partials/` | Fragments included with `{{> name}}` |
+| `static/` | Copied to the site root as is: CSS, JS, icons, `robots.txt`, `llms.txt`, `CNAME` |
+| `build.py` | The generator. Also writes `sitemap.xml`. |
 
-Displays the main title of the portfolio.
+## What the build checks
 
-### Navigation
+`build.py` exits non-zero, and CI fails, if:
 
-Provides links for navigating the website.
+- an internal link or anchor does not resolve
+- a page is missing a title, description or path
+- a meta description is over 170 characters
+- placeholder text such as "coming soon" appears anywhere
+- a JSON-LD block is not valid JSON
 
-### About Me
+## Deploy
 
-Includes an image and a brief description of who I am and my professional background.
+Pushing to `main` runs `.github/workflows/static.yml`, which builds and deploys `_site/` to GitHub Pages. Pull requests run the build without deploying.
 
-### My Journey
+## Keeping it true
 
-Details my career path, including my service in the United States Air Force and my work with Vets Who Code.
-
-### Footer
-
-Contains copyright information.
-
-## Deployment
-
-This project is deployed using GitHub Pages. To view it, navigate to [here](https://jeromehardaway.github.io/#).
-
-## Contact
-
-Feel free to reach out via [LinkedIn](https://www.linkedin.com/in/jeromehardaway/) or [Twitter](https://twitter.com/JeromeHardaway).
+Every number on the site was counted from repository history, CI configuration or the GitHub API on the date the page states. When a number changes, update the page and add an entry to `pages/changelog.html`.
 
 ## License
 
-&copy; 2024 Jerome Hardaway. All rights reserved.
+&copy; 2026 Jerome Hardaway. All rights reserved.
