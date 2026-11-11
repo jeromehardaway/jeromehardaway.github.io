@@ -1,0 +1,5 @@
+# Search engines and AI crawlers are welcome.
+User-agent: *
+Allow: /
+
+Sitemap: https://jerome.codes/sitemap.xml

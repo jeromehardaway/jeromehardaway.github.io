@@ -1,0 +1,102 @@
+---
+title: Decision records
+description: Twelve short decision records from Jerome Hardaway's work at Vets Who Code: the context, the choice and what it cost, each linked to the artifact it shaped.
+path: /decisions/
+nav: how-i-build
+---
+      <div class="page-head">
+        <div class="container">
+          <h1>Decisions, and what each one cost</h1>
+          <p class="lede">Short records of the tradeoffs behind the work on this site. Each one states the context, the decision and the consequence, and links to the artifact where it shows up.</p>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <div class="prose">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Record</th><th>Decision</th><th>Artifact</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><a href="#dr-001">DR-001</a></td><td>The spam classifier fails open</td><td>Platform</td></tr>
+                  <tr><td><a href="#dr-002">DR-002</a></td><td>Content lives in files, not a database</td><td>Platform</td></tr>
+                  <tr><td><a href="#dr-003">DR-003</a></td><td>Rate limits are counted in memory</td><td>Platform</td></tr>
+                  <tr><td><a href="#dr-004">DR-004</a></td><td>One source for every outcome number</td><td>Platform</td></tr>
+                  <tr><td><a href="#dr-005">DR-005</a></td><td>Generate model output offline and commit it</td><td>MOS Translator</td></tr>
+                  <tr><td><a href="#dr-006">DR-006</a></td><td>Salary data falls back in tiers and labels its source</td><td>MOS Translator</td></tr>
+                  <tr><td><a href="#dr-007">DR-007</a></td><td>Standard library and keyless data only</td><td>Job Kit</td></tr>
+                  <tr><td><a href="#dr-008">DR-008</a></td><td>Live data or stop</td><td>Job Kit, Hashflag Skills</td></tr>
+                  <tr><td><a href="#dr-009">DR-009</a></td><td>Scripts compute, the model grades with a quote</td><td>Job Kit, Hashflag Skills</td></tr>
+                  <tr><td><a href="#dr-010">DR-010</a></td><td>Two composite scores with declared weights</td><td>Job Kit</td></tr>
+                  <tr><td><a href="#dr-011">DR-011</a></td><td>Solutions are gated behind effort</td><td>J0DI3</td></tr>
+                  <tr><td><a href="#dr-012">DR-012</a></td><td>Every AI call is mocked in tests</td><td>J0DI3</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="dr-001">DR-001: The spam classifier fails open</h2>
+            <p><strong>Context.</strong> The vetswhocode.io contact form receives inquiries from veterans, employers and donors alongside SEO and link-building pitches. A model can tell them apart. A model can also be unavailable or wrong.</p>
+            <p><strong>Decision.</strong> A message is dropped only when the classifier returns spam with confidence of 0.8 or higher. A missing key, an API error, an empty response or unparseable output all deliver the message.</p>
+            <p><strong>Consequence.</strong> Some spam reaches Slack. No outage or model mistake short of a confident wrong answer can discard a real message. <a href="/artifacts/vetswhocode-platform/#tradeoffs">Platform deep dive</a>.</p>
+
+            <h2 id="dr-002">DR-002: Content lives in files, not a database</h2>
+            <p><strong>Context.</strong> The site’s content is blog posts, press entries, team and program data. None of it needs per-user state.</p>
+            <p><strong>Decision.</strong> Store content as Markdown, MDX, JSON and TypeScript in the repository.</p>
+            <p><strong>Consequence.</strong> Every content change is reviewed, versioned and reversible, and there is no database to operate. Publishing needs a pull request, and features with per-user state do not fit. The learning management system moved to its own application in September 2026. <a href="/artifacts/vetswhocode-platform/#tradeoffs">Platform deep dive</a>.</p>
+
+            <h2 id="dr-003">DR-003: Rate limits are counted in memory</h2>
+            <p><strong>Context.</strong> Public form endpoints need abuse protection. The limits are small: 3 applications per 10 minutes, 5 contact messages per minute, per client IP.</p>
+            <p><strong>Decision.</strong> A sliding-window limiter with counters in process memory, with a separate bucket per endpoint.</p>
+            <p><strong>Consequence.</strong> No extra service to run. Counts are exact only on a single instance, which the documentation states. The limiter’s interface is written so a shared store can replace the map without touching call sites. <a href="/artifacts/vetswhocode-platform/#v2">Planned for v2</a>.</p>
+
+            <h2 id="dr-004">DR-004: One source for every outcome number</h2>
+            <p><strong>Context.</strong> Placement rate, alumni earnings and veterans trained appear on about ten pages. Numbers that are typed in more than one place drift apart.</p>
+            <p><strong>Decision.</strong> Define each statistic once, with its source and the date it was confirmed. A test pins the values and scans the source tree for stray copies.</p>
+            <p><strong>Consequence.</strong> A number changes in one file or the build fails. Fields that are not confirmed are left unset instead of guessed. <a href="/artifacts/vetswhocode-platform/#tradeoffs">Platform deep dive</a>.</p>
+
+            <h2 id="dr-005">DR-005: Generate model output offline and commit it</h2>
+            <p><strong>Context.</strong> Career guides for more than four thousand job codes need model-written content. A nonprofit cannot pay for a model call on every page view.</p>
+            <p><strong>Decision.</strong> Run generation as offline scripts, validate each object against a schema, commit the JSON and build static pages from it.</p>
+            <p><strong>Consequence.</strong> Readers get no model latency, there is no per-view cost and a model outage cannot break a page. Content is only as fresh as the last run. <a href="/artifacts/mos-translator/#tradeoffs">MOS Translator deep dive</a>.</p>
+
+            <h2 id="dr-006">DR-006: Salary data falls back in tiers and labels its source</h2>
+            <p><strong>Context.</strong> Lightcast salary data needs credentials, and every credential in the project is optional so that contributors can run it without any.</p>
+            <p><strong>Decision.</strong> Try Lightcast, then Census ACS, then a curated table. Every record carries a <code>dataSource</code> field.</p>
+            <p><strong>Consequence.</strong> The pipeline always completes, and a reader can see whether a figure is live or curated. Curated figures can age. <a href="/artifacts/mos-translator/#tradeoffs">MOS Translator deep dive</a>.</p>
+
+            <h2 id="dr-007">DR-007: Standard library and keyless data only</h2>
+            <p><strong>Context.</strong> The job kit is used by workshop attendees and veterans on whatever laptop they have. Its method document sets the bar: every learner has to be able to rerun every number for free.</p>
+            <p><strong>Decision.</strong> Python standard library only. Public data sources that need no account: O*NET files, BLS tables and the BLS public API, public job board APIs and the unauthenticated GitHub API.</p>
+            <p><strong>Consequence.</strong> Nothing to install and nothing to pay for. Commercial labor data is out of reach, and the public APIs have small quotas. <a href="/artifacts/ai-era-job-kit/#tradeoffs">Job Kit deep dive</a>.</p>
+
+            <h2 id="dr-008">DR-008: Live data or stop</h2>
+            <p><strong>Context.</strong> A score against an out-of-date market looks exactly like a current one.</p>
+            <p><strong>Decision.</strong> When a source is unreachable the job kit prints <code>STOPPED:</code> and exits. Hashflag Skills refuses postings older than 14 days and O*NET data older than 30.</p>
+            <p><strong>Consequence.</strong> Users sometimes get no result and have to re-fetch. They never get a stale number presented as current. <a href="/artifacts/ai-era-job-kit/#tradeoffs">Job Kit deep dive</a>.</p>
+
+            <h2 id="dr-009">DR-009: Scripts compute, the model grades with a quote</h2>
+            <p><strong>Context.</strong> In the first eval round, grading sessions credited résumés with skills they never named, and scores moved by up to 5.1 points between sessions.</p>
+            <p><strong>Decision.</strong> All arithmetic is done by scripts. The model only decides whether a line is evidence for a skill, and it must return the quote. The quote has to name the skill, and scripts reject a quote that is not in the text.</p>
+            <p><strong>Consequence.</strong> By round three the spread was 1.2 points or less in every lane. A person who describes real work loosely scores lower until they name the skill. <a href="/artifacts/hashflag-skills/#ai-wrong">Hashflag Skills deep dive</a>.</p>
+
+            <h2 id="dr-010">DR-010: Two composite scores with declared weights</h2>
+            <p><strong>Context.</strong> An applicant tracking system and a hiring engineer read a candidate differently. One number would hide that.</p>
+            <p><strong>Decision.</strong> Report a machine read (résumé 40, LinkedIn 35, GitHub 15, portfolio 10) and a human read (portfolio 35, GitHub 30, résumé 20, LinkedIn 15), with a résumé gate at 70. Label the weights as a design judgment and make each one a command-line option.</p>
+            <p><strong>Consequence.</strong> The user sees which audience they are weak for. The weights are not research, and the documentation says so. <a href="/artifacts/ai-era-job-kit/#tradeoffs">Job Kit deep dive</a>.</p>
+
+            <h2 id="dr-011">DR-011: Solutions are gated behind effort</h2>
+            <p><strong>Context.</strong> A learner who is handed the answer does not build the skill an interview will test.</p>
+            <p><strong>Decision.</strong> Hints unlock after a first attempt. A full solution unlocks only after two or more hints or three or more failed attempts. Coaching does not start until an attempt is recorded. The rules live in the endpoints.</p>
+            <p><strong>Consequence.</strong> The assistant is less convenient than a general chatbot, on purpose. The gate holds whatever the model would have said. <a href="/artifacts/j0di3/#tradeoffs">J0DI3 deep dive</a>.</p>
+
+            <h2 id="dr-012">DR-012: Every AI call is mocked in tests</h2>
+            <p><strong>Context.</strong> A test suite that calls a model is slow, costs money and fails for reasons unrelated to the change.</p>
+            <p><strong>Decision.</strong> Mock all model calls. Test the code around the model: gating, budgets, breakers, safety checks and persistence.</p>
+            <p><strong>Consequence.</strong> More than 670 tests run in about eight seconds. Answer quality is not measured by this suite and needs its own eval. <a href="/artifacts/j0di3/#v2">Planned for v2</a>.</p>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

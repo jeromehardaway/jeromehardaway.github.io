@@ -1,0 +1,95 @@
+---
+title: How I Build
+description: How Jerome Hardaway builds with AI at Vets Who Code: workflow, where prompts and pinned models live, how output is evaluated, and how learner data is handled.
+path: /how-i-build/
+nav: how-i-build
+---
+      <div class="page-head">
+        <div class="container">
+          <h1>AI does the drafting. I answer for what ships.</h1>
+          <p class="lede">I use AI coding tools, and I am the author of record for everything that merges. This page is how I keep that work reviewable, measured and defensible.</p>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <div class="prose">
+            <h2 id="rules">Five rules</h2>
+            <ol>
+              <li><strong>Scripts compute, models judge.</strong> Any number a user will act on comes from deterministic code. A model is used for the part that needs reading comprehension, and it has to quote its evidence.</li>
+              <li><strong>Never list what you can’t defend.</strong> That is a law of the <a href="/artifacts/ai-era-job-kit/">AI-Era Job Kit</a> and it applies to my own code. If I cannot explain a line in review, it does not merge, whoever wrote it.</li>
+              <li><strong>Decide the failure mode first.</strong> The contact form’s spam filter fails open so no real message is lost. The job kit stops when live data is unavailable so no stale number is shown. Both are choices made before the happy path was written.</li>
+              <li><strong>Measure the non-deterministic step.</strong> When a model’s grading moved 5.1 points between sessions, I measured it over three rounds until it was inside target. See <a href="/artifacts/hashflag-skills/#eval">the eval</a>.</li>
+              <li><strong>Same gates for every author.</strong> A change drafted by an AI tool goes through the same type check, lint, tests and review as one typed by hand.</li>
+            </ol>
+
+            <h2 id="workflow">Workflow</h2>
+            <ol>
+              <li><strong>Write the change as a small pull request.</strong> Conventional commits, enforced by commitlint, with a 72-character header.</li>
+              <li><strong>Use agent tooling for the repeatable parts.</strong> The J0DI3 repository carries Claude Code skills for adding an endpoint, a migration or an AI surface, and agents that audit a change before a pull request and verify production after a deploy.</li>
+              <li><strong>Let CI decide.</strong> On the web app that is strict TypeScript, Biome, about 635 Vitest cases and Playwright in two browsers with an accessibility scan. On J0DI3 it adds a 70% coverage floor, integration tests against a real database and a migration round trip.</li>
+              <li><strong>Own the commit.</strong> I am responsible for the code, so the commit carries my name. A tool that helped draft a change does not share the accountability for it.</li>
+            </ol>
+
+            <h2 id="prompts">Prompts and pinned models</h2>
+            <p>Prompts live in the repositories next to the code that calls them, and they are reviewed in pull requests like any other source.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>System</th><th>Model</th><th>Where the prompt lives</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Contact form classifier</td>
+                    <td><code>gemini-2.5-flash</code>, temperature 0, JSON schema. SDK pinned to an exact version.</td>
+                    <td><a href="https://github.com/Vets-Who-Code/vets-who-code-app/blob/master/src/lib/api-helpers/classify-contact.ts" rel="noopener"><code>classify-contact.ts</code></a></td>
+                  </tr>
+                  <tr>
+                    <td>Career guide generators</td>
+                    <td><code>gemini-2.0-flash</code> with Zod schemas</td>
+                    <td><a href="https://github.com/Vets-Who-Code/vets-who-code-app/tree/master/scripts" rel="noopener"><code>scripts/generate-*.ts</code></a></td>
+                  </tr>
+                  <tr>
+                    <td>Job kit skills and agents</td>
+                    <td>Runs in the user’s own assistant</td>
+                    <td><a href="https://github.com/Vets-Who-Code/ai-era-job-kit/tree/main/skills" rel="noopener"><code>skills/</code></a> and <a href="https://github.com/Vets-Who-Code/ai-era-job-kit/tree/main/agents" rel="noopener"><code>agents/</code></a></td>
+                  </tr>
+                  <tr>
+                    <td>Hashflag Skills</td>
+                    <td>Runs in Claude Code</td>
+                    <td><a href="https://github.com/Vets-Who-Code/hashflag-skills/tree/main/skills" rel="noopener"><code>skills/</code></a></td>
+                  </tr>
+                  <tr>
+                    <td>J0DI3</td>
+                    <td><code>gemini-2.5-flash</code> and <code>gemini-2.5-pro</code>, set in one client module</td>
+                    <td>Private repository</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Model names are pinned to a model family. Pinning dated snapshots is on the list for <a href="/artifacts/j0di3/#v2">J0DI3 v2</a>.</p>
+
+            <h2 id="evals">Evals</h2>
+            <ul>
+              <li><a href="https://github.com/Vets-Who-Code/hashflag-skills/blob/main/skills/resume-market-scorer/references/consistency.md" rel="noopener">Grading consistency eval</a> for the résumé scorer: three résumés, three independent sessions each, three rounds, with every disagreement traced to a cause. Summarized in the <a href="/artifacts/hashflag-skills/#eval">Hashflag Skills deep dive</a>.</li>
+              <li><a href="https://github.com/Vets-Who-Code/ai-era-job-kit/blob/main/METHOD.md" rel="noopener">METHOD.md</a> in the job kit: the rules for sourcing every number and the grader agreement check, with a target of the same letter on 90% of qualifications.</li>
+              <li><a href="https://github.com/Vets-Who-Code/vets-who-code-app/blob/master/__tests__/pages/api/classify-contact.test.ts" rel="noopener">Classifier tests</a>: 13 cases covering every fail-open path, the model default and override, and that no personal data is logged.</li>
+            </ul>
+            <p>What is not evaluated yet is stated on each deep dive. The contact classifier and J0DI3 do not have labelled answer-quality sets, and I say that there instead of implying otherwise.</p>
+
+            <h2 id="data">LLM data handling</h2>
+            <p>This describes what the code does today.</p>
+            <ul>
+              <li><strong>vetswhocode.io contact form.</strong> The name, email, subject and message are sent to Google Gemini once to classify the message. The application does not store submissions. It forwards them to the team in Slack. A test asserts that personal data is not written to logs.</li>
+              <li><strong>Career guides.</strong> Only public military job code descriptions are sent to a model. No personal data is involved.</li>
+              <li><strong>Job kit and Hashflag Skills.</strong> Scripts run on the user’s machine and refuse to read or write a résumé inside a git repository. The résumé is read by whichever AI assistant the user runs the skill in, under that assistant’s terms. Nothing is sent, posted or applied for on the user’s behalf.</li>
+              <li><strong>J0DI3.</strong> Learner input is sanitized and delimited before it reaches a prompt. Personal fields are encrypted at the field level with rotating keys, access to them is audit logged, and output guardrails check responses for personal data. Sampled response snapshots are kept for 30 days for incident replay.</li>
+            </ul>
+
+            <h2 id="decisions">Decisions</h2>
+            <p>The tradeoffs behind each artifact are written up as short records in the <a href="/decisions/">decision records index</a>.</p>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

@@ -1,0 +1,41 @@
+# Jerome Hardaway
+
+> Jerome Hardaway is a senior data and AI engineer and engineering leader. He is the Founder and Executive Director of Vets Who Code, a nonprofit that has trained more than 300 veterans and military spouses for software careers since 2014. He is based in Atlanta, Georgia, works remotely, and is open to data and AI roles: Senior AI Engineer, Senior Data Engineer and AI Engineering Leader.
+
+Numbers were counted from repository history, CI configuration and the GitHub API on 10 November 2026.
+
+## Quotable facts
+
+- Hashflag Skills: a three-round eval cut AI résumé-grading spread from 5.1 points to 1.2 and raised pairwise grader agreement to 98–100%.
+- J0DI3: Jerome wrote 388 of 389 commits on the AI teaching backend, which has more than 670 tests.
+- AI-Era Job Kit: 7 skills, 7 agents and 11 Python scripts that run on $0 of API keys, covered by 62 tests.
+- MOS Translator: career guides for 4,201 of 4,455 military job codes, with zero model calls at request time.
+- vetswhocode.io platform: Jerome made 310 of the 361 commits to master in the last 12 months; the server bundle went from over 250 MB to 31 MB.
+- Open-source program: more than 770 stars and 130 forks across Prework, the Windows Dev Guide and the API List.
+- Vets Who Code: 300+ veterans trained, 97% job placement, $20M+ collective alumni earnings (internal cohort data, reported by Diginomica, December 2025).
+
+## Artifacts
+
+- [Hashflag Skills](https://jerome.codes/artifacts/hashflag-skills/): open-source Claude Code skills with a published grading consistency eval
+- [J0DI3 AI backend](https://jerome.codes/artifacts/j0di3/): FastAPI and pgvector RAG backend with prompt safety, budgets and circuit breakers
+- [AI-Era Job Kit](https://jerome.codes/artifacts/ai-era-job-kit/): keyless job search scoring kit built for a Master.dev workshop
+- [MOS Translator](https://jerome.codes/artifacts/mos-translator/): Gemini pipeline that maps military job codes to tech careers
+- [vetswhocode.io platform](https://jerome.codes/artifacts/vetswhocode-platform/): the Next.js platform the nonprofit runs on
+- [Open-source program](https://jerome.codes/artifacts/open-source-program/): how the training program runs in public
+
+## Hiring
+
+- [Recruiter fast lane](https://jerome.codes/recruiters/)
+- [Senior AI Engineer](https://jerome.codes/for/ai-engineer/)
+- [Senior Data Engineer](https://jerome.codes/for/data-engineer/)
+- [AI Engineering Leader](https://jerome.codes/for/ai-engineering-leader/)
+- [Résumé](https://jerome.codes/resume/)
+- [Referral kit](https://jerome.codes/refer/)
+
+## More
+
+- [About](https://jerome.codes/about/): bio, press, teaching and testimonials
+- [How I Build](https://jerome.codes/how-i-build/): workflow, prompts, evals and LLM data handling
+- [Decision records](https://jerome.codes/decisions/)
+- [Writing](https://jerome.codes/writing/)
+- [Contact](https://jerome.codes/contact/): LinkedIn https://www.linkedin.com/in/jeromehardaway/ and GitHub https://github.com/jeromehardaway

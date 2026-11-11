@@ -1,0 +1,108 @@
+---
+title: Open-source program
+description: How Vets Who Code runs its training in the open: Prework, community-written guides with 770+ GitHub stars between them, and merged contributor pull requests.
+path: /artifacts/open-source-program/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / Open-source program</p>
+          <p class="eyebrow">Deep dive: open-source leadership</p>
+          <h1>A training program that runs in public</h1>
+          <p class="lede">Vets Who Code teaches on GitHub. The entry requirements, the setup guides and the production app are all open repositories, and the people in the program write a large share of them.</p>
+          <div class="button-row">
+            <a class="button" href="https://github.com/Vets-Who-Code" rel="noopener">GitHub organization</a>
+            <a class="button secondary" href="https://vetswhocode.io/projects" rel="noopener">Project catalog</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>417</strong><span>stars on the Windows Dev Guide, written by a contributor</span></li>
+            <li><strong>204</strong><span>stars and 46 forks on the API List</span></li>
+            <li><strong>153</strong><span>stars and 52 forks on Prework</span></li>
+            <li><strong>26</strong><span>merged community pull requests I approved on the web app</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Founder of the organization and maintainer. I set the standards, review and merge. Contributors do much of the writing, and their names are on it.</dd>
+            <dt>Counted</dt>
+            <dd>10 November 2026, from the GitHub API</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>A veteran applying to a coding program has no way to show an employer what they did there, and a program has no way to prove what it teaches, unless the work is visible. Closed course platforms hide both. They also leave graduates with nothing in their GitHub history except tutorial clones.</p>
+
+            <h2 id="criteria">What it has to do</h2>
+            <ul>
+              <li>An applicant can start before being accepted, for free, with nothing but a browser and a GitHub account.</li>
+              <li>Work a learner does in the program leaves a public record they can show an employer.</li>
+              <li>Material stays current because the people using it can fix it.</li>
+            </ul>
+
+            <h2 id="approach">Approach</h2>
+            <h3>Prework as the application</h3>
+            <p><a href="https://github.com/Vets-Who-Code/Prework" rel="noopener">Prework</a> is a 40 to 50 hour self-paced course in six modules. An applicant builds a portfolio, deploys it to GitHub Pages and applies with the live URL. The application is proof of work, and the repository has been forked 52 times.</p>
+
+            <h3>Guides written by the people who needed them</h3>
+            <p>The <a href="https://github.com/Vets-Who-Code/windows-dev-guide" rel="noopener">Windows Dev Guide</a> covers WSL 2, Windows Terminal, Git and the GitHub CLI. It was written by <a href="https://github.com/stephanlamoureux" rel="noopener">stephanlamoureux</a>, not by me, and it is the most starred repository in the organization. That is the outcome I want from the program: a contributor ships something hundreds of other developers use, under their own name. The <a href="https://github.com/Vets-Who-Code/api-list" rel="noopener">API List</a> is a community-curated list of free APIs for people learning JavaScript.</p>
+
+            <h3>The production app as the classroom</h3>
+            <p>Learners contribute to the <a href="/artifacts/vetswhocode-platform/">vetswhocode.io platform</a> under the same rules as everyone else: conventional commits, type checks, tests and review. I approved 26 merged pull requests from about a dozen outside authors on that repository. A <a href="https://vetswhocode.io/projects" rel="noopener">public project catalog</a> lists the software the community has shipped.</p>
+
+            <h3>A published standard</h3>
+            <p><a href="https://vetswhocode.io/the-standard" rel="noopener">The Standard</a> is the public bar every person in the program is trained to. It is generated from the curriculum graph: 375 topics, 529 prerequisite links, 8 subjects and 53 domains. The curriculum is validated against 128 skills from Lightcast labor market data across 25 modules.</p>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>Open by default</h3>
+            <p>Anyone can copy the material. In return, every learner graduates with a public contribution history, and the program’s claims can be checked by reading the repositories.</p>
+            <h3>Credit goes to the author</h3>
+            <p>The most visible repository in the organization does not have my name in its commit history. A founder who needs every artifact to be theirs ends up with fewer artifacts.</p>
+
+            <h2 id="outcome">Measurable outcome</h2>
+            <ul>
+              <li>More than 770 stars and 130 forks across Prework, the Windows Dev Guide and the API List.</li>
+              <li>More than 300 veterans trained since 2014, a 97% job placement rate and more than $20M in collective alumni earnings (internal cohort data, <a href="https://diginomica.com/how-vets-who-code-helps-300-military-veterans-transition-tech-careers-97-job-placement-success" rel="noopener">reported by Diginomica</a>, December 2025).</li>
+              <li>Tuition is $0. Vets Who Code is a 501(c)(3) with no income share and no loans.</li>
+            </ul>
+
+            <blockquote>
+              <p>#VetsWhoCode’s tenacious focus on language and computer science fundamentals over frameworks was invaluable in my career transition from being a Radiology Technician in the US Army to building cloud scale infrastructure at Microsoft.</p>
+              <footer>Jeff Martin, US Army veteran, DevOps Engineer at GitHub</footer>
+            </blockquote>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>The guides and prework are written by people. AI enters the program as a subject and as tooling: learners are taught to use it and to defend what it produces, and the organization’s own agent skills are open source in <a href="/artifacts/hashflag-skills/">Hashflag Skills</a>.</p>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Write longer reviews.</strong> Most of my reviews on community pull requests are short approvals. A written review that explains the reasoning teaches more than a merge does.</li>
+              <li><strong>Add link checking and CI to the guide repositories</strong>, which currently have none.</li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <ol>
+              <li>Why the application is a deployed portfolio and not a form.</li>
+              <li>How a learner goes from prework to a merged pull request in production.</li>
+              <li>The story of the Windows Dev Guide and what it says about ownership.</li>
+              <li>How the curriculum graph and the labor data decide what gets taught.</li>
+              <li>What I would measure better.</li>
+            </ol>
+
+            <h2 id="related">Related posts</h2>
+            <ul>
+              <li><a href="https://vetswhocode.io/blogs/how-we-teach-code-review-find-the-defect-not-the-nit" rel="noopener">How We Teach Code Review: Find the Defect, Not the Nit</a></li>
+              <li><a href="https://vetswhocode.io/blogs/what-we-are-building-at-vets-who-code" rel="noopener">What We’re Building at Vets Who Code</a></li>
+              <li><a href="https://vetswhocode.io/blogs/ten-things-learned-after-10-years-at-vets-who-code" rel="noopener">Ten Things I’ve Learned After Ten Years at Vets Who Code</a></li>
+              <li><a href="https://vetswhocode.io/blogs/how-traditional-onboarding-excludes" rel="noopener">How Traditional Onboarding Excludes the People Tech Needs Most</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}

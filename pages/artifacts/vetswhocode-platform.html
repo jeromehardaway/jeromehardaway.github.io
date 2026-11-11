@@ -1,0 +1,200 @@
+---
+title: vetswhocode.io platform
+description: Deep dive on the open-source Next.js platform Vets Who Code runs on: architecture, tradeoffs, tests, CI, security and what changes in v2.
+path: /artifacts/vetswhocode-platform/
+nav: artifacts
+og_type: article
+---
+      <div class="page-head">
+        <div class="container">
+          <p class="breadcrumb"><a href="/artifacts/">Artifacts</a> / vetswhocode.io platform</p>
+          <p class="eyebrow">Deep dive: web platform</p>
+          <h1>The platform a veteran nonprofit runs on</h1>
+          <p class="lede">vetswhocode.io takes every application, mentor sign-up and hiring inquiry Vets Who Code receives. It is also the production codebase veterans in the program learn to ship to.</p>
+          <div class="button-row">
+            <a class="button" href="https://vetswhocode.io" rel="noopener">Live site</a>
+            <a class="button secondary" href="https://github.com/Vets-Who-Code/vets-who-code-app" rel="noopener">Repo</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="container">
+          <ul class="stats">
+            <li><strong>310 of 361</strong><span>commits to master in the last 12 months are mine</span></li>
+            <li><strong>215</strong><span>routes in the production build</span></li>
+            <li><strong>~635</strong><span>Vitest cases in 81 files, run on every PR</span></li>
+            <li><strong>250 MB → 31 MB</strong><span>server bundle, after a deploy-blocking size failure</span></li>
+          </ul>
+
+          <dl class="facts">
+            <dt>Role</dt>
+            <dd>Founder and lead maintainer. First commit 4 February 2017; 627 of 1,485 commits on master.</dd>
+            <dt>Stack</dt>
+            <dd>Next.js 15 (Pages Router), TypeScript, Tailwind CSS, Markdown and MDX content, Vitest, Playwright, Biome, Vercel</dd>
+            <dt>Integrations</dt>
+            <dd>Slack webhooks, Google Gemini, Shopify Storefront, Cloudinary, GitHub API, Lightcast, Census ACS</dd>
+            <dt>License</dt>
+            <dd>AGPL-3.0, open source</dd>
+            <dt>Counted</dt>
+            <dd>10 November 2026, from the repository history and build output</dd>
+          </dl>
+
+          <div class="prose">
+            <h2 id="problem">The problem</h2>
+            <p>Vets Who Code is a nonprofit that trains veterans and military spouses to become software engineers at no cost to them. The website is the front door for all of it. A veteran applies there, a mentor volunteers there, an employer asks to hire there, and a donor decides there.</p>
+            <p>The same repository is a teaching tool. People in the program make their first production pull requests against it, so the codebase has to be safe for someone new to change. The organization runs on donations, so the platform also has to be cheap to host and need very little operating attention.</p>
+
+            <h2 id="criteria">What it has to do</h2>
+            <ul>
+              <li><strong>Never lose a real message.</strong> If any dependency fails, an application or inquiry still reaches a person.</li>
+              <li><strong>Run locally in five minutes with no secrets.</strong> Every environment variable is optional, and the feature that reads it turns off or falls back when it is unset.</li>
+              <li><strong>Gate every change.</strong> Type checks, unit tests, browser tests and an accessibility scan run on each pull request.</li>
+              <li><strong>Need no database.</strong> Content lives in the repository, so there is no database to host, back up or migrate.</li>
+            </ul>
+
+            <h2 id="architecture">Approach and architecture</h2>
+            <p>The site is a Next.js application deployed on Vercel. Content is file-based: 45 blog posts in Markdown, media entries in MDX, and team, event, project and curriculum data in JSON and TypeScript. Server code is limited to a small set of API routes that validate form input and hand it to Slack, plus a Shopify storefront proxy for the store.</p>
+          </div>
+
+          <figure class="diagram">
+            <svg viewBox="0 0 760 330" role="img" aria-labelledby="platform-diagram-title" font-family="inherit" font-size="13">
+              <title id="platform-diagram-title">Architecture of vetswhocode.io: a browser talks to a Next.js app on Vercel, which serves file-based content and API routes that call Slack, Gemini, Shopify and Cloudinary. Build-time scripts generate data files.</title>
+              <defs>
+                <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" fill="currentColor" />
+                </marker>
+              </defs>
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="120" width="120" height="56" />
+                <rect x="190" y="20" width="330" height="250" stroke-dasharray="5 4" />
+                <rect x="210" y="60" width="290" height="56" />
+                <rect x="210" y="130" width="290" height="56" />
+                <rect x="210" y="200" width="290" height="56" />
+                <rect x="590" y="20" width="160" height="44" />
+                <rect x="590" y="78" width="160" height="44" />
+                <rect x="590" y="136" width="160" height="44" />
+                <rect x="590" y="194" width="160" height="44" />
+                <rect x="210" y="286" width="290" height="36" />
+                <path d="M130 148H208" marker-end="url(#arrow-a)" />
+                <path d="M500 150L588 44" marker-end="url(#arrow-a)" />
+                <path d="M500 156L588 100" marker-end="url(#arrow-a)" />
+                <path d="M500 162L588 158" marker-end="url(#arrow-a)" />
+                <path d="M500 168L588 214" marker-end="url(#arrow-a)" />
+                <path d="M355 286V258" marker-end="url(#arrow-a)" />
+              </g>
+              <g fill="currentColor">
+                <text x="70" y="152" text-anchor="middle">Browser</text>
+                <text x="355" y="42" text-anchor="middle" font-weight="700">Next.js on Vercel</text>
+                <text x="355" y="84" text-anchor="middle" font-weight="700">Pages</text>
+                <text x="355" y="102" text-anchor="middle">215 routes, PWA offline fallback</text>
+                <text x="355" y="154" text-anchor="middle" font-weight="700">API routes</text>
+                <text x="355" y="172" text-anchor="middle">validate, rate limit, classify, forward</text>
+                <text x="355" y="224" text-anchor="middle" font-weight="700">Content in the repo</text>
+                <text x="355" y="242" text-anchor="middle">Markdown, MDX, JSON, TypeScript</text>
+                <text x="670" y="47" text-anchor="middle">Slack webhooks</text>
+                <text x="670" y="105" text-anchor="middle">Gemini classifier</text>
+                <text x="670" y="163" text-anchor="middle">Shopify Storefront</text>
+                <text x="670" y="221" text-anchor="middle">Cloudinary media</text>
+                <text x="355" y="309" text-anchor="middle">Build-time scripts generate data files</text>
+              </g>
+            </svg>
+            <figcaption>Request path on the left, third-party services on the right. Nothing on the right is required for the site to serve pages.</figcaption>
+          </figure>
+
+          <div class="prose">
+            <h3>Data model</h3>
+            <p>There is no database, so the data model is the set of typed files under <code>src/data</code>.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Data</th><th>Stored as</th><th>Read by</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Blog posts</td><td>Markdown with front matter, one file per post</td><td><code>src/lib/blog.ts</code></td></tr>
+                  <tr><td>Press and media</td><td>MDX, one file per appearance</td><td>Media pages</td></tr>
+                  <tr><td>Outcome statistics</td><td>One TypeScript module, pinned by a test</td><td>Every page that shows a number</td></tr>
+                  <tr><td>Curriculum graph</td><td>Generated JSON: 375 topics, 529 prerequisite edges</td><td>Curriculum and standard pages</td></tr>
+                  <tr><td>Career guides</td><td>Generated JSON keyed by military job code</td><td><a href="/artifacts/mos-translator/">MOS Translator</a></td></tr>
+                  <tr><td>Form submissions</td><td>Not stored. Forwarded to Slack.</td><td>The team, in Slack</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="tradeoffs">Key tradeoffs</h2>
+            <h3>The spam filter fails open</h3>
+            <p>The contact form uses Gemini to classify each message as relevant, spam or unclear. A message is dropped only when the model says spam with at least 0.8 confidence. A missing API key, an API error, an empty response or malformed JSON all result in the message being delivered. The cost is that some spam reaches Slack. The alternative was a filter that could silently discard a veteran’s message. Recorded as <a href="/decisions/#dr-001">DR-001</a>.</p>
+
+            <h3>Files instead of a database</h3>
+            <p>Content changes go through pull requests, which gives review, history and rollback for free and removes a hosted dependency. The cost is that non-engineers cannot publish without help, and anything that needs per-user state has to live somewhere else. The learning management system, which does need it, moved to a separate application in September 2026. Recorded as <a href="/decisions/#dr-002">DR-002</a>.</p>
+
+            <h3>An in-memory rate limiter</h3>
+            <p>Each public endpoint has its own sliding-window limit per client IP, for example 5 requests a minute on the contact form and 3 every 10 minutes on applications. Counters live in process memory. That needs no extra service, and it is only exact on a single instance. The call sites are written so the store can be swapped for a shared one without changing them. Recorded as <a href="/decisions/#dr-003">DR-003</a>.</p>
+
+            <h3>One source for every outcome number</h3>
+            <p>Placement rate, alumni earnings and veterans trained are defined once, with their source and date, and a test pins the values. A statistic cannot drift between the home page and the donate page. Recorded as <a href="/decisions/#dr-004">DR-004</a>.</p>
+
+            <h2 id="outcome">Measurable outcome</h2>
+            <ul>
+              <li>The production deploy was failing Vercel’s 250 MB serverless limit. After moving a 57 MB editor dependency to a dynamic import, taking Playwright out of runtime dependencies and narrowing file tracing, server pages total 31 MB and API routes 932 KB.</li>
+              <li>Every pull request runs about 635 Vitest cases and 7 Playwright specs in Chromium and Firefox, including an axe accessibility scan.</li>
+              <li>CodeQL and a dependency audit run on every push and weekly.</li>
+              <li>The organization this platform serves has trained more than 300 veterans since 2014, with a 97% job placement rate and more than $20M in collective alumni earnings (internal cohort data, <a href="https://diginomica.com/how-vets-who-code-helps-300-military-veterans-transition-tech-careers-97-job-placement-success" rel="noopener">reported by Diginomica</a>, December 2025).</li>
+            </ul>
+
+            <h2 id="credibility">Engineering signals</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Area</th><th>What is in the repo</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Language settings</td><td>TypeScript <code>strict</code> plus unused-locals, unused-parameters, implicit-returns and implicit-override checks. Biome with about 119 rules set to error, including a large accessibility block.</td></tr>
+                  <tr><td>Dependencies</td><td>npm only, enforced at install. Dependabot weekly with grouped minor and patch updates.</td></tr>
+                  <tr><td>Tests</td><td>81 Vitest files, 7 Playwright specs covering end-to-end flows, accessibility and route protection.</td></tr>
+                  <tr><td>CI</td><td>Four workflows in <code>.github/workflows</code>: unit tests, Playwright, security, and a non-blocking code quality score on pull requests.</td></tr>
+                  <tr><td>Deploy</td><td>Vercel builds and deploys <code>master</code> to production. Production secrets live in Vercel project settings, never in the repo.</td></tr>
+                  <tr><td>Observability</td><td>Vercel Analytics and Speed Insights for Core Web Vitals, and <code>/api/health</code> returning status, version and uptime. Application logging is console output read in Vercel.</td></tr>
+                  <tr><td>Security</td><td>No user accounts in this app, so no auth surface. HSTS with preload, a Content Security Policy, DOMPurify for rendered HTML, length and field validation on every form, a honeypot field, and a published <code>SECURITY.md</code> with response targets.</td></tr>
+                  <tr><td>Model input and output</td><td>The classifier runs at temperature 0 with a JSON response schema. The model’s answer can only ever decide whether one message is forwarded to Slack.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="ai">AI collaboration note</h2>
+            <p>I use AI coding tools on this codebase. Every change, whoever drafted it, goes through the same pull request gates: type check, Biome, Vitest and Playwright. I review it, I merge it, and it ships under my name because I answer for it.</p>
+
+            <h2 id="v2">What I’d change in v2</h2>
+            <ul>
+              <li><strong>Build a labelled evaluation set for the spam classifier.</strong> Today it has 13 mocked unit tests that prove the fail-open paths. It has no measured precision or recall on real messages.</li>
+              <li><strong>Delimit user input in the classifier prompt.</strong> Form fields are interpolated directly. The blast radius is small, because the worst outcome is one spam message reaching Slack, and it is still worth closing.</li>
+              <li><strong>Move rate-limit counters to a shared store</strong> so limits hold across serverless instances.</li>
+              <li><strong>Replace console logging with structured logs</strong> and publish an uptime target next to the health endpoint.</li>
+              <li><strong>Bring first-load JavaScript down.</strong> Shared first-load is 148 kB, and 17 of 215 routes are over 200 kB.</li>
+            </ul>
+
+            <h2 id="walkthrough">Walk me through it</h2>
+            <p>The ten-minute spoken version:</p>
+            <ol>
+              <li>Who the platform serves and why a lost form submission is the worst failure it can have.</li>
+              <li>The request path for a contact message: honeypot, validation, rate limit, classifier, Slack.</li>
+              <li>Why the classifier fails open, and what that costs.</li>
+              <li>Why content lives in files, and the day that stopped being enough for the LMS.</li>
+              <li>The deploy that broke on bundle size, how I found the three causes, and the numbers after.</li>
+              <li>What CI checks on every pull request and why new contributors can trust it.</li>
+              <li>What I would build next and why it has not been built yet.</li>
+            </ol>
+
+            <h2 id="related">Decision records and related posts</h2>
+            <ul>
+              <li><a href="/decisions/">Decision records index</a></li>
+              <li><a href="https://vetswhocode.io/blogs/introducing-the-new-and-improved-vets-who-code-app" rel="noopener">Introducing the New and Improved Vets Who Code App</a></li>
+              <li><a href="https://vetswhocode.io/blogs/ai-as-infrastructure-audio-pipeline" rel="noopener">AI as Infrastructure: Automating Blog Audio with Gemini and Cloudinary</a></li>
+              <li><a href="https://vetswhocode.io/blogs/the-reviewable-pull-request" rel="noopener">The Reviewable Pull Request</a></li>
+              <li><a href="https://vetswhocode.io/blogs/three-cases-every-endpoint-test-covers" rel="noopener">Three Cases Every Endpoint Test Covers</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+{{> recruiter-cta}}
